@@ -4,17 +4,18 @@
 #include <time.h>
 #include <stdio.h>
 #define PI 3.1415926535898
+#define FIELD_NUM 25 // количество позиций на игровом поле
 typedef struct
 {
-	int x;
-	int y;
-	int colour;
+	int x; //координата по оси X
+	int y; //координата по оси Y
+	int colour; //цвет фишки на позиции (0, если нет фишки; 5, если стенка)
 } field_t;
-field_t field[25];
+field_t field[FIELD_NUM];
 int win = 0;
 int light = 0;
 field_t cursor;
-int width, height;
+int width, height; //глобальные переменные, хранящие размеры окна
 void init(void)
 {
 	//Выбрать фоновый (очищающий) цвет
@@ -30,9 +31,7 @@ void display(void)
 	double angle;
 	//Очистить экран glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
-	//Нарисовать белый полигон (квадрат) с углами //в (0.25, 0.25, 0.0) и (0.75,
-	//0.75, 0.0)
-	
+	//Нарисовать полигоны (в данном случае прямоугольники)
 	glColor3f(0.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
 	glVertex2f(0.4, 0.0);
@@ -96,9 +95,8 @@ void display(void)
 	glVertex2f(0.59, 0.59);
 	glVertex2f(0.59, 0.41);
 	glEnd();
-
 	circle_points = 100;
-	for (i = 0; i < 25; i++)
+	for (i = 0; i < FIELD_NUM; i++) //cycle for drawing circles on the field
 	{
 		if (field[i].colour != 0 && field[i].colour != 5)
 		{
@@ -139,15 +137,22 @@ void display(void)
 		glVertex2f((cursor.x - 1) * 0.2, (cursor.y - 1) * 0.2 + 0.2);
 		glEnd();
 	}
+	if (win == 1)
+	{
+		glColor3f(1.0, 1.0, 1.0);
+		glBegin(GL_POLYGON);
+		glVertex2f(0.2, 0.3);
+		glVertex2f(0.8, 0.3);
+		glVertex2f(0.8, 0.7);
+		glVertex2f(0.2, 0.7);
+		glEnd();
+		win = 0;
+	}
 	//Не ждем. Начинаем выполнять буферизованные
 	//команды OpenGL
 	glFlush();
 }
-//Установить начальные характеристики окна,
-//открыть окно с заголовком «4 по 4».
-//Зарегистрировать дисплейную функцию обратного вызова
-//Войти в главный цикл
-void initField()
+void initField() //инициализация игрового поля (25 полей, для каждого есть координаты и цвет)
 {
 	int i;
 	//field of game
@@ -218,13 +223,13 @@ void initField()
 		field[i].colour = 0; //NULL
 	}
 	field[21].x = 3;
-	field[21].y = 5;
-	field[22].x = 3;
-	field[22].y = 5;
-	field[23].x = 3;
-	field[23].y = 5;
+	field[21].y = 2;
+	field[22].x = 2;
+	field[22].y = 3;
+	field[23].x = 4;
+	field[23].y = 3;
 	field[24].x = 3;
-	field[24].y = 5;
+	field[24].y = 4;
 	cursor = field[0];
 }
 void randField(int num)
@@ -254,6 +259,13 @@ void randField(int num)
 void processNormalKeys(unsigned char key, int x, int y) {
 	if (key == 27)
 		exit(0);
+	if (key == 'r' || key == 'R')
+	{
+		// New game
+		initField();
+		randField(15);
+		display();
+	}
 }
 void processSpecialKeys(int key, int x, int y) {
 	switch(key) {
@@ -264,16 +276,68 @@ void processSpecialKeys(int key, int x, int y) {
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
- 
+	int field1 = 0, field2 = 0;
+	int i, xpos, ypos, temp; // позиция на координатной плоскости (1..5)
+	if (button == GLUT_RIGHT_BUTTON) {
+		if (state == GLUT_DOWN) {
+			// New game
+			initField();
+			randField(15);
+			display();
+		}
+	}
 	// только при начале движения, если нажата левая кнопка
 	if (button == GLUT_LEFT_BUTTON) {
- 
-		// когда кнопка отпущена
+		// когда кнопка нажата
 		if (state == GLUT_DOWN) {
-			printf(" %d - %d, %d, %d.", x, y, width, height);
-			if (light == 0)
+			xpos = x * 5 / width + 1;
+			ypos = (height - y) * 5 / height + 1;
+			if (light == 0) // when the position is not signed
+			{
+				for (i = 0; i < FIELD_NUM; i++)
+				{
+					if (field[i].x == xpos && field[i].y == ypos)
+					{
+						if (field[i].colour != 0 && field[i].colour != 5)
+						{
+							cursor = field[i];
+						}
+					}
+				}
 				light = 1;
-			else light = 0;
+			}
+			else 
+			{
+				if (((xpos == (cursor.x + 1)) && (ypos == cursor.y)) || ((xpos == (cursor.x - 1)) && (ypos == cursor.y)) ||
+					((xpos == cursor.x) && (ypos == (cursor.y + 1))) || ((xpos == cursor.x) && (ypos == (cursor.y - 1))))
+				{
+					for (i = 0; i < FIELD_NUM; i++)
+						{
+							if ((field[i].x == cursor.x) && (field[i].y == cursor.y))
+								{
+									field1 = i;
+								}
+						}
+					for (i = 0; i < FIELD_NUM; i++)
+					{
+						if ((field[i].x == xpos) && (field[i].y == ypos) && (field[i].colour == 0))
+						{
+							temp = field[i].colour;
+							field[i].colour = field[field1].colour;
+							field[field1].colour = temp;
+							cursor = field[i];
+						}
+					}
+				}
+				light = 0;
+				if ((field[0].colour == field[1].colour) && (field[1].colour == field[2].colour) && (field[2].colour == field[3].colour) &&
+					(field[4].colour == field[5].colour) && (field[5].colour == field[6].colour) && (field[6].colour == field[7].colour) &&
+					(field[8].colour == field[9].colour) && (field[9].colour == field[10].colour) && (field[10].colour == field[11].colour) &&
+					(field[12].colour == field[13].colour) && (field[13].colour == field[14].colour) && (field[14].colour == field[15].colour))
+				{
+					win = 1;
+				}
+			}
 			display();
 		}
 	}
@@ -282,24 +346,30 @@ void windowSize(int w, int h)
 {
 	width = w;
 	height = h;
+	// определяем окно просмотра
+	glViewport(0, 0, w, h);
+	init();
 	display();
 }
 int main(int argc, char **argv)
 {
-	//int i;
 	initField();
-	randField(20);
+	randField(15);
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_RGB);
+	//Установить начальные характеристики окна
 	glutInitWindowSize(250, 250);
 	glutInitWindowPosition(200, 150);
+	//открыть окно с заголовком «4 по 4»
 	glutCreateWindow("4 по 4");
 	init();
 	glutKeyboardFunc(processNormalKeys);
 	glutSpecialFunc(processSpecialKeys);
 	glutMouseFunc(mouseButton);
+	//Зарегистрировать дисплейную функцию обратного вызова
 	glutDisplayFunc(display);
 	glutReshapeFunc(windowSize);
+	//Войти в главный цикл
 	glutMainLoop();
 	return 0;
 }

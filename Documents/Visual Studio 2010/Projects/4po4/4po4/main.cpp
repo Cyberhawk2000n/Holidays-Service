@@ -6,12 +6,17 @@
 #define PI 3.1415926535898
 #define FIELD_NUM 25 // Number of positions on the game field
 #define RAND_NUM 15 // Number of mixing
+#define WINDOW_WIDTH 250
+#define WINDOW_HEIGHT 250
+#define WINDOW_X 200
+#define WINDOW_Y 150
+#define GLUT_KEY_ESC 27
 void initField();
 void randField();
 typedef struct
 {
-	int x; // Coordinate X
-	int y; // Coordinate Y
+	unsigned int x; // Coordinate X
+	unsigned int y; // Coordinate Y
 	int colour; // Colour of position (0, if nothing; 5, if wall)
 } field_t;
 field_t field[FIELD_NUM];
@@ -72,10 +77,82 @@ void drawString(float x, float y, void *font, const char* string) // For drawing
 		glutBitmapCharacter(font, *string++);
 	glPopMatrix();
 }
+void drawWinner()
+{
+		glColor3f(0.0f, 191.0f/255.0f, 1.0f);
+		glBegin(GL_POLYGON);
+		glVertex2f(0.15, 0.25);
+		glVertex2f(0.85, 0.25);
+		glVertex2f(0.85, 0.75);
+		glVertex2f(0.15, 0.75);
+		glEnd();
+		glColor3f(1.0f, 215.0f/255.0f, 0.0f);
+		glBegin(GL_POLYGON);
+		glVertex2f(0.2, 0.3);
+		glVertex2f(0.8, 0.3);
+		glVertex2f(0.8, 0.7);
+		glVertex2f(0.2, 0.7);
+		glEnd();
+		glColor3f(1.0, 0.0, 0.0);
+		drawString(0.28f, 0.48f, GLUT_BITMAP_TIMES_ROMAN_24, "YOU WIN!");
+		initField();
+		randField(RAND_NUM);
+		win = 0;
+}
+void drawCursor(unsigned int x, unsigned int y)
+{
+	glColor3f(1.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
+	glVertex2f((x - 1) * 0.2, (y - 1) * 0.2);
+	glVertex2f((x - 1) * 0.2 + 0.03, (y - 1) * 0.2);
+	glVertex2f((x - 1) * 0.2, (y - 1) * 0.2 + 0.03);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f((x - 1) * 0.2 + 0.17, (y - 1) * 0.2);
+	glVertex2f((x - 1) * 0.2 + 0.2, (y - 1) * 0.2);
+	glVertex2f((x - 1) * 0.2 + 0.2, (y - 1) * 0.2 + 0.03);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f((x - 1) * 0.2 + 0.2, (y - 1) * 0.2 + 0.17);
+	glVertex2f((x - 1) * 0.2 + 0.2, (y - 1) * 0.2 + 0.2);
+	glVertex2f((x - 1) * 0.2 + 0.17, (y - 1) * 0.2 + 0.2);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex2f((x - 1) * 0.2, (y - 1) * 0.2 + 0.17);
+	glVertex2f((x - 1) * 0.2, (y - 1) * 0.2 + 0.2);
+	glVertex2f((x - 1) * 0.2 + 0.03, (y - 1) * 0.2 + 0.2);
+	glEnd();
+}
+void drawCircles()
+{
+	unsigned int i, j, circle_points;
+	double angle;
+	circle_points = 100;
+	for (i = 0; i < FIELD_NUM; i++) // Cycle for drawing circles on the field
+	{
+		if (field[i].colour != 0 && field[i].colour != 5)
+		{
+			switchColour(field[i].colour, 0); // Light circle
+			glBegin(GL_POLYGON);
+			for(j=0; j<circle_points; j++)
+			{
+				angle = 2*PI*j/circle_points;
+				glVertex2f(field[i].x * 0.2 - 0.1 + cos(angle) / 11, field[i].y * 0.2 - 0.1 + sin(angle) / 11);
+			}
+			glEnd();
+			switchColour(field[i].colour, 1); // Dark circle
+			glBegin(GL_POLYGON);
+			for(j=0; j<circle_points; j++)
+			{
+				angle = 2*PI*j/circle_points;
+				glVertex2f(field[i].x * 0.2 - 0.1 + cos(angle) / 18, field[i].y * 0.2 - 0.1 + sin(angle) / 18);
+			}
+			glEnd(); 
+		}
+	}
+}
 void display(void)
 {
-	int i, j, circle_points;
-	double angle;
 	//Clear screen with glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
 	//Draw polygons (squares)
@@ -142,81 +219,17 @@ void display(void)
 	glVertex2f(0.59, 0.59);
 	glVertex2f(0.59, 0.41);
 	glEnd();
-	circle_points = 100;
-	for (i = 0; i < FIELD_NUM; i++) // Cycle for drawing circles on the field
-	{
-		if (field[i].colour != 0 && field[i].colour != 5)
-		{
-			switchColour(field[i].colour, 0); // Light circle
-			glBegin(GL_POLYGON);
-			for(j=0; j<circle_points; j++)
-			{
-				angle = 2*PI*j/circle_points;
-				glVertex2f(field[i].x * 0.2 - 0.1 + cos(angle) / 11, field[i].y * 0.2 - 0.1 + sin(angle) / 11);
-			}
-			glEnd();
-			switchColour(field[i].colour, 1); // Dark circle
-			glBegin(GL_POLYGON);
-			for(j=0; j<circle_points; j++)
-			{
-				angle = 2*PI*j/circle_points;
-				glVertex2f(field[i].x * 0.2 - 0.1 + cos(angle) / 18, field[i].y * 0.2 - 0.1 + sin(angle) / 18);
-			}
-			glEnd(); 
-		}
-	}
+	drawCircles();
 	if (light == 1) // Draw cursor
-	{
-		glColor3f(1.0, 0.0, 0.0);
-		glBegin(GL_POLYGON);
-		glVertex2f((cursor.x - 1) * 0.2, (cursor.y - 1) * 0.2);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.03, (cursor.y - 1) * 0.2);
-		glVertex2f((cursor.x - 1) * 0.2, (cursor.y - 1) * 0.2 + 0.03);
-		glEnd();
-		glBegin(GL_POLYGON);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.17, (cursor.y - 1) * 0.2);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.2, (cursor.y - 1) * 0.2);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.2, (cursor.y - 1) * 0.2 + 0.03);
-		glEnd();
-		glBegin(GL_POLYGON);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.2, (cursor.y - 1) * 0.2 + 0.17);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.2, (cursor.y - 1) * 0.2 + 0.2);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.17, (cursor.y - 1) * 0.2 + 0.2);
-		glEnd();
-		glBegin(GL_POLYGON);
-		glVertex2f((cursor.x - 1) * 0.2, (cursor.y - 1) * 0.2 + 0.17);
-		glVertex2f((cursor.x - 1) * 0.2, (cursor.y - 1) * 0.2 + 0.2);
-		glVertex2f((cursor.x - 1) * 0.2 + 0.03, (cursor.y - 1) * 0.2 + 0.2);
-		glEnd();
-	}
+		drawCursor(cursor.x, cursor.y);
 	if (win == 1) // Draw winner notification
-	{
-		glColor3f(0.0f, 191.0f/255.0f, 1.0f);
-		glBegin(GL_POLYGON);
-		glVertex2f(0.15, 0.25);
-		glVertex2f(0.85, 0.25);
-		glVertex2f(0.85, 0.75);
-		glVertex2f(0.15, 0.75);
-		glEnd();
-		glColor3f(1.0f, 215.0f/255.0f, 0.0f);
-		glBegin(GL_POLYGON);
-		glVertex2f(0.2, 0.3);
-		glVertex2f(0.8, 0.3);
-		glVertex2f(0.8, 0.7);
-		glVertex2f(0.2, 0.7);
-		glEnd();
-		glColor3f(1.0, 0.0, 0.0);
-		drawString(0.28f, 0.48f, GLUT_BITMAP_TIMES_ROMAN_24, "YOU WIN!");
-		initField();
-		randField(RAND_NUM);
-		win = 0;
-	}
+		drawWinner();
 	// Output OpenGL picture
 	glFlush();
 }
 void initField() // Initialization of game field (25 positions, there are coordinates and colour for every position)
 {
-	int i;
+	unsigned int i;
 	// Field of game
 	for (i = 0; i < 4; i++)
 	{
@@ -294,9 +307,9 @@ void initField() // Initialization of game field (25 positions, there are coordi
 	field[24].y = 4;
 	cursor = field[0];
 }
-void randField(int num)
+void randField(unsigned int num)
 {
-	int i, temp, field1, field2, pad1, pad2;
+	unsigned int i, temp, field1, field2, pad1, pad2;
 	srand(time(NULL));
 	for (i = 0; i < num; i++)
 	{
@@ -318,10 +331,10 @@ void randField(int num)
 	win = 0;
 	light = 0;
 }
-void anim(int curs, int targ) // Cursor and target indexes (for animation)
+void anim(unsigned int curs, unsigned int targ) // Cursor and target indexes (for animation)
 {
 	double angle, i;
-	int k, j, temp, circle_p = 100;
+	unsigned int k, j, temp, circle_p = 100;
 	temp = field[curs].colour;
 	field[curs].colour = 0;
 	if (field[curs].x == field[targ].x)
@@ -441,7 +454,7 @@ void anim(int curs, int targ) // Cursor and target indexes (for animation)
 	field[targ].colour = temp;
 }
 void processNormalKeys(unsigned char key, int x, int y) {
-	if (key == 27) // Exit from game by pushing "Esc" button
+	if (key == GLUT_KEY_ESC) // Exit from game by pushing "Esc" button
 		exit(0);
 	if (key == 'r' || key == 'R')
 	{
@@ -452,8 +465,8 @@ void processNormalKeys(unsigned char key, int x, int y) {
 	}
 }
 void mouseButton(int button, int state, int x, int y) {
-	int field1 = 0, field2 = 0;
-	int i, xpos, ypos; // xpos, ypos - positions on the field (1..5)
+	unsigned int field1 = 0, field2 = 0;
+	unsigned int i, xpos, ypos; // xpos, ypos - positions on the field (1..5)
 	if (button == GLUT_RIGHT_BUTTON) {
 		if (state == GLUT_DOWN) {
 			// New game
@@ -524,7 +537,7 @@ void mouseButton(int button, int state, int x, int y) {
 void windowSize(int w, int h)
 {
 	width = w;
-	height = h;
+ 	height = h;
 	// Determine window sizes
 	glViewport(0, 0, w, h);
 	init();
@@ -532,16 +545,15 @@ void windowSize(int w, int h)
 }
 int main(int argc, char **argv)
 {
-	// Window parameters
-	width = 250;
-	height = 250;
+	width = WINDOW_WIDTH;
+	height = WINDOW_HEIGHT;
 	initField(); // Create field positions
 	randField(RAND_NUM); // Mix field positions in segments
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_RGB);
 	// Setup window parameters
-	glutInitWindowSize(width, height);
-	glutInitWindowPosition(200, 150);
+	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	glutInitWindowPosition(WINDOW_X, WINDOW_Y);
 	// Open the window with title «4 on 4»
 	glutCreateWindow("4 ïî 4");
 	init();

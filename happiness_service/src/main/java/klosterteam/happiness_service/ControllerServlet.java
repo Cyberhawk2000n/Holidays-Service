@@ -38,7 +38,7 @@ public class ControllerServlet extends HttpServlet {
             out.println("<title>Servlet ControllerServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet of " + request.getContextPath() + " is working!!!</h1>");
+            out.println("<h1>Servlet of " + request.getContextPath() + " is working!</h1>");
             out.println("</body>");
             out.println("</html>");
         }

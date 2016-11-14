@@ -1,1 +1,3 @@
 klosterteam\happiness_service\ControllerServlet.class
+klosterteam\happiness_service\Roles.class
+klosterteam\happiness_service\HibernateSessionFactory.class

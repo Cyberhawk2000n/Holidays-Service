@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.hibernate.Session;
 
 /**
  *
@@ -32,6 +33,17 @@ public class ControllerServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
+            /*Session session = HibernateSessionFactory.getSessionFactory().openSession();
+            session.beginTransaction();
+            Roles role = new Roles();
+            role.setId(1);
+            role.setRole("User");
+            session.save(role);
+            session.getTransaction().commit();*
+            
+            
+            session.close();*/
+            
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");

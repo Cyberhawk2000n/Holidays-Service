@@ -7,6 +7,7 @@ package klosterteam.happiness_service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,19 +32,10 @@ public class ControllerServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        //Logger log = new Logger();
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            /*Session session = HibernateSessionFactory.getSessionFactory().openSession();
-            session.beginTransaction();
-            Roles role = new Roles();
-            role.setId(1);
-            role.setRole("User");
-            session.save(role);
-            session.getTransaction().commit();*
-            
-            
-            session.close();*/
-            
+            //request.setAttribute("a", "1");
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -51,6 +43,34 @@ public class ControllerServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet of " + request.getContextPath() + " is working!!!</h1>");
+            if ("1".equals(request.getParameter("a")))
+            {
+                /*try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {
+                    session.beginTransaction();
+                    Roles role = new Roles();
+                    role.setId(1);
+                    role.setRole("User");
+                    session.save(role);
+                    session.getTransaction().commit();
+                    session.beginTransaction();
+                    Users user = new Users();
+                    user.setId(1);
+                    user.setName("Dima");
+                    user.setSurname("One");
+                    Date dt = new Date();
+                    user.setBirthday(dt);
+                    user.setEmail("nochdssldjlskd");
+                    user.setRoleId(role);
+                    session.save(user);
+                    session.getTransaction().commit();
+                    System.out.println("close transaction");
+                }
+                catch (Exception exc)
+                {
+                    
+                }*/
+            }
+            
             out.println("</body>");
             out.println("</html>");
         }

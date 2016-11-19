@@ -13,6 +13,16 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
         
-        <mapping class="klosterteam.happiness_service.Roles" />     
+        <mapping class="klosterteam.happiness_service.Categories" />  
+        <mapping class="klosterteam.happiness_service.Events_types" />  
+        <mapping class="klosterteam.happiness_service.Events" />  
+        <mapping class="klosterteam.happiness_service.Gift_history" />  
+        <mapping class="klosterteam.happiness_service.Gifts" />  
+        <mapping class="klosterteam.happiness_service.History" />  
+        <mapping class="klosterteam.happiness_service.Logins" />  
+        <mapping class="klosterteam.happiness_service.Money" />
+        <mapping class="klosterteam.happiness_service.Roles" />
+        <mapping class="klosterteam.happiness_service.Users" />  
+        <mapping class="klosterteam.happiness_service.Vote" />        
     </session-factory>
 </hibernate-configuration>

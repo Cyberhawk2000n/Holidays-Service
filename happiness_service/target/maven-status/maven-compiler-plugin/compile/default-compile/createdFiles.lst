@@ -1,3 +1,13 @@
-klosterteam\happiness_service\ControllerServlet.class
-klosterteam\happiness_service\Roles.class
+klosterteam\happiness_service\Users.class
+klosterteam\happiness_service\History.class
+klosterteam\happiness_service\Event_types.class
+klosterteam\happiness_service\Gift_history.class
 klosterteam\happiness_service\HibernateSessionFactory.class
+klosterteam\happiness_service\Money.class
+klosterteam\happiness_service\Gifts.class
+klosterteam\happiness_service\Logins.class
+klosterteam\happiness_service\ControllerServlet.class
+klosterteam\happiness_service\Events.class
+klosterteam\happiness_service\Vote.class
+klosterteam\happiness_service\Roles.class
+klosterteam\happiness_service\Categories.class

@@ -12,19 +12,16 @@ import javax.persistence.*;
  * @author Cyberhawk
  */
 @Entity
-@Table
+@Table(name = "Roles", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "id")}) 
 public class Roles implements Serializable {
     @Id
+    @Column(name="id", unique = true, nullable = false)
     private long id;
     @Column(name="role", unique = true, nullable = false, length = 16)
     private String role;
 
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+    public Roles() {
     }
 
     public long getId() {
@@ -35,4 +32,12 @@ public class Roles implements Serializable {
         this.id = id;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
 }

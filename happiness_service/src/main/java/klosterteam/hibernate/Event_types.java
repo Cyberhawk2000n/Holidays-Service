@@ -17,20 +17,21 @@ import javax.persistence.*;
 public class Event_types implements Serializable {
     @Id
     @Column(name="id", unique = true, nullable = false)
-    private long id;
+    private short id;
     @Column(name="name", unique = true, nullable = false, length = 32)
     private String name;
 
     public Event_types() {
     }
 
-    public long getId() {
+    public short getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(short id) {
         this.id = id;
     }
+
 
     public String getName() {
         return name;

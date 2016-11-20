@@ -106,7 +106,7 @@ public class HappyHibernate {
         {
             session.beginTransaction();
             Event_types eventType = new Event_types();
-            eventType.setId(0);
+            eventType.setId((short)0);
             eventType.setName(name);
             session.save(eventType);
             session.getTransaction().commit();
@@ -123,7 +123,7 @@ public class HappyHibernate {
         {
             session.beginTransaction();
             Roles role = new Roles();
-            role.setId(0);
+            role.setId((short)0);
             role.setRole(name);
             session.save(role);
             session.getTransaction().commit();

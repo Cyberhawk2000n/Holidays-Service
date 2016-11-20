@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+  <!-- Секция аппендеров -->
+  <Appenders>
+    <!-- Файловый аппендер -->
+    <File name="file" fileName="happynessService.log">
+      <PatternLayout>
+        <PatternLayout pattern="%d{DD-MM-YYYY HH:mm:ss.SSS} %-5level [%t] %logger{36} %msg%n"/>
+      </PatternLayout>
+    </File>
+    <Console name="console" target="SYSTEM_OUT">
+        <PatternLayout pattern="%d{DD-MM-YYYY HH:mm:ss.SSS} %-5level [%t] %logger{36} %msg%n"/>
+        <!--<PatternLayout pattern="%d %p %c{1.} [%t] %m %ex%n"/>-->
+    </Console>
+  </Appenders>
+  <!-- Секция логгеров -->
+  <Loggers>
+    <!-- Корневой логгер -->
+    <Root level="DEBUG">
+      <AppenderRef ref="file" level="DEBUG"/>
+      <AppenderRef ref="console" level="DEBUG"/>
+    </Root>
+  </Loggers>
+</Configuration> 

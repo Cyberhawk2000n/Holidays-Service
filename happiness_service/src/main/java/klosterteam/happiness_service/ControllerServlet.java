@@ -43,6 +43,7 @@ public class ControllerServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet of " + request.getContextPath() + " is working!!!</h1>");
+            HappyHibernate hHibernate = new HappyHibernate();
             if ("1".equals(request.getParameter("a")))
             {
                 /*try (Session session = HibernateSessionFactory.getSessionFactory().openSession()) {

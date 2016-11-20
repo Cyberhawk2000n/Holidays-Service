@@ -14,7 +14,7 @@
         <property name="show_sql">true</property>
         
         <mapping class="klosterteam.happiness_service.Categories" />  
-        <mapping class="klosterteam.happiness_service.Events_types" />  
+        <mapping class="klosterteam.happiness_service.Event_types" />  
         <mapping class="klosterteam.happiness_service.Events" />  
         <mapping class="klosterteam.happiness_service.Gift_history" />  
         <mapping class="klosterteam.happiness_service.Gifts" />  

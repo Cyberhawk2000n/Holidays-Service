@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package klosterteam.happiness_service;
+package klosterteam.hibernate;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -31,7 +31,7 @@ public class Categories implements Serializable {
     @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "FK_Categories_parent_id_Categories_id"), unique = false, nullable = false)
     private Categories parentId;
     @Column(name="name", unique = false, nullable = false, length = 64)
-    private long name;
+    private String name;
 
     public Categories() {
     }
@@ -52,11 +52,11 @@ public class Categories implements Serializable {
         this.parentId = parentId;
     }
 
-    public long getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(long name) {
+    public void setName(String name) {
         this.name = name;
     }
     

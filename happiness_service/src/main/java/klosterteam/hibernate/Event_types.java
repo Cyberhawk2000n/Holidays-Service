@@ -16,6 +16,7 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = "id")})
 public class Event_types implements Serializable {
     @Id
+    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private short id;
     @Column(name="name", unique = true, nullable = false, length = 32)

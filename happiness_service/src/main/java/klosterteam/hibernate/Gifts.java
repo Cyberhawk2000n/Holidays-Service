@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,6 +26,7 @@ import javax.persistence.UniqueConstraint;
         @UniqueConstraint(columnNames = "id")})
 public class Gifts implements Serializable {
     @Id
+    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
     @Column(name="name", unique = false, nullable = false, length = 32)
@@ -57,6 +59,11 @@ public class Gifts implements Serializable {
     }
 
     public void setCatId(Categories catId) {
+        this.catId = catId;
+    }
+
+    public Gifts(String name, Categories catId) {
+        this.name = name;
         this.catId = catId;
     }
     

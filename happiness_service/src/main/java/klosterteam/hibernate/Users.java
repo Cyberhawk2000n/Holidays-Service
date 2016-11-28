@@ -17,6 +17,7 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = "id")})
 public class Users implements Serializable {
     @Id
+    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
     @Column(name="name", unique = false, nullable = false, length = 32)
@@ -100,6 +101,16 @@ public class Users implements Serializable {
     }
 
     public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public Users(String name, String surname, String patronymic, Date birthday, Roles roleId, String email, String about) {
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.birthday = birthday;
+        this.roleId = roleId;
+        this.email = email;
         this.about = about;
     }
     

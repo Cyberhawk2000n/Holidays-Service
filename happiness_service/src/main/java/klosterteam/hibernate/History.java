@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,6 +29,7 @@ import javax.persistence.UniqueConstraint;
         @UniqueConstraint(columnNames = "id")})
 public class History implements Serializable {
     @Id
+    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
     @Column(name="name", unique = false, nullable = false, length = 64)

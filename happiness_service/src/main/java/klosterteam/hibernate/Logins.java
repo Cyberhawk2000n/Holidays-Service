@@ -53,5 +53,11 @@ public class Logins implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public Logins(Users userId, String login, String password) {
+        this.userId = userId;
+        this.login = login;
+        this.password = password;
+    }
     
 }

@@ -43,5 +43,10 @@ public class Gift_history implements Serializable {
     public void setHistId(History histId) {
         this.histId = histId;
     }
+
+    public Gift_history(Gifts giftId, History histId) {
+        this.giftId = giftId;
+        this.histId = histId;
+    }
     
 }

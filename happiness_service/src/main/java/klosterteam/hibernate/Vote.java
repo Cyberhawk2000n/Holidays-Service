@@ -54,5 +54,11 @@ public class Vote implements Serializable {
     public void setCount(int count) {
         this.count = count;
     }
+
+    public Vote(History histId, Gifts giftId, int count) {
+        this.histId = histId;
+        this.giftId = giftId;
+        this.count = count;
+    }
     
 }

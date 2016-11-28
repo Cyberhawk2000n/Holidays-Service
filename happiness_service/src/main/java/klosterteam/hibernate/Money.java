@@ -53,5 +53,11 @@ public class Money implements Serializable {
     public void setMoneyMax(long moneyMax) {
         this.moneyMax = moneyMax;
     }
+
+    public Money(History histId, long money, long moneyMax) {
+        this.histId = histId;
+        this.money = money;
+        this.moneyMax = moneyMax;
+    }
     
 }

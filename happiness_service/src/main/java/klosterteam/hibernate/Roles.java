@@ -16,6 +16,7 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = "id")}) 
 public class Roles implements Serializable {
     @Id
+    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private short id;
     @Column(name="role", unique = true, nullable = false, length = 16)
@@ -38,6 +39,10 @@ public class Roles implements Serializable {
     }
 
     public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Roles(String role) {
         this.role = role;
     }
     

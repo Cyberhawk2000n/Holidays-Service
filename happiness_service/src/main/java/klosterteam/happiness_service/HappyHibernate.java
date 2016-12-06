@@ -15,11 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import klosterteam.hibernate.Categories;
+import klosterteam.hibernate.Departments;
 import klosterteam.hibernate.Gift_history;
 import klosterteam.hibernate.Gifts;
-import klosterteam.hibernate.History;
 import klosterteam.hibernate.Logins;
 import klosterteam.hibernate.Money;
+import klosterteam.hibernate.Preferences;
 import klosterteam.hibernate.Roles;
 import klosterteam.hibernate.Vote;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -68,7 +69,8 @@ public class HappyHibernate {
         }
     }
     
-    public Events createEvent(String name, Date date, boolean everyYear, Event_types typeId, Users userId)
+    public Events createEvent(String name, Date date, boolean everyYear, Event_types typeId, Users userId,
+            boolean active, String template, Users managerId)
     {
         try
         {
@@ -85,33 +87,12 @@ public class HappyHibernate {
             event.setEveryYear(everyYear);
             event.setTypeId(typeId);
             event.setUserId(userId);
+            event.setActive(active);
+            event.setTemplate(template);
+            event.setManagerId(managerId);
             session.save(event);
             session.getTransaction().commit();
             return event;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Adding to database error!", exc);
-            return null;
-        }
-    }
-    
-    public History createHistoryEvent(String name, Date date, boolean active, Events event)
-    {
-        try
-        {
-            session.beginTransaction();
-            event = (Events)session.get(Events.class, event.getId());
-            if (event == null)
-                throw new NullPointerException();
-            History hEvent = new History();
-            hEvent.setName(name);
-            hEvent.setDate(date);
-            hEvent.setActive(active);
-            hEvent.setEventId(event);
-            session.save(hEvent);
-            session.getTransaction().commit();
-            return hEvent;
         }
         catch (Exception exc)
         {
@@ -148,6 +129,45 @@ public class HappyHibernate {
             session.save(role);
             session.getTransaction().commit();
             return role;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Adding to database error!", exc);
+            return null;
+        }
+    }
+    
+    public Departments createDepartments(int id, String name)
+    {
+        try
+        {
+            session.beginTransaction();
+            Departments dep = new Departments();
+            dep.setId(id);
+            dep.setName(name);
+            session.save(dep);
+            session.getTransaction().commit();
+            return dep;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Adding to database error!", exc);
+            return null;
+        }
+    }
+    
+    public Departments createDepartments(int id, String name, Users manager)
+    {
+        try
+        {
+            session.beginTransaction();
+            Departments dep = new Departments();
+            dep.setId(id);
+            dep.setName(name);
+            dep.setManagerId(manager);
+            session.save(dep);
+            session.getTransaction().commit();
+            return dep;
         }
         catch (Exception exc)
         {
@@ -203,23 +223,48 @@ public class HappyHibernate {
         }
     }
     
-    public Gift_history createGiftHistory(History event, Gifts gift)
+    public Gift_history createGiftHistory(Users user, Gifts gift)
     {
         try
         {
             session.beginTransaction();
-            event = (History)session.get(History.class, event.getId());
-            if (event == null)
+            user = (Users)session.get(Users.class, user.getId());
+            if (user == null)
                 throw new NullPointerException();
             gift = (Gifts)session.get(Gifts.class, gift.getId());
             if (gift == null)
                 throw new NullPointerException();
             Gift_history gHist = new Gift_history();
-            gHist.setHistId(event);
+            gHist.setUserId(user);
             gHist.setGiftId(gift);
             session.save(gHist);
             session.getTransaction().commit();
             return gHist;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Adding to database error!", exc);
+            return null;
+        }
+    }
+    
+    public Preferences createPreferences(Users user, Categories cat)
+    {
+        try
+        {
+            session.beginTransaction();
+            user = (Users)session.get(Users.class, user.getId());
+            if (user == null)
+                throw new NullPointerException();
+            cat = (Categories)session.get(Categories.class, cat.getId());
+            if (cat == null)
+                throw new NullPointerException();
+            Preferences prefs = new Preferences();
+            prefs.setUserId(user);
+            prefs.setCatId(cat);
+            session.save(prefs);
+            session.getTransaction().commit();
+            return prefs;
         }
         catch (Exception exc)
         {
@@ -239,7 +284,7 @@ public class HappyHibernate {
             if (vote == null)
                 throw new NullPointerException();
             Gift_history gHist = new Gift_history();
-            gHist.setHistId(vote.getHistId());
+            gHist.setUserId(vote.getHistId().getUserId());
             gHist.setGiftId(vote.getGiftId());
             session.save(gHist);
             session.getTransaction().commit();
@@ -252,12 +297,12 @@ public class HappyHibernate {
         }
     }
     
-    public Vote createVote(History event, Gifts gift, int count)
+    public Vote createVote(Events event, Gifts gift, int count)
     {
         try
         {
             session.beginTransaction();
-            event = (History)session.get(History.class, event.getId());
+            event = (Events)session.get(Events.class, event.getId());
             if (event == null)
                 throw new NullPointerException();
             gift = (Gifts)session.get(Gifts.class, gift.getId());
@@ -278,12 +323,12 @@ public class HappyHibernate {
         }
     }
     
-    public Money createMoney(History event, long money, long moneyMax)
+    public Money createMoney(Events event, long money, long moneyMax)
     {
         try
         {
             session.beginTransaction();
-            event = (History)session.get(History.class, event.getId());
+            event = (Events)session.get(Events.class, event.getId());
             if (event == null)
                 throw new NullPointerException();
             Money collecting = new Money();
@@ -301,7 +346,8 @@ public class HappyHibernate {
         }
     }
     
-    public Users createUser(String name, String surname, String patronymic, Date birthday, Roles role, String email, String about)
+    public Users createUser(String name, String surname, String patronymic, Date birthday, Roles role,
+            String email, String about, Departments depId, boolean giveGift)
     {
         try
         {
@@ -317,6 +363,8 @@ public class HappyHibernate {
             user.setRoleId(role);
             user.setEmail(email);
             user.setAbout(about);
+            user.setDepId(depId);
+            user.setGiveGift(giveGift);
             session.save(user);
             session.getTransaction().commit();
             return user;
@@ -451,52 +499,12 @@ public class HappyHibernate {
         }
     }
     
-    public History changeHistoryEventName(History hEvent, String name)
+    public Events changeEventActive(Events hEvent, boolean active)
     {
         try
         {
             session.beginTransaction();
-            hEvent = (History)session.get(History.class, hEvent.getId());
-            if (hEvent == null)
-                throw new NullPointerException();
-            hEvent.setName(name);
-            session.save(hEvent);
-            session.getTransaction().commit();
-            return hEvent;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Adding to database error!", exc);
-            return null;
-        }
-    }
-    
-    public History changeHistoryEventDate(History hEvent, Date date)
-    {
-        try
-        {
-            session.beginTransaction();
-            hEvent = (History)session.get(History.class, hEvent.getId());
-            if (hEvent == null)
-                throw new NullPointerException();
-            hEvent.setDate(date);
-            session.save(hEvent);
-            session.getTransaction().commit();
-            return hEvent;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Adding to database error!", exc);
-            return null;
-        }
-    }
-    
-    public History changeHistoryEventActive(History hEvent, boolean active)
-    {
-        try
-        {
-            session.beginTransaction();
-            hEvent = (History)session.get(History.class, hEvent.getId());
+            hEvent = (Events)session.get(Events.class, hEvent.getId());
             if (hEvent == null)
                 throw new NullPointerException();
             hEvent.setActive(active);
@@ -511,15 +519,35 @@ public class HappyHibernate {
         }
     }
     
-    public History changeHistoryEventEvent(History hEvent, Events event)
+    public Events changeEventTemplate(Events hEvent, String template)
     {
         try
         {
             session.beginTransaction();
-            hEvent = (History)session.get(History.class, hEvent.getId());
+            hEvent = (Events)session.get(Events.class, hEvent.getId());
             if (hEvent == null)
                 throw new NullPointerException();
-            hEvent.setEventId(event);
+            hEvent.setTemplate(template);
+            session.save(hEvent);
+            session.getTransaction().commit();
+            return hEvent;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Adding to database error!", exc);
+            return null;
+        }
+    }
+    
+    public Events changeEventManager(Events hEvent, Users manager)
+    {
+        try
+        {
+            session.beginTransaction();
+            hEvent = (Events)session.get(Events.class, hEvent.getId());
+            if (hEvent == null)
+                throw new NullPointerException();
+            hEvent.setManagerId(manager);
             session.save(hEvent);
             session.getTransaction().commit();
             return hEvent;
@@ -631,6 +659,26 @@ public class HappyHibernate {
         }
     }
     
+    public Users changeUserDepartment(Users user, Departments depId)
+    {
+        try
+        {
+            session.beginTransaction();
+            user = (Users)session.get(Users.class, user.getId());
+            if (user == null)
+                throw new NullPointerException();
+            user.setDepId(depId);
+            session.save(user);
+            session.getTransaction().commit();
+            return user;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Adding to database error!", exc);
+            return null;
+        }
+    }
+    
     public Users changeUserEmail(Users user, String email)
     {
         try
@@ -671,6 +719,26 @@ public class HappyHibernate {
         }
     }
     
+    public Users changeUserGiveGift(Users user, boolean giveGift)
+    {
+        try
+        {
+            session.beginTransaction();
+            user = (Users)session.get(Users.class, user.getId());
+            if (user == null)
+                throw new NullPointerException();
+            user.setGiveGift(giveGift);
+            session.save(user);
+            session.getTransaction().commit();
+            return user;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Adding to database error!", exc);
+            return null;
+        }
+    }
+    
     public Logins changeUserLogin(Users user, String login)
     {
         try
@@ -680,7 +748,7 @@ public class HappyHibernate {
             if (userLog == null)
                 throw new NullPointerException();
             userLog.setLogin(login);
-            session.save(user);
+            session.save(userLog);
             session.getTransaction().commit();
             return userLog;
         }
@@ -700,9 +768,29 @@ public class HappyHibernate {
             if (userLog == null)
                 throw new NullPointerException();
             userLog.setPassword(DigestUtils.md5Hex(password));
-            session.save(user);
+            session.save(userLog);
             session.getTransaction().commit();
             return userLog;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Adding to database error!", exc);
+            return null;
+        }
+    }
+    
+    public Departments changeDepartmentManager(Departments dep, Users manager)
+    {
+        try
+        {
+            session.beginTransaction();
+            Departments userLog = (Departments)session.get(Departments.class, dep.getId());
+            if (userLog == null)
+                throw new NullPointerException();
+            dep.setManagerId(manager);
+            session.save(dep);
+            session.getTransaction().commit();
+            return dep;
         }
         catch (Exception exc)
         {
@@ -852,6 +940,25 @@ public class HappyHibernate {
         
     }
     
+    public List<Departments> selectDepartments(String name)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Departments.class);
+            cr.add(Restrictions.like("name", name));
+            List<Departments> list = cr.list();
+            session.getTransaction().commit();
+            return list;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Getting from database error!", exc);
+            return null;
+        }
+        
+    }
+    
     public List<Vote> selectVote(long histId)
     {
         try
@@ -889,6 +996,25 @@ public class HappyHibernate {
         
     }
     
+    public List<Categories> selectCategoryByName(String name)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Categories.class);
+            cr.add(Restrictions.like("name", name));
+            List<Categories> list = cr.list();
+            session.getTransaction().commit();
+            return list;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Getting from database error!", exc);
+            return null;
+        }
+        
+    }
+    
     public List<Users> selectUsersByEmail(String email)
     {
         try
@@ -899,6 +1025,23 @@ public class HappyHibernate {
             List<Users> list = cr.list();
             session.getTransaction().commit();
             return list;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Getting from database error!", exc);
+            return null;
+        }
+        
+    }
+    
+    public Logins selectLoginByUser(Users userId)
+    {
+        try
+        {
+            session.beginTransaction();
+            Logins login = (Logins)session.get(Logins.class, userId.getId());
+            session.getTransaction().commit();
+            return login;
         }
         catch (Exception exc)
         {
@@ -964,80 +1107,6 @@ public class HappyHibernate {
         
     }
     
-    public List<History> selectHistoryEvents()
-    {
-        try
-        {
-            session.beginTransaction();
-            Criteria cr = session.createCriteria(History.class);
-            List<History> list = cr.list();
-            session.getTransaction().commit();
-            return list;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Getting from database error!", exc);
-            return null;
-        }
-        
-    }
-    
-    public List<History> selectHistoryEventsByUser(Users user)
-    {
-        try
-        {
-            session.beginTransaction();
-            Criteria cr = session.createCriteria(Events.class);
-            cr.add(Restrictions.like("user", user));
-            List<Events> list = cr.list();
-            session.getTransaction().commit();
-            List<History> list2 = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++)
-            {
-                session.beginTransaction();
-                Criteria cr2 = session.createCriteria(History.class);
-                cr2.add(Restrictions.like("eventId", list.get(i).getId()));
-                list2.addAll(cr2.list());
-                session.getTransaction().commit();
-            }
-            return list2;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Getting from database error!", exc);
-            return null;
-        }
-        
-    }
-    
-    public List<History> selectHistoryEventsByType(Event_types type)
-    {
-        try
-        {
-            session.beginTransaction();
-            Criteria cr = session.createCriteria(Events.class);
-            cr.add(Restrictions.like("typeId", type));
-            List<Events> list = cr.list();
-            session.getTransaction().commit();
-            List<History> list2 = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++)
-            {
-                session.beginTransaction();
-                Criteria cr2 = session.createCriteria(History.class);
-                cr2.add(Restrictions.like("eventId", list.get(i).getId()));
-                list2.addAll(cr2.list());
-                session.getTransaction().commit();
-            }
-            return list2;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Getting from database error!", exc);
-            return null;
-        }
-        
-    }
-    
     public Map<Categories, List<Categories>> selectCategoriesAndSubCategories()
     {
         try
@@ -1045,15 +1114,20 @@ public class HappyHibernate {
             Map<Categories, List<Categories>> map = new HashMap<>();
             session.beginTransaction();
             Criteria cr = session.createCriteria(Categories.class);
-            cr.add(Restrictions.like("parent", null));
+            cr.add(Restrictions.isNotNull("parentId"));
             List<Categories> list = cr.list();
+            log.debug("LIST_SIZE = " + list.size());
             session.getTransaction().commit();
             for (int i = 0; i < list.size(); i++)
             {
+                //long tmpParentId = ((Categories)list.get(i)).getId();
                 session.beginTransaction();
-                Criteria cr2 = session.createCriteria(Categories.class);
-                cr2.add(Restrictions.like("parent", list.get(i).getId()));
-                map.put(list.get(i), cr2.list());
+                Categories tmpParent = (Categories)session.get(Categories.class, list.get(i).getParentId().getId());
+                List<Categories> list2 = new ArrayList<>();
+                if (map.containsKey(tmpParent))
+                    list2 = map.get(tmpParent);
+                list2.add(list.get(i));
+                map.put(tmpParent, list2);
                 session.getTransaction().commit();
             }
             return map;
@@ -1106,21 +1180,12 @@ public class HappyHibernate {
             cr.add(Restrictions.like("user", user));
             List<Events> list = cr.list();
             session.getTransaction().commit();
-            List<History> list2 = new ArrayList<>();
+            List<Gift_history> list3 = new ArrayList<>();
             for (int i = 0; i < list.size(); i++)
             {
                 session.beginTransaction();
-                Criteria cr2 = session.createCriteria(History.class);
-                cr2.add(Restrictions.like("eventId", list.get(i).getId()));
-                list2.addAll(cr2.list());
-                session.getTransaction().commit();
-            }
-            List<Gift_history> list3 = new ArrayList<>();
-            for (int i = 0; i < list2.size(); i++)
-            {
-                session.beginTransaction();
                 Criteria cr3 = session.createCriteria(Gift_history.class);
-                cr3.add(Restrictions.like("histId", list2.get(i).getId()));
+                cr3.add(Restrictions.like("histId", list.get(i).getId()));
                 list3.addAll(cr3.list());
                 session.getTransaction().commit();
             }
@@ -1133,4 +1198,68 @@ public class HappyHibernate {
         }
         
     }
+    
+    public int deleteUser(Users user)
+    {
+        try
+        {
+            session.beginTransaction();
+            user = session.get(Users.class, user.getId());
+            if (user == null)
+                throw new NullPointerException();
+            session.delete(user);
+            session.getTransaction().commit();
+            return 0;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Deleting from database error!", exc);
+            return -1;
+        }
+        
+    }
+    
+    public int deleteLogin(Users user)
+    {
+        try
+        {
+            session.beginTransaction();
+            Logins login = session.get(Logins.class, user.getId());
+            if (login == null)
+                throw new NullPointerException();
+            session.delete(login);
+            session.getTransaction().commit();
+            return 0;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Deleting from database error!", exc);
+            return -1;
+        }
+        
+    }
+    
+    public int deletePreferences(Users user)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Preferences.class);
+            cr.add(Restrictions.like("userId", user.getId()));
+            List<Preferences> list = cr.list();
+            for (int i = 0; i < list.size(); i++)
+            {
+                session.delete((Preferences)list.get(i));
+            }
+            session.getTransaction().commit();
+            return 0;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Deleting from database error!", exc);
+            return -1;
+        }
+        
+    }
 }
+

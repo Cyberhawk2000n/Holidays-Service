@@ -6,23 +6,34 @@
 package klosterteam.hibernate;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author Cyberhawk
  */
-@Table(name = "Vote")
+@Entity
+@Table(name = "Vote", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "id")})
 public class Vote implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hist_id", foreignKey = @ForeignKey(name = "FK_Vote_hist_id_History_id"), unique = false, nullable = false)
-    private History histId;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Id
+    @GeneratedValue
+    @Column(name="id", unique = true, nullable = false)
+    private long id;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "hist_id", unique = false, nullable = false)
+    private Events histId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Vote_gift_id_Gifts_id"), unique = false, nullable = false)
     private Gifts giftId;
     @Column(name="count", unique = false, nullable = false)
@@ -31,11 +42,19 @@ public class Vote implements Serializable {
     public Vote() {
     }
 
-    public History getHistId() {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Events getHistId() {
         return histId;
     }
 
-    public void setHistId(History histId) {
+    public void setHistId(Events histId) {
         this.histId = histId;
     }
 
@@ -55,7 +74,7 @@ public class Vote implements Serializable {
         this.count = count;
     }
 
-    public Vote(History histId, Gifts giftId, int count) {
+    public Vote(Events histId, Gifts giftId, int count) {
         this.histId = histId;
         this.giftId = giftId;
         this.count = count;

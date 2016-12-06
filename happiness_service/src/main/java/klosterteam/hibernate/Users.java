@@ -29,13 +29,18 @@ public class Users implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name="birthday", unique = false, nullable = false)
     private Date birthday;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_Money_hist_id_History_id"), unique = false, nullable = false)
     private Roles roleId;
     @Column(name="email", unique = true, nullable = false, length = 64)
     private String email;
     @Column(name="about", unique = false, nullable = true, length = 256)
     private String about;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "dep_id", unique = false, nullable = false)
+    private Departments depId;
+    @Column(name="give_gift", unique = false, nullable = false)
+    private boolean giveGift;
 
     public Users() {
     }
@@ -104,7 +109,24 @@ public class Users implements Serializable {
         this.about = about;
     }
 
-    public Users(String name, String surname, String patronymic, Date birthday, Roles roleId, String email, String about) {
+    public Departments getDepId() {
+        return depId;
+    }
+
+    public void setDepId(Departments depId) {
+        this.depId = depId;
+    }
+
+    public boolean isGiveGift() {
+        return giveGift;
+    }
+
+    public void setGiveGift(boolean giveGift) {
+        this.giveGift = giveGift;
+    }
+
+
+    public Users(String name, String surname, String patronymic, Date birthday, Roles roleId, String email, String about, Departments depId, boolean give_gift) {
         this.name = name;
         this.surname = surname;
         this.patronymic = patronymic;
@@ -112,6 +134,8 @@ public class Users implements Serializable {
         this.roleId = roleId;
         this.email = email;
         this.about = about;
+        this.depId = depId;
+        this.giveGift = give_gift;
     }
     
 }

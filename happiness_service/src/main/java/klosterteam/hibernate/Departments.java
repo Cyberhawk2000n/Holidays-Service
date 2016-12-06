@@ -10,7 +10,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -23,27 +22,26 @@ import javax.persistence.UniqueConstraint;
  * @author Cyberhawk
  */
 @Entity
-@Table(name = "Gifts", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "id")})
-public class Gifts implements Serializable {
+@Table(name = "Departments", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "id")}) 
+public class Departments implements Serializable {
     @Id
-    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
-    private long id;
-    @Column(name="name", unique = false, nullable = false, length = 32)
+    private int id;
+    @Column(name="name", unique = true, nullable = false, length = 64)
     private String name;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cat_id", foreignKey = @ForeignKey(name = "FK_Gifts_cat_id_Categories_id"), unique = false, nullable = false)
-    private Categories catId;
+    @JoinColumn(name = "manager_id", unique = false, nullable = true)
+    private Users managerId;
 
-    public Gifts() {
+    public Departments() {
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -55,17 +53,23 @@ public class Gifts implements Serializable {
         this.name = name;
     }
 
-    public Categories getCatId() {
-        return catId;
+    public Users getManagerId() {
+        return managerId;
     }
 
-    public void setCatId(Categories catId) {
-        this.catId = catId;
+    public void setManagerId(Users managerId) {
+        this.managerId = managerId;
     }
 
-    public Gifts(String name, Categories catId) {
+    public Departments(short id, String name) {
+        this.id = id;
         this.name = name;
-        this.catId = catId;
+    }
+
+    public Departments(short id, String name, Users managerId) {
+        this.id = id;
+        this.name = name;
+        this.managerId = managerId;
     }
     
 }

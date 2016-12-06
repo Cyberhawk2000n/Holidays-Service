@@ -18,7 +18,7 @@
     <!-- Корневой логгер -->
     <Root level="DEBUG">
       <AppenderRef ref="file" level="DEBUG"/>
-      <AppenderRef ref="console" level="DEBUG"/>
+      <AppenderRef ref="console" level="WARN"/>
     </Root>
   </Loggers>
 </Configuration> 

@@ -17,12 +17,13 @@
         <mapping class="klosterteam.hibernate.Event_types" />  
         <mapping class="klosterteam.hibernate.Events" />  
         <mapping class="klosterteam.hibernate.Gift_history" />  
-        <mapping class="klosterteam.hibernate.Gifts" />  
-        <mapping class="klosterteam.hibernate.History" />  
+        <mapping class="klosterteam.hibernate.Gifts" />    
         <mapping class="klosterteam.hibernate.Logins" />  
         <mapping class="klosterteam.hibernate.Money" />
         <mapping class="klosterteam.hibernate.Roles" />
         <mapping class="klosterteam.hibernate.Users" />  
-        <mapping class="klosterteam.hibernate.Vote" />        
+        <mapping class="klosterteam.hibernate.Vote" />
+        <mapping class="klosterteam.hibernate.Departments" />
+        <mapping class="klosterteam.hibernate.Preferences" />        
     </session-factory>
 </hibernate-configuration>

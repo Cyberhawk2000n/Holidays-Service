@@ -41,4 +41,8 @@ public class Event_types implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Event_types(String name) {
+        this.name = name;
+    }
 }

@@ -6,26 +6,46 @@
 package klosterteam.hibernate;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author Cyberhawk
  */
-@Table(name = "Gift_history")
+@Entity
+@Table(name = "Gift_history", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "id")})
 public class Gift_history implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Id
+    @GeneratedValue
+    @Column(name="id", unique = true, nullable = false)
+    private long id;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Gift_history_gift_id_Gifts_id"), unique = false, nullable = false)
     private Gifts giftId;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hist_id", foreignKey = @ForeignKey(name = "FK_Gift_history_hist_id_History_id"), unique = true, nullable = false)
-    private History histId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    private Users userId;
 
     public Gift_history() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Gifts getGiftId() {
@@ -36,17 +56,17 @@ public class Gift_history implements Serializable {
         this.giftId = giftId;
     }
 
-    public History getHistId() {
-        return histId;
+    public Users getUserId() {
+        return userId;
     }
 
-    public void setHistId(History histId) {
-        this.histId = histId;
+    public void setUserId(Users userId) {
+        this.userId = userId;
     }
 
-    public Gift_history(Gifts giftId, History histId) {
+    public Gift_history(Gifts giftId, Users userId) {
         this.giftId = giftId;
-        this.histId = histId;
+        this.userId = userId;
     }
     
 }

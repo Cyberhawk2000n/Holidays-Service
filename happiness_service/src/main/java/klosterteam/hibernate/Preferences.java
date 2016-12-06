@@ -23,48 +23,50 @@ import javax.persistence.UniqueConstraint;
  * @author Cyberhawk
  */
 @Entity
-@Table(name = "Categories", uniqueConstraints = {
+@Table(name = "Preferences", uniqueConstraints = {
         @UniqueConstraint(columnNames = "id")})
-public class Categories implements Serializable {
+public class Preferences implements Serializable {
     @Id
     @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
-    private long id;
+    private short id;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "FK_Categories_parent_id_Categories_id"), unique = false, nullable = true)
-    private Categories parentId;
-    @Column(name="name", unique = false, nullable = false, length = 64)
-    private String name;
+    @JoinColumn(name = "user_id", unique = false, nullable = false)
+    private Users userId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "cat_id", unique = false, nullable = false)
+    private Categories catId;
 
-    public Categories() {
+    public Preferences() {
     }
-    
-    public long getId() {
+
+    public short getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(short id) {
         this.id = id;
     }
 
-    public Categories getParentId() {
-        return parentId;
+    public Users getUserId() {
+        return userId;
     }
 
-    public void setParentId(Categories parentId) {
-        this.parentId = parentId;
+    public void setUserId(Users userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public Categories getCatId() {
+        return catId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCatId(Categories catId) {
+        this.catId = catId;
     }
 
-    public Categories(Categories parentId, String name) {
-        this.parentId = parentId;
-        this.name = name;
+    public Preferences(Users userId, Categories catId) {
+        this.userId = userId;
+        this.catId = catId;
     }
+    
 }

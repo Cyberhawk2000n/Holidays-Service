@@ -1,18 +1,21 @@
 function TestConnection() {
     $.ajax({
         type : "POST",
-        url : "/",
+        url : "/happiness_service-1.0-SNAPSHOT/testingAjaxServlet",
         data : 
         {
-            "test":
-            {
-            	"message" : "test connection processing!"
-            }
+            "message" : "test connection processing!"
         },
         dataType: "json",
 
         success : function(responseText) {
-            $('#ajaxGetUserServletResponse').text(responseText);
+            alert("Everything's fine");
+            //var json = JSON.parse(responseText);
+            $('#ajaxGetUserServletResponse').text(responseText.message);
+        },
+
+        error:function(data,status,er) {
+            alert("error: "+data+" \n status: "+status+" \ner:"+er);
         }
     });
 }

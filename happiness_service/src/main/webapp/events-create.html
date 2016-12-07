@@ -7,47 +7,40 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="css/bootstrap.css">
     <script src="js/jquery-3.1.1.min.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" type="text/css" href="video-background.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="video-background.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="js/events-create-scripts.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
 
 </head>
 <body>
-  <nav class="navbar navbar-inverse">  
-      <div class="container-fluid">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="main.html">HappynessService</a>
+            <a class="navbar-brand" href="main.html">HappyService</a>
         </div>
         <ul class="nav navbar-nav">
             <li><a href="main.html">Main</a></li>
             <li class="active"><a href="events-create.html">Events</a></li>
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">About me
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="profile.html">My Profile</a></li>
-                <li><a href="preferences.html">My preferences</a></li>
-              </ul>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">About me
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="preferences.html">My preferences</a></li>
+                </ul>
             </li>
-            </ul>
-        <form class="navbar-form navbar-left">
-          <div class="form-group">
-            <label class="btn btn-default btn-file">
-              Update members <input type="file" style="display: none;">
-            </label>
-            <button type="submit" class="btn btn-success">Become an organizaer</button>
-          </div>
-        </form>
+        </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
-      </div>
-  </nav>
+    </div>
+</nav>
+
 
 <!--<video autoplay loop muted poster="screenshot.jpg" id="background">
     <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4">
@@ -63,9 +56,9 @@
                   <label for="EventFreq" class="h4">Choose an event frequency</label>
                   <div id="EventFreq">
                       <label class="radio-inline">
-                          <input type="radio" name="freq_radio">Single</label>
+                          <input type="radio" name="freq_radio" value="Single">Single</label>
                       <label class="radio-inline">
-                          <input type="radio" name="freq_radio">Every Year</label>
+                          <input type="radio" name="freq_radio" value="Every Year">Every Year</label>
                   </div>
               </div>            
             </div>
@@ -75,11 +68,11 @@
                   <label for="EventType" class="h4">Choose an event content-type</label>
                   <div id="EventType">
                       <label class="radio-inline">
-                          <input type="radio" name="type_radio">Birthday</label>
+                          <input type="radio" name="type_radio" value="Birthday">Birthday</label>
                       <label class="radio-inline">
-                          <input type="radio" name="type_radio">Corporate</label>
+                          <input type="radio" name="type_radio" value="Corporate">Corporate</label>
                       <label class="radio-inline">
-                          <input type="radio" name="type_radio">Addition to the family</label>
+                          <input type="radio" name="type_radio" value="Addition">Addition to the family</label>
                   </div>
               </div>            
             </div>
@@ -110,11 +103,8 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                               <h4 class="modal-title">Event info</h4>
                           </div>
-                          <div class="modal-body">
-                            Event frequency : 123 <br>
-                            Event content-type : 123  <br>
-                            Date :  <br>
-                            Person :  <br>
+                          <div class="modal-body" id="myModal1_info">
+                            test
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -140,7 +130,7 @@
                             </form>
                           </div>
                           <div class="modal-footer">
-                            <button type="submit" class="btn btn-success" data-dismiss="modal" onclick="add_member();">Create</button>
+                            <button type="button" class="btn btn-success" data-dismiss="modal" onclick="add_member();">Create</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Abort</button>
                           </div>
                         </div>
@@ -169,14 +159,14 @@
                     </button>
               </div>        
             </div>
-          <div id="msgSubmit" class="h3 text-center hidden">Message Submitted!</div>  
+          <div id="msgSubmit" class="h3 text-center hidden">Message Submitted!</div>
       </form>
     </div>
   </div>
     
     <div class="row">
-      <div class="col-md-6 col-sm-offset-3">  
-        <button type="submit" id="form-submit" class="btn btn-success btn-lg  ">Create event</button>
+      <div class="col-md-6 col-sm-offset-3">
+        <button type="submit" id="form-submit" class="btn btn-success btn-lg" onclick="submitForm();">Create event</button>
     </div>
   </div>
 

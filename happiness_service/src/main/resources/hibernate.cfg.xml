@@ -5,16 +5,16 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/postgres</property>
-        <property name="hibernate.connection.username">postgres</property>
-        <property name="hibernate.connection.password">0</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/NC</property>
+        <property name="hibernate.connection.username">pgsql</property>
+        <property name="hibernate.connection.password">qwerty</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         <property name="hibernate.default_schema">public</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="show_sql">true</property>
         
         <mapping class="klosterteam.happiness_service.Categories" />  
-        <mapping class="klosterteam.happiness_service.Events_types" />  
+        <mapping class="klosterteam.happiness_service.Event_types" />
         <mapping class="klosterteam.happiness_service.Events" />  
         <mapping class="klosterteam.happiness_service.Gift_history" />  
         <mapping class="klosterteam.happiness_service.Gifts" />  

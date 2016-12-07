@@ -10,45 +10,34 @@
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
- 	<script type="text/javascript">
- 	 $( function() {
-    	$( "#datepicker" ).datepicker();
-	 });
- 	 </script>
+    <script src="js/registraion.js"></script>
+    <script src="js/jquery.cookie.js"></script>
 </head>
 <body>
-	 <nav class="navbar navbar-inverse">  
-      <div class="container-fluid">
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="main.html">HappynessService</a>
+            <a class="navbar-brand" href="main.html">HappyService</a>
         </div>
         <ul class="nav navbar-nav">
             <li><a href="main.html">Main</a></li>
             <li><a href="events-create.html">Events</a></li>
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="#">About me
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="profile.html">My Profile</a></li>
-                <li><a href="preferences.html">My preferences</a></li>
-              </ul>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">About me
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="preferences.html">My preferences</a></li>
+                </ul>
             </li>
-            </ul>
-        <form class="navbar-form navbar-left">
-          <div class="form-group">
-            <label class="btn btn-default btn-file">
-              Update members <input type="file" style="display: none;">
-            </label>
-            <button type="submit" class="btn btn-success">Become an organizaer</button>
-          </div>
-        </form>
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
-      </div>
-  </nav>
+        <ul class="nav navbar-nav navbar-right">
+            <li active><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        </ul>
+    </div>
+</nav>
+
 
 	<div class="row">
 		<div class="col-sm-6 col-sm-offset-3">
@@ -61,21 +50,15 @@
             	<div class="form-group col-sm-6">
                 	<label for="pw" class="h4">Password</label>
                 	<input type="password" class="form-control" id="pw" placeholder="123456" required/>
-            
             	</div>
-        		
-        		<div class="form-group col-md-6">
-            		<label for="datepicker" class="h4">Select your birth date</label>
-               			<input type='text' id="datepicker" class="form-control"/>               
-        		</div>        
-				<div id="msgSubmit" class="h3 text-center hidden">Message Submitted!</div>  
+ 				<div id="msgSubmit" class="h3 text-center hidden">Wrong user info!</div>
     		</form>
 		</div>
 	</div>
     
     <div class="row">
     	<div class="col-md-6 col-sm-offset-3">	
-    		<button type="submit" id="form-submit" class="btn btn-success btn-lg  ">Send 	confirmation</button>
+    		<button type="submit" id="form-submit" class="btn btn-success btn-lg" onclick="submitForm()">Login</button>
 		</div>
 	</div>
 </body>

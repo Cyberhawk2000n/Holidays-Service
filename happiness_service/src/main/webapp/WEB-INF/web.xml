@@ -1,13 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <servlet>
-        <servlet-name>ControllerServlet</servlet-name>
-        <servlet-class>klosterteam.happiness_service.ControllerServlet</servlet-class>
+        <servlet-name>testingAjaxServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.TestingAjaxServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>ControllerServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <servlet-name>testingAjaxServlet</servlet-name>
+        <url-pattern>/testingAjaxServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>EventsServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.EventsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EventsServlet</servlet-name>
+        <url-pattern>/EventsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AboutMeProfileServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.AboutMeProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VotingServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.VotingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VotingServlet</servlet-name>
+        <url-pattern>/VotingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AboutMeProfileServlet</servlet-name>
+        <url-pattern>/AboutMeProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AboutMePreferencesServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.AboutMePreferencesServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AboutMePreferencesServlet</servlet-name>
+        <url-pattern>/AboutMePreferencesServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.MainServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/MainServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>RegistrationServlet</servlet-name>
+        <servlet-class>klosterteam.happiness_service.Servlets.RegistrationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RegistrationServlet</servlet-name>
+        <url-pattern>/RegistrationServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>votingServlet</servlet-name>
+        <jsp-file>Voting.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>votingServlet</servlet-name>
+        <url-pattern>/view</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>registration</welcome-file>
+    </welcome-file-list>
     <session-config>
         <session-timeout>
             30

@@ -34,7 +34,7 @@ public class Gift_history implements Serializable {
     @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Gift_history_gift_id_Gifts_id"), unique = false, nullable = false)
     private Gifts giftId;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    @JoinColumn(name = "user_id", unique = false, nullable = false)
     private Users userId;
 
     public Gift_history() {

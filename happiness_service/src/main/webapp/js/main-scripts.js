@@ -7,42 +7,64 @@ $(document).ready(function() {
 		$("#datepicker1").datepicker();
 	});
 
-	$.ajax({
-		type : "POST",
-		url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
-		data :
-		{
-			"message" : "info",
-		},
-		dataType: "json",
-
-		success : function(responseText) {
-			alert("Everything's fine\n"+responseText.message);
-			$.each(responseText,function(){
-				$('#list-group-events').append(
-					'<li class="list-group-item">'+this.date+' '+this.name+
-					'<button onclick="fillUpdate('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e'+this.id+'">'+
-					'<span class="glyphicon glyphicon-cog"></span> Edit Event'+
-					'</button>'+
-					'<button type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d'+this.id+'">'+
-					'<span class="glyphicon glyphicon-cog"></span> Delay Event'+
-					'</button>'+
-					'</li>'
-				);
-			});
-		},
-
-		error:function(data,status,er) {
-			alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
-		}
-	});
-
 	if(!checkRole()){
 		window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
 	}
 	else{
 		if($.cookie("role")=="user") {
-			$("button[data-toggle='modal']").hide();
+			$.ajax({
+				type : "POST",
+				url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
+				data :
+				{
+					"message" : "info",
+				},
+				dataType: "json",
+
+				success : function(responseText) {
+					alert("Everything's fine\n"+responseText.message);
+					$.each(responseText,function(){
+						$('#list-group-events').append(
+							'<li class="list-group-item">'+this.date+' '+this.name+'</li>'
+						);
+					});
+				},
+
+				error:function(data,status,er) {
+					alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+				}
+			});
+		}
+		else{
+			$.ajax({
+				type : "POST",
+				url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
+				data :
+				{
+					"message" : "info",
+				},
+				dataType: "json",
+
+				success : function(responseText) {
+					alert("Everything's fine\n"+responseText.message);
+					$.each(responseText,function(){
+						$('#list-group-events').append(
+							'<li class="list-group-item">'+this.date+' '+this.name+
+							'<button onclick="fillUpdate('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e'+this.id+'">'+
+							'<span class="glyphicon glyphicon-cog"></span> Edit Event'+
+							'</button>'+
+							'<button type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d'+this.id+'">'+
+							'<span class="glyphicon glyphicon-cog"></span> Delay Event'+
+							'</button>'+
+							'</li>'
+						);
+					});
+				},
+
+				error:function(data,status,er) {
+					alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+				}
+			});
 		}
 	}
 

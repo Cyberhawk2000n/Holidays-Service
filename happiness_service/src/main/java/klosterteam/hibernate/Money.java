@@ -3,25 +3,32 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package klosterteam.happiness_service;
+package klosterteam.hibernate;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author Cyberhawk
  */
-@Table(name = "Money")
+@Entity
+@Table(name = "Money", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "hist_id")})
 public class Money implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hist_id", foreignKey = @ForeignKey(name = "FK_Money_hist_id_History_id"), unique = true, nullable = false)
-    private History histId;
+    @Id
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "hist_id", unique = true, nullable = false)
+    private Events histId;
     @Column(name="money", unique = false, nullable = false)
     private long money;
     @Column(name="money_max", unique = false, nullable = false)
@@ -30,13 +37,14 @@ public class Money implements Serializable {
     public Money() {
     }
 
-    public History getHistId() {
+    public Events getHistId() {
         return histId;
     }
 
-    public void setHistId(History histId) {
+    public void setHistId(Events histId) {
         this.histId = histId;
     }
+
 
     public long getMoney() {
         return money;
@@ -51,6 +59,12 @@ public class Money implements Serializable {
     }
 
     public void setMoneyMax(long moneyMax) {
+        this.moneyMax = moneyMax;
+    }
+
+    public Money(Events histId, long money, long moneyMax) {
+        this.histId = histId;
+        this.money = money;
         this.moneyMax = moneyMax;
     }
     

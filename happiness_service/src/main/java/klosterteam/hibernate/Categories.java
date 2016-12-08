@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package klosterteam.happiness_service;
+package klosterteam.hibernate;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -25,13 +27,14 @@ import javax.persistence.UniqueConstraint;
         @UniqueConstraint(columnNames = "id")})
 public class Categories implements Serializable {
     @Id
+    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "FK_Categories_parent_id_Categories_id"), unique = false, nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "FK_Categories_parent_id_Categories_id"), unique = false, nullable = true)
     private Categories parentId;
     @Column(name="name", unique = false, nullable = false, length = 64)
-    private long name;
+    private String name;
 
     public Categories() {
     }
@@ -52,12 +55,16 @@ public class Categories implements Serializable {
         this.parentId = parentId;
     }
 
-    public long getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(long name) {
+    public void setName(String name) {
         this.name = name;
     }
-    
+
+    public Categories(Categories parentId, String name) {
+        this.parentId = parentId;
+        this.name = name;
+    }
 }

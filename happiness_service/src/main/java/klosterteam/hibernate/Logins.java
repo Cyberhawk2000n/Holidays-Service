@@ -3,23 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package klosterteam.happiness_service;
+package klosterteam.hibernate;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  *
  * @author Cyberhawk
  */
-@Table(name = "Logins")
+@Entity
+@Table(name = "Logins", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "user_id")})
 public class Logins implements Serializable {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Id
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_Logins_user_id_Users_id"), unique = true, nullable = false)
     private Users userId;
     @Column(name="login", unique = false, nullable = false, length = 32)
@@ -51,6 +58,12 @@ public class Logins implements Serializable {
     }
 
     public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Logins(Users userId, String login, String password) {
+        this.userId = userId;
+        this.login = login;
         this.password = password;
     }
     

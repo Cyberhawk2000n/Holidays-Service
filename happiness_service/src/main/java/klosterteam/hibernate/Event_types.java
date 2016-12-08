@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package klosterteam.happiness_service;
+package klosterteam.hibernate;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -16,27 +16,33 @@ import javax.persistence.*;
         @UniqueConstraint(columnNames = "id")})
 public class Event_types implements Serializable {
     @Id
+    @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
-    private long id;
+    private short id;
     @Column(name="name", unique = true, nullable = false, length = 32)
     private String name;
 
     public Event_types() {
     }
 
-    public long getId() {
+    public short getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(short id) {
         this.id = id;
     }
+
 
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
+        this.name = name;
+    }
+
+    public Event_types(String name) {
         this.name = name;
     }
 }

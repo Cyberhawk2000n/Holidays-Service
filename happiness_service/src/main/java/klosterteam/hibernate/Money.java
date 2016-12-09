@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  *
@@ -26,7 +28,8 @@ import javax.persistence.UniqueConstraint;
         @UniqueConstraint(columnNames = "hist_id")})
 public class Money implements Serializable {
     @Id
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hist_id", unique = true, nullable = false)
     private Events histId;
     @Column(name="money", unique = false, nullable = false)

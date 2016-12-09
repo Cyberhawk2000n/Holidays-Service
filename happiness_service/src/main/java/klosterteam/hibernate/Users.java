@@ -8,6 +8,8 @@ package klosterteam.hibernate;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 /**
  *
  * @author Cyberhawk
@@ -29,14 +31,16 @@ public class Users implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name="birthday", unique = false, nullable = false)
     private Date birthday;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_Money_hist_id_History_id"), unique = false, nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "role_id", unique = false, nullable = false)
     private Roles roleId;
     @Column(name="email", unique = true, nullable = false, length = 64)
     private String email;
     @Column(name="about", unique = false, nullable = true, length = 256)
     private String about;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "dep_id", unique = false, nullable = false)
     private Departments depId;
     @Column(name="give_gift", unique = false, nullable = false)

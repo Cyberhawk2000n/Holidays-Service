@@ -88,14 +88,16 @@ public class ControllerServlet extends HttpServlet {
             //Users user = (Users)hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);
             if (hHibernate == null)
             {
-                hHibernate = new HappyHibernate();
-                SchedulerFactory sf = new StdSchedulerFactory();
+                //hHibernate = new HappyHibernate();
+                //Users user = hHibernate.selectUserById(100);
+                //hHibernate.deleteUser(user);
+                /*SchedulerFactory sf = new StdSchedulerFactory();
                 Scheduler sche = sf.getScheduler();
                 sche.start();
                 JobDetail job = newJob(DoEventActiveJob.class)
                 .withIdentity("job", "group1")
-                /*.usingJobData("email", user.getEmail())
-                .usingJobData("eventId", event.getId())*/
+                .usingJobData("email", user.getEmail())
+                .usingJobData("eventId", event.getId())
                 .build();
                 //job.getJobDataMap().
                 CronTrigger cron = newTrigger()
@@ -103,7 +105,7 @@ public class ControllerServlet extends HttpServlet {
                 .withSchedule(cronSchedule("0/10 * * * * ?"))//"0 0 3 * * ?"
                 .forJob("job", "group1")
                 .build();
-                sche.scheduleJob(job, cron);
+                sche.scheduleJob(job, cron);*/
                 
                 /*Users user = hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);
                 Events event = hHibernate.selectEventsByUser(user).get(0);
@@ -169,16 +171,19 @@ public class ControllerServlet extends HttpServlet {
                     for (int i = 0; i < vote.size(); i++)
                         log.warn("HIBERNATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + vote.get(i).getGiftId().getName()
                                 + ": "+ vote.get(i).getCount());*/
-                List<Pack> packs = this.getCategoriesAndGifts();
-                for (int i = 0; i < packs.size(); i++)
-                {
-                    out.println("<h1>Category " + i + " (" + packs.get(i).getName() + ") contains:</h1>");
-                    //log.warn("ACTIVE!!!!!!!!!!!!!!!!!!!!!: " + hHibernate.selectEventsByActiveDate(user.getBirthday()).get(0).getName());
-                    //out.println("<h5> ::: " + packs.get(i).getNames().length + "</h5>");
-                    for (String name : packs.get(i).getNames()) {
-                        out.println("<h5> -> " + name + "</h5>");
+                /*List<Pack> packs = this.getCategoriesAndGifts();
+                if (packs != null)
+                    for (int i = 0; i < packs.size(); i++)
+                    {
+                        out.println("<h1>Category " + i + " (" + packs.get(i).getName() + ") contains:</h1>");
+                        //log.warn("ACTIVE!!!!!!!!!!!!!!!!!!!!!: " + hHibernate.selectEventsByActiveDate(user.getBirthday()).get(0).getName());
+                        //out.println("<h5> ::: " + packs.get(i).getNames().length + "</h5>");
+                        for (String name : packs.get(i).getNames()) {
+                            out.println("<h5> -> " + name + "</h5>");
+                        }
                     }
-                }
+                else*/
+                    out.println("<h1>No categories!</h1>");
             }
             //((Logins)hHibernate.selectLoginsByUser(user).get(0)).getPassword()
             //Event_types typeId = new Event_types();
@@ -514,15 +519,15 @@ public class ControllerServlet extends HttpServlet {
             fos.write(str);
             fos.close();
             BufferedReader csv = new BufferedReader(new FileReader("in.csv"));
-            while ((line = csv.readLine()) != null)
+            /*while ((line = csv.readLine()) != null)//while
             {
                 columns = line.split(csvSplitBy);
-                /*for (int i = 0; i < columns.length; i++)
+                for (int i = 0; i < columns.length; i++)
                 {
                     log.warn(columns[i] + "\n\n");
-                }*/
+                }
                 rows.put(columns[columns.length - 1], columns);
-            }
+            }*/
             List<Users> users = hHibernate.selectUsers();
             for (int i = 0; i < users.size(); i++)
             {
@@ -564,7 +569,7 @@ public class ControllerServlet extends HttpServlet {
                             }
                         }
                     }*/
-                    //hHibernate.deleteUser(users.get(i));
+                    hHibernate.deleteUser(users.get(i));
                 }
             }
             //add departments

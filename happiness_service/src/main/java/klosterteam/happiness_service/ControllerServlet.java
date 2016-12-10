@@ -88,7 +88,7 @@ public class ControllerServlet extends HttpServlet {
             //Users user = (Users)hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);
             if (hHibernate == null)
             {
-                //hHibernate = new HappyHibernate();
+                hHibernate = new HappyHibernate();
                 //Users user = hHibernate.selectUserById(100);
                 //hHibernate.deleteUser(user);
                 /*SchedulerFactory sf = new StdSchedulerFactory();
@@ -171,7 +171,7 @@ public class ControllerServlet extends HttpServlet {
                     for (int i = 0; i < vote.size(); i++)
                         log.warn("HIBERNATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + vote.get(i).getGiftId().getName()
                                 + ": "+ vote.get(i).getCount());*/
-                /*List<Pack> packs = this.getCategoriesAndGifts();
+                List<Pack> packs = this.getCategoriesAndSubcategories();
                 if (packs != null)
                     for (int i = 0; i < packs.size(); i++)
                     {
@@ -182,7 +182,7 @@ public class ControllerServlet extends HttpServlet {
                             out.println("<h5> -> " + name + "</h5>");
                         }
                     }
-                else*/
+                else
                     out.println("<h1>No categories!</h1>");
             }
             //((Logins)hHibernate.selectLoginsByUser(user).get(0)).getPassword()

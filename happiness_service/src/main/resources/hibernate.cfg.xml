@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://172.30.174.16:5432/postgres</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/postgres</property><!--172.30.174.16-->
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">0</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
@@ -24,6 +24,7 @@
         <mapping class="klosterteam.hibernate.Users" />  
         <mapping class="klosterteam.hibernate.Vote" />
         <mapping class="klosterteam.hibernate.Departments" />
-        <mapping class="klosterteam.hibernate.Preferences" />        
+        <mapping class="klosterteam.hibernate.Preferences" /> 
+        <mapping class="klosterteam.hibernate.Passwd" />         
     </session-factory>
 </hibernate-configuration>

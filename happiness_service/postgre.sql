@@ -152,6 +152,12 @@ CREATE TABLE Roles
 	,CONSTRAINT PK_Roles_id PRIMARY KEY (id)
 );
 
+CREATE TABLE Passwd
+(
+	id SMALLINT NOT NULL 
+	,passwd VARCHAR(64) NOT NULL 
+	,CONSTRAINT PK_Passwd_id PRIMARY KEY (id)
+);
 
 
 -- Create Foreign Key: Vote.gift_id -> Gifts.id

@@ -6,6 +6,7 @@
 package klosterteam.happiness_service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,13 +34,20 @@ import klosterteam.hibernate.Vote;
 import org.hibernate.Session;
 import java.util.Properties;
 import java.util.Set;
-import javax.mail.*;
+import java.util.Properties;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import klosterteam.hibernate.Categories;
 import klosterteam.hibernate.Departments;
 import klosterteam.hibernate.Gift_history;
 import klosterteam.hibernate.Logins;
+import klosterteam.hibernate.Passwd;
 import klosterteam.hibernate.Preferences;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
@@ -89,6 +97,7 @@ public class ControllerServlet extends HttpServlet {
             if (hHibernate == null)
             {
                 hHibernate = new HappyHibernate();
+                //sendMessage("nochds@gmail.com", "Hello, now you are user of Happiness Service!");
                 //Users user = hHibernate.selectUserById(100);
                 //hHibernate.deleteUser(user);
                 /*SchedulerFactory sf = new StdSchedulerFactory();
@@ -631,43 +640,31 @@ public class ControllerServlet extends HttpServlet {
     int sendMessage(String email, String message)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
-        // Recipient's email ID needs to be mentioned.
-        String to = email;
-
-        // Sender's email ID needs to be mentioned
-        String from = "nochds@gmail.com";
-
-        // Assuming you are sending email from localhost
-        String host = "localhost";
-
-        // Get system properties
-        Properties properties = System.getProperties();
-
-        // Setup mail server
-        properties.setProperty("mail.smtp.host", host);
-
-        // Get the default Session object.
-        javax.mail.Session session = javax.mail.Session.getDefaultInstance(properties);
-
-        try {
-            // Create a default MimeMessage object.
-            MimeMessage mMessage = new MimeMessage(session);
-
-            // Set From: header field of the header.
-            mMessage.setFrom(new InternetAddress(from));
-
-            // Set To: header field of the header.
-            mMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-
-            // Set Subject: header field
-            mMessage.setSubject("This is the Subject Line!");
-
-            // Now set the actual message
-            mMessage.setText(message);
-
-            // Send message
-            Transport.send(mMessage);
-            log.debug("Sent message successfully....");
+        try
+        {
+            if (hHibernate == null)
+                hHibernate = new HappyHibernate();
+            Passwd passwd = new Passwd((short)0, "");
+            passwd = hHibernate.session.get(Passwd.class, passwd.getId());
+            final String username = "optimusprime1024@gmail.com";
+            final String password = passwd.getPasswd();
+            Properties props = System.getProperties();
+            props.load(getClass().getClassLoader().getResourceAsStream("mail.properties"));
+            javax.mail.Session session = javax.mail.Session.getDefaultInstance(props, 
+                          new Authenticator(){
+                             protected PasswordAuthentication getPasswordAuthentication() {
+                                return new PasswordAuthentication(username, password);
+                             }});
+            // -- Create a new message --
+            Message msg = new MimeMessage(session);
+            // -- Set the FROM and TO fields --
+            msg.setFrom(new InternetAddress(username));
+            msg.setRecipients(Message.RecipientType.TO, 
+                             InternetAddress.parse(email, false));
+            msg.setSubject("Happiness Service!");
+            msg.setText(message);
+            msg.setSentDate(new Date());
+            Transport.send(msg);
             return 0;
         }
         catch (Exception exc)

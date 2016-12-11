@@ -17,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  *
@@ -32,7 +34,8 @@ public class Gifts implements Serializable {
     private long id;
     @Column(name="name", unique = false, nullable = false, length = 32)
     private String name;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "cat_id", foreignKey = @ForeignKey(name = "FK_Gifts_cat_id_Categories_id"), unique = false, nullable = false)
     private Categories catId;
 

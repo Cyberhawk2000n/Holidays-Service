@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 /**
  *
@@ -35,12 +37,14 @@ public class Events implements Serializable {
     private long id;
     @Column(name="name", unique = false, nullable = false, length = 64)
     private String name;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "type_id", foreignKey = @ForeignKey(name = "FK_Events_type_id_Event_types_id"), unique = false, nullable = false)
     private Event_types typeId;
     @Column(name="every_year", unique = false, nullable = false)
     private boolean everyYear;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_Events_user_id_Users_id"), unique = false, nullable = true)
     private Users userId;
     @Temporal(TemporalType.DATE)
@@ -50,7 +54,8 @@ public class Events implements Serializable {
     private boolean active;
     @Column(name="template", unique = false, nullable = false, length = 256)
     private String template;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "manager_id", unique = false, nullable = true)
     private Users managerId;
 

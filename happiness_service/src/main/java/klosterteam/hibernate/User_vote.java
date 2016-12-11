@@ -10,7 +10,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -25,25 +24,33 @@ import org.hibernate.annotations.OnDeleteAction;
  * @author Cyberhawk
  */
 @Entity
-@Table(name = "Vote", uniqueConstraints = {
+@Table(name = "User_vote", uniqueConstraints = {
         @UniqueConstraint(columnNames = "id")})
-public class Vote implements Serializable {
+public class User_vote implements Serializable {
     @Id
     @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", unique = false, nullable = false)
+    private Users userId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hist_id", unique = false, nullable = false)
     private Events histId;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Vote_gift_id_Gifts_id"), unique = false, nullable = false)
-    private Gifts giftId;
-    @Column(name="count", unique = false, nullable = false)
-    private int count;
+    @JoinColumn(name = "vote_id", unique = false, nullable = false)
+    private Vote voteId;
 
-    public Vote() {
+    public User_vote() {
+    }
+
+    public User_vote(Users userId, Events histId, Vote voteId) {
+        this.userId = userId;
+        this.histId = histId;
+        this.voteId = voteId;
     }
 
     public long getId() {
@@ -54,6 +61,14 @@ public class Vote implements Serializable {
         this.id = id;
     }
 
+    public Users getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Users userId) {
+        this.userId = userId;
+    }
+
     public Events getHistId() {
         return histId;
     }
@@ -62,26 +77,12 @@ public class Vote implements Serializable {
         this.histId = histId;
     }
 
-    public Gifts getGiftId() {
-        return giftId;
+    public Vote getVoteId() {
+        return voteId;
     }
 
-    public void setGiftId(Gifts giftId) {
-        this.giftId = giftId;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public Vote(Events histId, Gifts giftId, int count) {
-        this.histId = histId;
-        this.giftId = giftId;
-        this.count = count;
+    public void setVoteId(Vote voteId) {
+        this.voteId = voteId;
     }
     
 }

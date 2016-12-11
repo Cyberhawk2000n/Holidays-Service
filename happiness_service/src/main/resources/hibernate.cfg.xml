@@ -8,6 +8,7 @@
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/NC</property>
         <property name="hibernate.connection.username">pgsql</property>
         <property name="hibernate.connection.password">qwerty</property>
+
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
         <property name="hibernate.default_schema">public</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
@@ -24,6 +25,8 @@
         <mapping class="klosterteam.hibernate.Users" />  
         <mapping class="klosterteam.hibernate.Vote" />
         <mapping class="klosterteam.hibernate.Departments" />
-        <mapping class="klosterteam.hibernate.Preferences" />        
+        <mapping class="klosterteam.hibernate.Preferences" /> 
+        <mapping class="klosterteam.hibernate.User_vote" />     
+        <mapping class="klosterteam.hibernate.Passwd" />         
     </session-factory>
 </hibernate-configuration>

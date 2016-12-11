@@ -25,6 +25,7 @@
         <mapping class="klosterteam.hibernate.Vote" />
         <mapping class="klosterteam.hibernate.Departments" />
         <mapping class="klosterteam.hibernate.Preferences" /> 
+        <mapping class="klosterteam.hibernate.User_vote" />     
         <mapping class="klosterteam.hibernate.Passwd" />         
     </session-factory>
 </hibernate-configuration>

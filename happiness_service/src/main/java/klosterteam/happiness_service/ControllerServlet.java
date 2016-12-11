@@ -5,13 +5,6 @@
  */
 package klosterteam.happiness_service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -25,30 +18,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import klosterteam.hibernate.Event_types;
 import klosterteam.hibernate.Events;
 import klosterteam.hibernate.Gifts;
-import klosterteam.hibernate.Roles;
+import klosterteam.hibernate.User_vote;
 import klosterteam.hibernate.Users;
 import klosterteam.hibernate.Vote;
-import org.hibernate.Session;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Properties;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import klosterteam.hibernate.Categories;
-import klosterteam.hibernate.Departments;
-import klosterteam.hibernate.Gift_history;
-import klosterteam.hibernate.Logins;
-import klosterteam.hibernate.Passwd;
-import klosterteam.hibernate.Preferences;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,7 +54,7 @@ public class ControllerServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        Logger log = LogManager.getLogger(HappyHibernate.class);
+        Logger log = LogManager.getLogger(ControllerServlet.class);
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             
@@ -97,6 +71,20 @@ public class ControllerServlet extends HttpServlet {
             if (hHibernate == null)
             {
                 hHibernate = new HappyHibernate();
+                
+                /*Users user = hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);
+                Events event = hHibernate.selectEventsByUser(user).get(0);
+                User_vote uVote = hHibernate.selectUserVotes(user, event).get(0);
+                hHibernate.deleteUserVote(uVote);*/
+                /*Gifts gift = hHibernate.selectGiftByName("Prestigio PAP3350");
+                Vote vote = hHibernate.createVote(event, gift, 1);
+                if (vote == null)
+                {
+                    vote = hHibernate.selectVote(event, gift);
+                    User_vote uVote = hHibernate.createUserVote(user, event, vote);
+                    hHibernate.changeVoteCount(vote, vote.getCount() + 1);
+                }*/
+                    
                 //sendMessage("nochds@gmail.com", "Hello, now you are user of Happiness Service!");
                 //Users user = hHibernate.selectUserById(100);
                 //hHibernate.deleteUser(user);
@@ -180,7 +168,7 @@ public class ControllerServlet extends HttpServlet {
                     for (int i = 0; i < vote.size(); i++)
                         log.warn("HIBERNATE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + vote.get(i).getGiftId().getName()
                                 + ": "+ vote.get(i).getCount());*/
-                List<Pack> packs = this.getCategoriesAndSubcategories();
+                List<Pack> packs = hHibernate.getCategoriesAndSubcategories();
                 if (packs != null)
                     for (int i = 0; i < packs.size(); i++)
                     {
@@ -271,408 +259,7 @@ public class ControllerServlet extends HttpServlet {
         }
     }
 
-    List<Pack> getCategoriesAndSubcategories() {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            List<Pack> packs = new ArrayList<>();
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            Map<Categories, List<Categories>> map = hHibernate.selectCategoriesAndSubCategories();
-            Set set = map.keySet();
-            for (Iterator i = set.iterator(); i.hasNext();)
-            {
-                Pack pack = new Pack();
-                Categories cat = (Categories)i.next();
-                pack.setName(cat.getName());
-                List<Categories> list = map.get(cat);
-                String[] names = new String[list.size()];
-                for (int j = 0; j < list.size(); j++)
-                    names[j] = list.get(j).getName();
-                pack.setNames(names);
-                packs.add(pack);
-            }
-            return packs;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Getting categories pack exception!", exc);
-            return null;
-        }
-    }
-    
-    List<Pack> getUserPreferences(Users user) {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            List<Pack> packs = new ArrayList<>();
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            Map<Categories, List<Categories>> map = hHibernate.selectPreferencesByUser(user);
-            if (map == null)
-                return null;
-            Set set = map.keySet();
-            for (Iterator i = set.iterator(); i.hasNext();)
-            {
-                Pack pack = new Pack();
-                Categories cat = (Categories)i.next();
-                pack.setName(cat.getName());
-                List<Categories> list = map.get(cat);
-                String[] names = new String[list.size()];
-                for (int j = 0; j < list.size(); j++)
-                    names[j] = list.get(j).getName();
-                pack.setNames(names);
-                packs.add(pack);
-            }
-            return packs;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Getting preferences pack exception!", exc);
-            return null;
-        }
-    }
-    
-    List<Pack> getCategoriesAndGifts() {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            List<Pack> packs = new ArrayList<>();
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            Map<Categories, List<Gifts>> map = hHibernate.selectCategoriesAndGifts();
-            Set set = map.keySet();
-            for (Iterator i = set.iterator(); i.hasNext();)
-            {
-                Pack pack = new Pack();
-                Categories cat = (Categories)i.next();
-                pack.setName(cat.getName());
-                List<Gifts> list = map.get(cat);
-                String[] names = new String[list.size()];
-                for (int j = 0; j < list.size(); j++)
-                    names[j] = list.get(j).getName();
-                pack.setNames(names);
-                packs.add(pack);
-            }
-            return packs;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Getting categories pack exception!", exc);
-            return null;
-        }
-    }
-    
-    int createEvent(String name, Date date, boolean everyYear, Event_types typeId,
-            Users userId, String template, Users managerId)
-    {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            boolean active = false;
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            long diff = date.getTime() - (new Date()).getTime();
-            if (diff > -43200000L && diff < 1209600000L)
-                active = true;
-            hHibernate.createEvent(name, date, everyYear, typeId, userId, active, template, managerId);
-            return 0;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Editing event exception!", exc);
-            return -1;
-        }
-    }
-    
-    int editEvent(Events event, String name, Date date, boolean everyYear, Event_types typeId,
-            Users userId, boolean active, String template, Users managerId)
-    {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            if (name != null)
-                hHibernate.changeEventName(event, name);
-            if (date != null)
-                hHibernate.changeEventDate(event, date);
-            hHibernate.changeEventEveryYear(event, everyYear);
-            if (typeId != null)
-                hHibernate.changeEventEventType(event, typeId);
-            if (userId != null)
-                hHibernate.changeEventUser(event, userId);
-            hHibernate.changeEventActive(event, active);
-            if (template != null)
-                hHibernate.changeEventTemplate(event, template);
-            if (managerId != null)
-                hHibernate.changeEventManager(event, managerId);
-            return 0;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Editing event exception!", exc);
-            return -1;
-        }
-    }
-    
-    int editUser(Users user, String name, String surname, String patronymic, Date birthday, Roles role,
-            String email, String about, Departments depId, boolean giveGift)
-    {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            if (name != null)
-                hHibernate.changeUserName(user, name);
-            if (surname != null)
-                hHibernate.changeUserSurname(user, surname);
-            hHibernate.changeUserPatronymic(user, patronymic);
-            if (birthday != null)
-                hHibernate.changeUserBirthday(user, birthday);
-            if (role != null)
-                hHibernate.changeUserRole(user, role);
-            if (email != null)
-                hHibernate.changeUserEmail(user, email);
-            if (about != null)
-                hHibernate.changeUserAbout(user, about);
-            if (depId != null)
-                hHibernate.changeUserDepartment(user, depId);
-            hHibernate.changeUserGiveGift(user, giveGift);
-            return 0;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Editing user exception!", exc);
-            return -1;
-        }
-    }
-    
-    int authUser(String email, String password)
-    {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            Users user = hHibernate.selectUsersByEmail(email).get(0);
-            Logins login = hHibernate.selectLoginByUser(user);
-            if (login.getPassword().equals(DigestUtils.md5Hex(password)))
-                return 0;
-            else return -1;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Checking password exception!", exc);
-            return -1;
-        }
-    }
-    
-    Gifts addGift(String name, Categories cat)
-    {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            if (hHibernate.selectGiftByName(name) == null)
-            {
-                return hHibernate.createGift(name, cat);
-            }
-            else
-                return null;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Editing user exception!", exc);
-            return null;
-        }
-    }
-    
-    Vote addVote(Events event, Gifts gift)
-    {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            if (hHibernate.selectVote(event, gift) == null)
-            {
-                return hHibernate.createVote(event, gift, 0);
-            }
-            else
-                return null;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Editing user exception!", exc);
-            return null;
-        }
-    }
-    
-    int updateMembers(FileInputStream csvInput) throws FileNotFoundException
-    {
-        Logger log = LogManager.getLogger(ControllerServlet.class);
-        try
-        {
-            String line = "";
-            String csvSplitBy = ";";
-            Map<String, String[]> rows = new HashMap<>();
-            String[] columns;
-            FileWriter fos = new FileWriter("in.csv");
-            //fos.
-            String str = "Nochevnoy;Dmitriy;Sergeevich;26.12.1995;1;Dep1;nochds@gmail.com\n";
-            fos.write(str);
-            str = "Nochevnoy;Dmitriy;;7.12.1995;5;Dep5;nochds2@gmail.com\n";
-            fos.write(str);
-            fos.close();
-            BufferedReader csv = new BufferedReader(new FileReader("in.csv"));
-            /*while ((line = csv.readLine()) != null)//while
-            {
-                columns = line.split(csvSplitBy);
-                for (int i = 0; i < columns.length; i++)
-                {
-                    log.warn(columns[i] + "\n\n");
-                }
-                rows.put(columns[columns.length - 1], columns);
-            }*/
-            List<Users> users = hHibernate.selectUsers();
-            for (int i = 0; i < users.size(); i++)
-            {
-                if (!rows.containsKey(users.get(i).getEmail()))
-                {
-                    //log.warn(users.get(i).getEmail() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    //hHibernate.deleteLogin(users.get(i));
-                    //hHibernate.deletePreferences(users.get(i));
-                    /*List<Gift_history> gHist = hHibernate.selectGiftHistoryByUser(users.get(i));
-                    if (gHist != null)
-                        for (int j = 0; j < gHist.size(); j++)
-                            hHibernate.deleteGiftHistory(gHist.get(i));*/
-                    /*List<Event_types> evTypes;
-                    Event_types typeId;
-                    Events event;
-                    if ((evTypes = hHibernate.selectEventTypes("Birthday")) != null)
-                    {
-                        log.warn("HERE!!!!!!!!\n");
-                        typeId = evTypes.get(0);
-                        if (typeId != null)
-                        {
-                            List<Events> events;
-                            log.warn("HERE!!!!!!!!\n");
-                            events = hHibernate.selectEventsByUserAndType(users.get(i), typeId);
-                            if (events != null)
-                            {
-                                event = events.get(0);
-                                log.warn("HERE2222!!!!!!!!\n");
-                                List<Vote> votes;
-                                if (event != null)
-                                {
-                                    votes = hHibernate.selectVote(event.getId());
-                                    if (votes != null)
-                                        for (int j = 0; j < votes.size(); j++)
-                                            hHibernate.deleteVote(votes.get(i));
-                                    hHibernate.deleteMoney(event);
-                                    hHibernate.deleteEvent(event);
-                                }
-                            }
-                        }
-                    }*/
-                    hHibernate.deleteUser(users.get(i));
-                }
-            }
-            //add departments
-            Set set = rows.keySet();
-            for (Iterator i = set.iterator(); i.hasNext();)
-            {
-                String email = (String)i.next();
-                if (hHibernate.selectDepartments(rows.get(email)[5]).isEmpty())
-                    hHibernate.createDepartments(Integer.valueOf(rows.get(email)[4]), rows.get(email)[5]);
-            }
-            //add users and events
-            List<Roles> roles = hHibernate.selectRoles("user");
-            Roles role;
-            if (roles != null)
-            {
-                role = roles.get(0);
-                for (Iterator i = set.iterator(); i.hasNext();)
-                {
-                    String email = (String)i.next();
-                    if (hHibernate.selectUsersByEmail(email).isEmpty())
-                    {
-                        Departments depId = (Departments)hHibernate.selectDepartments(rows.get(email)[5]).get(0);
-                        String[] dayMonthYear = rows.get(email)[3].split("\\.");
-                        /*log.warn("\nDay!!!!!!!!\n" + dayMonthYear[0] + ": " + Integer.valueOf(dayMonthYear[0]));
-                        log.warn("\nMonth!!!!!!!!\n" + dayMonthYear[1] + ": " + Integer.valueOf(dayMonthYear[1]));
-                        log.warn("\nYear!!!!!!!!\n" + dayMonthYear[2] + ": " + Integer.valueOf(dayMonthYear[2]));
-                        log.debug("\n " + rows.get(email)[3] + " ::: " + dayMonthYear.length + " \n");*/
-                        //Date date = new Date(Integer.valueOf(dayMonthYear[0]), );
-                        Users user = hHibernate.createUser(rows.get(email)[1], rows.get(email)[0], rows.get(email)[2],
-                                new Date(Integer.valueOf(dayMonthYear[2]) - 1900, Integer.valueOf(dayMonthYear[1]) - 1,
-                                        Integer.valueOf(dayMonthYear[0])),
-                                role, email, "about", depId, true);
-                        hHibernate.createLogin(user, user.getEmail(), user.getEmail());
-                        Event_types typeId = hHibernate.selectEventTypes("Birthday").get(0);
-                        Date eventDate = user.getBirthday();
-                        eventDate.setYear((new Date()).getYear());
-                        boolean active = false;
-                        long diff = eventDate.getTime() - (new Date()).getTime();
-                        if (diff > -43200000L && diff < 1209600000L)
-                            active = true;
-                        Events event = hHibernate.createEvent("Birthday of " + user.getEmail(), eventDate,
-                                true, typeId, user, active, "template", null);
-                        
-                        //sendMessage(); login, password
 
-                    }
-                }
-            }
-            log.warn("SUCCESS!!!!!!!!!!!!!!!!!!!!!!!");
-        }
-        catch (Exception exc)
-        {
-            log.warn("updateMembers error!", exc);
-            return -1;
-        }
-        return 0;
-    }
-    
-    int sendMessage(String email, String message)
-    {
-        Logger log = LogManager.getLogger(HappyHibernate.class);
-        try
-        {
-            if (hHibernate == null)
-                hHibernate = new HappyHibernate();
-            Passwd passwd = new Passwd((short)0, "");
-            passwd = hHibernate.session.get(Passwd.class, passwd.getId());
-            final String username = "optimusprime1024@gmail.com";
-            final String password = passwd.getPasswd();
-            Properties props = System.getProperties();
-            props.load(getClass().getClassLoader().getResourceAsStream("mail.properties"));
-            javax.mail.Session session = javax.mail.Session.getDefaultInstance(props, 
-                          new Authenticator(){
-                             protected PasswordAuthentication getPasswordAuthentication() {
-                                return new PasswordAuthentication(username, password);
-                             }});
-            // -- Create a new message --
-            Message msg = new MimeMessage(session);
-            // -- Set the FROM and TO fields --
-            msg.setFrom(new InternetAddress(username));
-            msg.setRecipients(Message.RecipientType.TO, 
-                             InternetAddress.parse(email, false));
-            msg.setSubject("Happiness Service!");
-            msg.setText(message);
-            msg.setSentDate(new Date());
-            Transport.send(msg);
-            return 0;
-        }
-        catch (Exception exc)
-        {
-            log.debug("Send e-mail error!", exc);
-            return -1;
-        }
-    }
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

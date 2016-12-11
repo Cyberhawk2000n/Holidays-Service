@@ -63,7 +63,6 @@ function formSubmit(){
 
         success : function(responseText) {
             alert("Everything's fine\n"+responseText.message);
-            //код заполения input-ов
         },
 
         error:function(data,status,er) {

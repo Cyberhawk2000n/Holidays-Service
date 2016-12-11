@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="klosterteam.happiness_service.Servlets.VotingServletAPI" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,12 +21,6 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-        $( function() {
-            $( "#datepicker" ).datepicker();
-        });
-
-    </script>
 </head>
 <body>
 Welcome to vote #<b><%=request.getParameter("id")%></b>
@@ -57,11 +53,19 @@ Welcome to vote #<b><%=request.getParameter("id")%></b>
         <h1>Vote for a gift!</h1>
         <form role="form" id="EventForm" onclick="check()" \>
             <label for="Options" class="h4">Choose an option:</label>
+
             <div id="Options">
+                <% String[] options = VotingServletAPI.getVotingOptions(Integer.parseInt(request.getParameter("id")));
+                    for (int i=0; i<options.length;i++ ){%>
                 <label class="radio-inline">
-                    <input type="radio" name="freq_radio">Single</label> <br>
-                <label class="radio-inline">
-                    <input type="radio" name="freq_radio">Every Year</label>
+                    <input type="radio" name="freq_radio"><%=options[i]%></label> <br>
+                <% }%>
+            </div>
+            <div id="Progress">
+                <% int[] progress = VotingServletAPI.getVotingProgress(Integer.parseInt(request.getParameter("id")));
+                    for (int i=0; i<options.length;i++ ){%>
+                    <%=i%>  <%=options[i]%> -- <%=progress[i]%>
+                <% }%>
             </div>
         </form>
     </div>
@@ -69,9 +73,15 @@ Welcome to vote #<b><%=request.getParameter("id")%></b>
         <h1>Information:</h1>
         <div id="Preferences">
             <label class="h4">Preferences:</label>
+            <%=VotingServletAPI.getPreference(Integer.parseInt(request.getParameter("id")))%>
         </div>
         <div id="History">
             <label class="h4">History:</label>
+            <% String[] history = VotingServletAPI.getVotingOptions(Integer.parseInt(request.getParameter("id")));
+                for (int i=0; i<history.length;i++ ){%>
+            <label class="radio-inline">
+                <input type="radio" name="freq_radio"><%=history[i]%></label> <br>
+            <% }%>
         </div>
     </div>
 </div>

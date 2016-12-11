@@ -63,8 +63,8 @@ function submitForm(){
         data :
         {
             "message" : "update",
-            "options" : selected_options,
-            "sub_options" : selected_sub_options,
+            "categories" : selected_options,
+            "sub_categories" : selected_sub_options,
             "sub_count" : count_selected_sub
         },
         dataType: "json",

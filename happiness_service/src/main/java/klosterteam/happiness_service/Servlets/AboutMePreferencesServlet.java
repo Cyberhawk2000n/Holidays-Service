@@ -18,7 +18,7 @@ public class AboutMePreferencesServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if("info".equals(request.getParameter("message"))){
-            // we are reading user info from
+            // read user info from db
             // json format:
             // jsonObject{
             //      { Cat_Name: cat1[ {test} , {test} ] },  { cat2[ {test} , {test} ] } ;
@@ -42,7 +42,11 @@ public class AboutMePreferencesServlet extends HttpServlet {
             return;
         }
         else if("update".equals(request.getParameter("message"))){
-            // we are updating preferences in db
+            // update preferences in db
+            // request has :
+            // - "categories" - array of selected categories
+            // - "sub_categories" - array of selected sub-categories
+            // - "sub_count" - array of numbers to separate sub_categories.{3,5} - means first 3 sub-cats from first cat, then 5 from second
             System.out.println("DEBUG | AboutMeServlet ---> processRequest() ---> updating user preferences ");
             JsonObject json = Json.createObjectBuilder()
                     .add("message", "Success on updating user =) kinda lel")
@@ -59,7 +63,6 @@ public class AboutMePreferencesServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().write(json.toString());
     }
-
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

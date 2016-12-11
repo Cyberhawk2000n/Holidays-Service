@@ -38,6 +38,8 @@ public class MainServlet extends HttpServlet{
         }
         if("event".equals(request.getParameter("message"))){
             // here we go to DB for an event info using the Id
+            // still in development
+            //todo need to figure out which fields of event do we allow to change
             JsonObject json = Json.createObjectBuilder()
                     .add("message", "eh. Loaded")
                     .build();

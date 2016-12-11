@@ -17,7 +17,7 @@ public class AboutMeProfileServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if("info".equals(request.getParameter("message"))){
-            // we are reading user info from
+            // read user info from db
             // json format:
             // jsonObject{
             //      "email":<>
@@ -36,7 +36,8 @@ public class AboutMeProfileServlet extends HttpServlet {
             return;
         }
         else if("update".equals(request.getParameter("message"))){
-            // we are updating info in db
+            // update info in db
+            // fields for request - email, pw, date, comment
             System.out.println("DEBUG | AboutMeServlet ---> processRequest() ---> updating user info ");
             JsonObject json = Json.createObjectBuilder()
                     .add("message", "Success on updating user =) kinda lel")

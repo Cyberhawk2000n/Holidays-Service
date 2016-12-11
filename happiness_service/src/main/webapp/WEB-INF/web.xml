@@ -20,14 +20,6 @@
         <servlet-name>AboutMeProfileServlet</servlet-name>
         <servlet-class>klosterteam.happiness_service.Servlets.AboutMeProfileServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>VotingServlet</servlet-name>
-        <servlet-class>klosterteam.happiness_service.Servlets.VotingServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>VotingServlet</servlet-name>
-        <url-pattern>/VotingServlet</url-pattern>
-    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AboutMeProfileServlet</servlet-name>
         <url-pattern>/AboutMeProfileServlet</url-pattern>

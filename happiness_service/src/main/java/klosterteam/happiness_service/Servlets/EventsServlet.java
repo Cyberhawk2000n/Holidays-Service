@@ -25,9 +25,9 @@ public class EventsServlet extends HttpServlet {
         System.out.println("DEBUG | EventsServlet ---> processRequest() ---> request ="+request.getParameter("message"));
         if("users".equals(request.getParameter("message"))){
             System.out.println("DEBUG | EventsServlet ---> processRequest() ---> forming JsonArray of Users");
-//            call DB for users list, for now it will be hardcoded
-//            example of structure :
-//            jsonObject [ {Name: "FirstName LastName Patronymmic"} , {Name: "FirstName LastName Patronymmic"} ]
+            //read list of users of this department. Get the department from moderator email (cookies.email)
+            //json respond:
+            //jsonObject [ {Name: "FirstName LastName Patronymmic"} , {Name: "FirstName LastName Patronymmic"} ]
 
             JsonArray json = Json.createArrayBuilder()
                     .add(Json.createObjectBuilder()
@@ -44,12 +44,12 @@ public class EventsServlet extends HttpServlet {
         }
         else if("user".equals(request.getParameter("message"))){
             System.out.println("DEBUG | EventsServlet ---> processRequest() ---> forming an event Json based on type: "+request.getParameter("type")+" and user name: "+request.getParameter("name"));
-//            call DB for evens of this type = request.getParameter("e_type") and full name = request.getParameter("e_name") of user
-//            example of structure :
-//            jsonObject {
-//                message : 1  // '0' if there is no Event on this user and '1' if there is one
-//                Event_name : 'Birthday on 16.09'
-//            }
+            //check event existance by type = request.getParameter("e_type") and full name  of user = request.getParameter("e_name")
+            //example of structure :
+            //jsonObject {
+            //  message : 1  // '0' if there is no Event on this user and '1' if there is one
+            //  Event_name : 'Birthday on 16.09'
+            //}
             JsonObject json = Json.createObjectBuilder()
                     .add("message","1")
                     .add("type","Corporate")
@@ -62,8 +62,7 @@ public class EventsServlet extends HttpServlet {
         }
         else if("add".equals(request.getParameter("message"))) {
             System.out.println("DEBUG | EventsServlet ---> processRequest() ---> adding user to Database with name: " + request.getParameter("Name") + " and email: " + request.getParameter("Email"));
-            //call Db for merging a User entity. Fields can be added easily
-            // Basic are : Full name (or like 3 parts of name) , email
+            //merge new User to DB. request fields: "Name" , "Emai;"
             JsonObject json = Json.createObjectBuilder()
                     .add("message", "Success on adding user =) kinda lel")
                     .build();
@@ -73,7 +72,8 @@ public class EventsServlet extends HttpServlet {
         }
         else if("event".equals(request.getParameter("message"))){
             System.out.println("DEBUG | EventsServlet ---> processRequest() --->  creating Event");
-            //merge an Event
+            //merge new Event to DB.
+            //fields: name, date, content (email content) (for now) Still in development
             JsonObject json = Json.createObjectBuilder()
                     .add("message", "Event merged to db")
                     .build();

@@ -19,24 +19,6 @@ $(document).ready(function(){
 		$( "#datepicker" ).datepicker();
    		});
 
-	   	/*//test JSON for members
-   		var jsonResult = [{
-		    "Id": 1,
-		    "Name": "Иванов Иван Иванович"},
-		{
-		    "Id": 2,
-		    "Name": "Алексеев Алексей Алексеевич"},
-		{
-		    "Id": 4,
-		    "Name": "Петров Петр Петрович"}
-		]
-
-		$.each(jsonResult, function() {
-		   $('#MembersList').append(
-		        $("<option></option>").text(this.Name)
-		   );
-		});*/
-
 		$.ajax({
 			type : "POST",
 			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
@@ -184,6 +166,7 @@ function add_member(){
 function submitForm(){
 		var name = document.getElementById("name");
 		var date = document.getElementById("datepicker");
+		var comment = document.getElementById("comment");
 		$.ajax({
 			type : "POST",
 			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
@@ -191,7 +174,8 @@ function submitForm(){
 			{
 				"message" : "event",
 				"name": name.value,
-				"date": date.value
+				"date": date.value,
+				"content":comment.value
 			},
 			dataType: "json",
 

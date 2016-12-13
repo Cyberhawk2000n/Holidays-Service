@@ -131,6 +131,7 @@ public class EventsServlet extends HttpServlet {
                         else
                             jsonBuilder.add(Json.createObjectBuilder().add("Name", person.getName() + " "
                                 + " " + person.getPatronymic() + " " + person.getSurname()));
+                        jsonBuilder.add(Json.createObjectBuilder().add("id", person.getId()));
                     }
                 }
             return jsonBuilder.build();

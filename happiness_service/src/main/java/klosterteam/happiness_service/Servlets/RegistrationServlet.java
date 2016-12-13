@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import klosterteam.happiness_service.HappyHibernate;
+import klosterteam.hibernate.Users;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Stanislav on 07.12.2016.
@@ -18,17 +22,28 @@ public class RegistrationServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        Logger log = LogManager.getLogger(RegistrationServlet.class);
         if("init".equals(request.getParameter("message"))){
-            System.out.println("DEBUG | RegistrationServlet ---> processRequest() ---> login in "+request.getParameter("email"));
-
-            Cookie cookie_role = new Cookie("role", "admin");
-            Cookie cookie_email = new Cookie("email", request.getParameter("email"));
-            JsonObject json = Json.createObjectBuilder().add("message", "success").build();
-            response.setContentType("application/json");
-            response.getWriter().write(json.toString());
-            response.addCookie(cookie_role);
-            response.addCookie(cookie_email);
+            log.debug("RegistrationServlet ---> processRequest() ---> login in "+request.getParameter("email"));
+            
+            HappyHibernate hHibernate = new HappyHibernate();
+            Users user = hHibernate.selectUsersByEmail(request.getParameter("email")).get(0);
+            if (hHibernate.authUser(request.getParameter("email"), request.getParameter("pw")) == 0)
+            {
+                Cookie cookie_role = new Cookie("role", user.getRoleId().getRole());
+                Cookie cookie_email = new Cookie("email", request.getParameter("email"));
+                JsonObject json = Json.createObjectBuilder().add("message", "success").build();
+                response.setContentType("application/json");
+                response.getWriter().write(json.toString());
+                response.addCookie(cookie_role);
+                response.addCookie(cookie_email);
+            }
+            else
+            {
+                JsonObject json = Json.createObjectBuilder().add("message", "fail").build();
+                response.setContentType("application/json");
+                response.getWriter().write(json.toString());
+            }
             return;
 
         }

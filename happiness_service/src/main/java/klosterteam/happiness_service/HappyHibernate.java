@@ -1128,6 +1128,25 @@ public class HappyHibernate {
         
     }
     
+    public List<Users> selectUsersByDepartment(Departments depId)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Users.class);
+            cr.add(Restrictions.eq("depId", depId));
+            List<Users> list = cr.list();
+            session.getTransaction().commit();
+            return list;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Getting from database error!", exc);
+            return null;
+        }
+        
+    }
+    
     public Logins selectLoginByUser(Users userId)
     {
         try
@@ -1587,7 +1606,7 @@ public class HappyHibernate {
         
     }
     
-        List<Pack> getCategoriesAndSubcategories() {
+    public List<Pack> getCategoriesAndSubcategories() {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
         {
@@ -1615,7 +1634,7 @@ public class HappyHibernate {
         }
     }
     
-    List<Pack> getUserPreferences(Users user) {
+    public List<Pack> getUserPreferences(Users user) {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
         {
@@ -1645,7 +1664,7 @@ public class HappyHibernate {
         }
     }
     
-    List<Pack> getCategoriesAndGifts() {
+    public List<Pack> getCategoriesAndGifts() {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
         {
@@ -1673,7 +1692,7 @@ public class HappyHibernate {
         }
     }
     
-    Events createEvent(String name, Date eventDate, boolean everyYear, Event_types typeId,
+    public Events createEvent(String name, Date eventDate, boolean everyYear, Event_types typeId,
             Users userId, String template, Users managerId)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
@@ -1704,7 +1723,7 @@ public class HappyHibernate {
         }
     }
     
-    int editEvent(Events event, String name, Date date, boolean everyYear, Event_types typeId,
+    public int editEvent(Events event, String name, Date date, boolean everyYear, Event_types typeId,
             Users userId, boolean active, String template, Users managerId)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
@@ -1733,7 +1752,7 @@ public class HappyHibernate {
         }
     }
     
-    int editUser(Users user, String name, String surname, String patronymic, Date birthday, Roles role,
+    public int editUser(Users user, String name, String surname, String patronymic, Date birthday, Roles role,
             String email, String about, Departments depId, boolean giveGift)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
@@ -1764,7 +1783,7 @@ public class HappyHibernate {
         }
     }
     
-    int authUser(String email, String password)
+    public int authUser(String email, String password)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
@@ -1782,7 +1801,7 @@ public class HappyHibernate {
         }
     }
     
-    Gifts addGift(String name, Categories cat)
+    public Gifts addGift(String name, Categories cat)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
@@ -1801,7 +1820,7 @@ public class HappyHibernate {
         }
     }
     
-    Vote addVote(Events event, Gifts gift)
+    public Vote addVote(Events event, Gifts gift)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
@@ -1820,7 +1839,7 @@ public class HappyHibernate {
         }
     }
     
-    int updateMembers(FileInputStream csvInput) throws FileNotFoundException
+    public int updateMembers(FileInputStream csvInput) throws FileNotFoundException
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
@@ -1833,11 +1852,15 @@ public class HappyHibernate {
             //fos.
             String str = "Nochevnoy;Dmitriy;Sergeevich;26.12.1995;1;Dep1;nochds@gmail.com\n";
             fos.write(str);
-            str = "Nochevnoy;Dmitriy;;7.12.1995;5;Dep5;cyberhawk2000n@gmail.com\n";
+            str = "Read;Jim;;12.12.1995;5;Dep5;cyberhawk2000n@gmail.com\n";
+            fos.write(str);
+            str = "King;John;Dunbar;5.1.1995;5;Dep5;nochds11@gmail.com\n";
+            fos.write(str);
+            str = "Reevs;Eujene;Olegovich;7.1.1995;5;Dep5;nochds22@gmail.com\n";
             fos.write(str);
             fos.close();
             BufferedReader csv = new BufferedReader(new FileReader("in.csv"));
-            /*while ((line = csv.readLine()) != null)//while
+            while ((line = csv.readLine()) != null)//while
             {
                 columns = line.split(csvSplitBy);
                 //for (int i = 0; i < columns.length; i++)
@@ -1845,7 +1868,7 @@ public class HappyHibernate {
                 //    log.warn(columns[i] + "\n\n");
                 //}
                 rows.put(columns[columns.length - 1], columns);
-            }*/
+            }
             List<Users> users = this.selectUsers();
             for (int i = 0; i < users.size(); i++)
             {
@@ -1953,7 +1976,7 @@ public class HappyHibernate {
         return 0;
     }
     
-    int sendMessage(String email, String message)
+    public int sendMessage(String email, String message)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
@@ -1988,7 +2011,7 @@ public class HappyHibernate {
         }
     }
     
-    int createEventShedule(Events event, boolean isRepeatable)
+    public int createEventShedule(Events event, boolean isRepeatable)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try

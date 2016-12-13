@@ -21,31 +21,16 @@ public class RegistrationServlet extends HttpServlet {
 
         if("init".equals(request.getParameter("message"))){
             System.out.println("DEBUG | RegistrationServlet ---> processRequest() ---> login in "+request.getParameter("email"));
-            boolean cookie_init = false;
-            Cookie[] cookies = request.getCookies();
 
-            if(cookies!=null)
-                for(Cookie c: cookies){
-                    if(c.getName()=="role")
-                        cookie_init=true;
-                }
-            if(cookie_init == false) {
-                Cookie cookie = new Cookie("role", "user");
-                JsonObject json = Json.createObjectBuilder().add("message", "success").build();
-                response.setContentType("application/json");
-                response.getWriter().write(json.toString());
-                response.addCookie(cookie);
-                return;
-            }
-            else{
-                JsonObject json = Json.createObjectBuilder()
-                        .add("message", "success")
-                        .add("info","cookie already exists")
-                        .build();
-                response.setContentType("application/json");
-                response.getWriter().write(json.toString());
-                return;
-            }
+            Cookie cookie_role = new Cookie("role", "admin");
+            Cookie cookie_email = new Cookie("email", request.getParameter("email"));
+            JsonObject json = Json.createObjectBuilder().add("message", "success").build();
+            response.setContentType("application/json");
+            response.getWriter().write(json.toString());
+            response.addCookie(cookie_role);
+            response.addCookie(cookie_email);
+            return;
+
         }
     }
 

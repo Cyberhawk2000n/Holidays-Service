@@ -54,7 +54,7 @@ $(document).ready(function(){
 			}
 		if(type_event_flag==0)
 			return;
-		alert ("Data ot from radio:"+type_event);
+		alert ("Data ot from radio:"+type_event+" \n name:"+this.value);
 
 		var new_name = document.getElementById('name');
 		$.ajax({

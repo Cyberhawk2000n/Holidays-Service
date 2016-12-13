@@ -41,14 +41,6 @@
         <url-pattern>/MainServlet</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>klosterteam.happiness_service.Servlets.LoginServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/LoginServlet</url-pattern>
-    </servlet-mapping>
-    <servlet>
         <servlet-name>RegistrationServlet</servlet-name>
         <servlet-class>klosterteam.happiness_service.Servlets.RegistrationServlet</servlet-class>
     </servlet>
@@ -58,7 +50,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>votingServlet</servlet-name>
-        <jsp-file>Voting.jsp</jsp-file>
+        <jsp-file>/Voting.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>votingServlet</servlet-name>
@@ -66,7 +58,7 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>registration</welcome-file>
+        <welcome-file>registration.html</welcome-file>
     </welcome-file-list>
     <session-config>
         <session-timeout>

@@ -32,13 +32,15 @@ public class Preferences implements Serializable {
     @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private short id;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", unique = false, nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_Preferences_user_id_Users_id"),
+            unique = false, nullable = false)
     private Users userId;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "cat_id", unique = false, nullable = false)
+    @JoinColumn(name = "cat_id", foreignKey = @ForeignKey(name = "FK_Preferences_cat_id_Categories_id"),
+            unique = false, nullable = false)
     private Categories catId;
 
     public Preferences() {

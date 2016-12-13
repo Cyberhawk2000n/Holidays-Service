@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -32,9 +33,10 @@ public class Departments implements Serializable {
     private int id;
     @Column(name="name", unique = true, nullable = false, length = 64)
     private String name;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "manager_id", unique = false, nullable = true)
+    @JoinColumn(name = "manager_id", foreignKey = @ForeignKey(name = "FK_Departments_manager_id_Users_id"),
+            unique = false, nullable = true)
     private Users managerId;
 
     public Departments() {

@@ -18,6 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import klosterteam.hibernate.Categories;
+import klosterteam.hibernate.Event_types;
 import klosterteam.hibernate.Events;
 import klosterteam.hibernate.Gifts;
 import klosterteam.hibernate.User_vote;
@@ -71,11 +73,42 @@ public class ControllerServlet extends HttpServlet {
             if (hHibernate == null)
             {
                 hHibernate = new HappyHibernate();
-                
+                //Users user = hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);
+                //Events event = hHibernate.selectEventsByUser(user).get(0);
+                /*Event_types typeId = hHibernate.selectEventTypes("Birthday").get(0);
+                Events event = hHibernate.createEvent("Birthday of " + user.getName(),
+                        user.getBirthday(), true, typeId, user, "template", null);
+                Categories cat = hHibernate.selectCategoryByName("Laptop").get(0);
+                Gifts gift = hHibernate.selectGiftByName("Asus K53SJ");
+                Vote vote = hHibernate.createVote(event, gift, 2);
+                hHibernate.createUserVote(user, event, vote);
+                hHibernate.changeVoteCount(vote, 3);*/
+                //Gifts gift = hHibernate.selectGiftByName("Asus K53SJ");
+                //Vote vote = hHibernate.createVote(event, gift, 3);
+                //hHibernate.deleteVote(vote);
+                //log.warn("\n\n" + Calendar.getInstance().getTime().toString() + "\n\n");
+                //hHibernate.deleteMoney(event);
+                //CREATE SHEDULED EVENT
                 /*Users user = hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);
-                Events event = hHibernate.selectEventsByUser(user).get(0);
-                User_vote uVote = hHibernate.selectUserVotes(user, event).get(0);
-                hHibernate.deleteUserVote(uVote);*/
+                Event_types typeId = hHibernate.selectEventTypes("Birthday").get(0);
+                
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(user.getBirthday());
+                
+                Calendar date = Calendar.getInstance();
+                date.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+                date.set(Calendar.DATE, calendar.get(Calendar.DATE));
+                
+                Calendar current = Calendar.getInstance();
+                if (date.compareTo(current) > 0)
+                    calendar.set(Calendar.YEAR, current.get(Calendar.YEAR));
+                else
+                    calendar.set(Calendar.YEAR, current.get(Calendar.YEAR) + 1);
+                Events event = hHibernate.createEvent("Birthday of " + user.getName(),
+                        calendar.getTime(), true, typeId, user, "template", null);
+                hHibernate.createEventShedule(event, true);*/
+                //User_vote uVote = hHibernate.selectUserVotes(user, event).get(0);
+                //hHibernate.deleteUserVote(uVote);*/
                 /*Gifts gift = hHibernate.selectGiftByName("Prestigio PAP3350");
                 Vote vote = hHibernate.createVote(event, gift, 1);
                 if (vote == null)
@@ -88,21 +121,6 @@ public class ControllerServlet extends HttpServlet {
                 //sendMessage("nochds@gmail.com", "Hello, now you are user of Happiness Service!");
                 //Users user = hHibernate.selectUserById(100);
                 //hHibernate.deleteUser(user);
-                /*SchedulerFactory sf = new StdSchedulerFactory();
-                Scheduler sche = sf.getScheduler();
-                sche.start();
-                JobDetail job = newJob(DoEventActiveJob.class)
-                .withIdentity("job", "group1")
-                .usingJobData("email", user.getEmail())
-                .usingJobData("eventId", event.getId())
-                .build();
-                //job.getJobDataMap().
-                CronTrigger cron = newTrigger()
-                .withIdentity("trigger", "group1")
-                .withSchedule(cronSchedule("0/10 * * * * ?"))//"0 0 3 * * ?"
-                .forJob("job", "group1")
-                .build();
-                sche.scheduleJob(job, cron);*/
                 
                 /*Users user = hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);
                 Events event = hHibernate.selectEventsByUser(user).get(0);
@@ -157,7 +175,7 @@ public class ControllerServlet extends HttpServlet {
             }
             else
             {
-                //updateMembers(null);
+                //hHibernate.updateMembers(null);
                 //Map<Categories, List<Categories>> map = hHibernate.selectCategoriesAndSubCategories();
                 //Set set = map.keySet();
                 //Users user = hHibernate.selectUsersByEmail("nochds@gmail.com").get(0);

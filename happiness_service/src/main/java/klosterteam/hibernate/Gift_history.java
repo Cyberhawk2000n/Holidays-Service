@@ -32,13 +32,15 @@ public class Gift_history implements Serializable {
     @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Gift_history_gift_id_Gifts_id"), unique = false, nullable = false)
+    @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Gift_history_gift_id_Gifts_id"),
+            unique = false, nullable = false)
     private Gifts giftId;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", unique = false, nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_Gift_history_user_id_Users_id"),
+            unique = false, nullable = false)
     private Users userId;
 
     public Gift_history() {

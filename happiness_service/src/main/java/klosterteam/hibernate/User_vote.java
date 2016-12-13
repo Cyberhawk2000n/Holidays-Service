@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -31,17 +32,20 @@ public class User_vote implements Serializable {
     @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", unique = false, nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_User_vote_user_id_Users_id"),
+            unique = false, nullable = false)
     private Users userId;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hist_id", unique = false, nullable = false)
+    @JoinColumn(name = "hist_id", foreignKey = @ForeignKey(name = "FK_User_vote_hist_id_Events_id"),
+            unique = false, nullable = false)
     private Events histId;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "vote_id", unique = false, nullable = false)
+    @JoinColumn(name = "vote_id", foreignKey = @ForeignKey(name = "FK_User_vote_vote_id_Vote_id"),
+            unique = false, nullable = false)
     private Vote voteId;
 
     public User_vote() {

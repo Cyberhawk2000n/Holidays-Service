@@ -32,9 +32,10 @@ public class Categories implements Serializable {
     @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "FK_Categories_parent_id_Categories_id"), unique = false, nullable = true)
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "FK_Categories_parent_id_Categories_id"),
+            unique = false, nullable = true)
     private Categories parentId;
     @Column(name="name", unique = false, nullable = false, length = 64)
     private String name;

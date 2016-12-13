@@ -28,9 +28,10 @@ import org.hibernate.annotations.OnDeleteAction;
         @UniqueConstraint(columnNames = "user_id")})
 public class Logins implements Serializable {
     @Id
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_Logins_user_id_Users_id"), unique = true, nullable = false)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_Logins_user_id_Users_id"),
+            unique = true, nullable = false)
     private Users userId;
     @Column(name="login", unique = false, nullable = false, length = 32)
     private String login;

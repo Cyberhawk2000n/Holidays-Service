@@ -32,13 +32,15 @@ public class Vote implements Serializable {
     @GeneratedValue
     @Column(name="id", unique = true, nullable = false)
     private long id;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hist_id", unique = false, nullable = false)
+    @JoinColumn(name = "hist_id", foreignKey = @ForeignKey(name = "FK_Vote_hist_id_Events_id"),
+            unique = false, nullable = false)
     private Events histId;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Vote_gift_id_Gifts_id"), unique = false, nullable = false)
+    @JoinColumn(name = "gift_id", foreignKey = @ForeignKey(name = "FK_Vote_gift_id_Gifts_id"),
+            unique = false, nullable = false)
     private Gifts giftId;
     @Column(name="count", unique = false, nullable = false)
     private int count;

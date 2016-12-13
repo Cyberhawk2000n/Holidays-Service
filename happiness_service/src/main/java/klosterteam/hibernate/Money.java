@@ -28,9 +28,10 @@ import org.hibernate.annotations.OnDeleteAction;
         @UniqueConstraint(columnNames = "hist_id")})
 public class Money implements Serializable {
     @Id
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hist_id", unique = true, nullable = false)
+    @JoinColumn(name = "hist_id", foreignKey = @ForeignKey(name = "FK_Money_hist_id_Events_id"),
+            unique = true, nullable = false)
     private Events histId;
     @Column(name="money", unique = false, nullable = false)
     private long money;

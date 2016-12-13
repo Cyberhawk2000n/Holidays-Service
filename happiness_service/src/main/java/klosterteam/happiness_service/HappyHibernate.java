@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import klosterteam.hibernate.Events;
 import klosterteam.hibernate.Users;
 import klosterteam.hibernate.Event_types;
@@ -1672,23 +1673,34 @@ public class HappyHibernate {
         }
     }
     
-    int createEvent(String name, Date date, boolean everyYear, Event_types typeId,
+    Events createEvent(String name, Date eventDate, boolean everyYear, Event_types typeId,
             Users userId, String template, Users managerId)
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
         {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(eventDate);
+
+            Calendar date = Calendar.getInstance();
+            date.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+            date.set(Calendar.DATE, calendar.get(Calendar.DATE));
+
+            Calendar current = Calendar.getInstance();
+            if (date.compareTo(current) > 0)
+                calendar.set(Calendar.YEAR, current.get(Calendar.YEAR));
+            else
+                calendar.set(Calendar.YEAR, current.get(Calendar.YEAR) + 1);
             boolean active = false;
-            long diff = date.getTime() - (new Date()).getTime();
+            long diff = calendar.getTimeInMillis() - (new Date()).getTime();
             if (diff > -43200000L && diff < 1209600000L)
                 active = true;
-            this.createEvent(name, date, everyYear, typeId, userId, active, template, managerId);
-            return 0;
+            return this.createEvent(name, calendar.getTime(), everyYear, typeId, userId, active, template, managerId);
         }
         catch (Exception exc)
         {
-            log.debug("Editing event exception!", exc);
-            return -1;
+            log.debug("Creating event exception!", exc);
+            return null;
         }
     }
     
@@ -1821,17 +1833,17 @@ public class HappyHibernate {
             //fos.
             String str = "Nochevnoy;Dmitriy;Sergeevich;26.12.1995;1;Dep1;nochds@gmail.com\n";
             fos.write(str);
-            str = "Nochevnoy;Dmitriy;;7.12.1995;5;Dep5;nochds2@gmail.com\n";
+            str = "Nochevnoy;Dmitriy;;7.12.1995;5;Dep5;cyberhawk2000n@gmail.com\n";
             fos.write(str);
             fos.close();
             BufferedReader csv = new BufferedReader(new FileReader("in.csv"));
             /*while ((line = csv.readLine()) != null)//while
             {
                 columns = line.split(csvSplitBy);
-                for (int i = 0; i < columns.length; i++)
-                {
-                    log.warn(columns[i] + "\n\n");
-                }
+                //for (int i = 0; i < columns.length; i++)
+                //{
+                //    log.warn(columns[i] + "\n\n");
+                //}
                 rows.put(columns[columns.length - 1], columns);
             }*/
             List<Users> users = this.selectUsers();
@@ -1899,26 +1911,33 @@ public class HappyHibernate {
                     {
                         Departments depId = (Departments)this.selectDepartments(rows.get(email)[5]).get(0);
                         String[] dayMonthYear = rows.get(email)[3].split("\\.");
-                        /*log.warn("\nDay!!!!!!!!\n" + dayMonthYear[0] + ": " + Integer.valueOf(dayMonthYear[0]));
-                        log.warn("\nMonth!!!!!!!!\n" + dayMonthYear[1] + ": " + Integer.valueOf(dayMonthYear[1]));
-                        log.warn("\nYear!!!!!!!!\n" + dayMonthYear[2] + ": " + Integer.valueOf(dayMonthYear[2]));
-                        log.debug("\n " + rows.get(email)[3] + " ::: " + dayMonthYear.length + " \n");*/
-                        //Date date = new Date(Integer.valueOf(dayMonthYear[0]), );
                         Users user = this.createUser(rows.get(email)[1], rows.get(email)[0], rows.get(email)[2],
                                 new Date(Integer.valueOf(dayMonthYear[2]) - 1900, Integer.valueOf(dayMonthYear[1]) - 1,
                                         Integer.valueOf(dayMonthYear[0])),
                                 role, email, "about", depId, true);
                         this.createLogin(user, user.getEmail(), user.getEmail());
                         Event_types typeId = this.selectEventTypes("Birthday").get(0);
-                        Date eventDate = user.getBirthday();
-                        eventDate.setYear((new Date()).getYear());
+                        //Date eventDate = user.getBirthday();
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(user.getBirthday());
+
+                        Calendar date = Calendar.getInstance();
+                        date.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+                        date.set(Calendar.DATE, calendar.get(Calendar.DATE));
+
+                        Calendar current = Calendar.getInstance();
+                        if (date.compareTo(current) > 0)
+                            calendar.set(Calendar.YEAR, current.get(Calendar.YEAR));
+                        else
+                            calendar.set(Calendar.YEAR, current.get(Calendar.YEAR) + 1);
+                        //eventDate.setYear((new Date()).getYear());
                         boolean active = false;
-                        long diff = eventDate.getTime() - (new Date()).getTime();
+                        long diff = calendar.getTimeInMillis() - (new Date()).getTime();
                         if (diff > -43200000L && diff < 1209600000L)
                             active = true;
-                        Events event = this.createEvent("Birthday of " + user.getEmail(), eventDate,
+                        Events event = this.createEvent("Birthday of " + user.getEmail(), calendar.getTime(),
                                 true, typeId, user, active, "template", null);
-                        
+                        //this.createEventShedule(event, true);
                         //sendMessage(); login, password
 
                     }
@@ -1960,6 +1979,53 @@ public class HappyHibernate {
             msg.setText(message);
             msg.setSentDate(new Date());
             Transport.send(msg);
+            return 0;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Send e-mail error!", exc);
+            return -1;
+        }
+    }
+    
+    int createEventShedule(Events event, boolean isRepeatable)
+    {
+        Logger log = LogManager.getLogger(HappyHibernate.class);
+        try
+        {
+            Map<String, Object> params = new HashMap<>();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(event.getDate());
+            calendar.setTimeInMillis(calendar.getTimeInMillis() - 1209600000L);
+            //if (calendar.compareTo(Calendar.getInstance()) < 0)
+            //    ;
+            String cronEx = "0 0 0 " + calendar.get(Calendar.DATE) + " "
+                    + calendar.get(Calendar.MONTH) + " ?";/*"0 * * * * ?"; */
+            /*if (calendar.getTimeInMillis() < Calendar.getInstance().getTimeInMillis())
+                cronEx = "0 0 0 " + calendar.get(Calendar.DATE) + " "
+                    + calendar.get(Calendar.MONTH) + " ?"
+                    + (Calendar.getInstance().get(Calendar.YEAR) + 1);
+            else
+                cronEx = "0 0 0 " + calendar.get(Calendar.DATE) + " "
+                    + calendar.get(Calendar.MONTH) + " ?"
+                    + (Calendar.getInstance().get(Calendar.YEAR));*/
+            params.put("type", "1"); //shedule do event active
+            params.put("event", event);
+            AppCronTrigger.createTrigger(params, cronEx, isRepeatable);
+            calendar.setTime(event.getDate());
+            calendar.setTimeInMillis(calendar.getTimeInMillis() - 259200000L);
+            cronEx = "0 0 0 " + calendar.get(Calendar.DATE) + " "
+                    + calendar.get(Calendar.MONTH) + " ?";/*cronEx = "20 * * * * ?";*/
+            //params.remove("type");
+            params.replace("type", "2"); //end of vote
+            //params.put("event", event);
+            AppCronTrigger.createTrigger(params, cronEx, isRepeatable);
+            calendar.setTime(event.getDate());
+            cronEx = "0 0 0 " + calendar.get(Calendar.DATE) + " "
+                    + calendar.get(Calendar.MONTH) + " ?";/*cronEx = "40 * * * * ?";*/
+            params.replace("type", "3"); //end of event and others (inactive)
+            //params.put("event", event);
+            AppCronTrigger.createTrigger(params, cronEx, isRepeatable);
             return 0;
         }
         catch (Exception exc)

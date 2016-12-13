@@ -31,17 +31,19 @@ public class Users implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name="birthday", unique = false, nullable = false)
     private Date birthday;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "role_id", unique = false, nullable = false)
+    @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_Users_role_id_Roles_id"),
+            unique = false, nullable = false)
     private Roles roleId;
     @Column(name="email", unique = true, nullable = false, length = 64)
     private String email;
     @Column(name="about", unique = false, nullable = true, length = 256)
     private String about;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER/*, cascade = CascadeType.REMOVE*/)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "dep_id", unique = false, nullable = false)
+    @JoinColumn(name = "dep_id", foreignKey = @ForeignKey(name = "FK_Users_dep_id_Departments_id"),
+            unique = false, nullable = false)
     private Departments depId;
     @Column(name="give_gift", unique = false, nullable = false)
     private boolean giveGift;

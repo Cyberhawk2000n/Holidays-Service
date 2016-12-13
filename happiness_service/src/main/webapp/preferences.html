@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact form using Bootstrap 3.3.4</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-3.1.1.min.js"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/about-me-preferences-scripts.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="main.html">HappyService</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="main.html">Main</a></li>
+            <li><a href="events-create.html">Events</a></li>
+            <li class="dropdown active">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">About me
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="preferences.html">My preferences</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+    		<h3>Hello, asshole. Fill your preferences</h3>
+        <h4>Categories:</h4>
+		</div>
+	</div>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <div class="form-group col-sm-8" id="ListOfCategories">
+      </div>
+    </div>
+	</div>
+      <div class="row">
+        <div class="col-md-6 col-sm-offset-3">
+            <button type="submit" id="form-submit" class="btn btn-success btn-lg" onclick="submitForm();">Save info</button>
+        </div>
+      </div>
+</body>
+
+</html>
+

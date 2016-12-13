@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Happyness Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="video-background.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/events-create-scripts.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/jquery.cookie.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="main.html">HappyService</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="main.html">Main</a></li>
+            <li class="active"><a href="events-create.html">Events</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">About me
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="preferences.html">My preferences</a></li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+<!--<video autoplay loop muted poster="screenshot.jpg" id="background">
+    <source src="http://techslides.com/demos/sample-videos/small.mp4" type="video/mp4">
+</video>
+-->
+  <div class="row">
+    <div class="col-md-6 col-sm-offset-3">
+        <h1>Create-event</h1>
+        <form role="form" id="EventForm" onclick="check()" \>
+          
+            <div class="row">
+              <div class="form-group col-sm-6">
+                  <label for="EventFreq" class="h4">Choose an event frequency</label>
+                  <div id="EventFreq">
+                      <label class="radio-inline">
+                          <input type="radio" name="freq_radio" value="Single">Single</label>
+                      <label class="radio-inline">
+                          <input type="radio" name="freq_radio" value="Every Year">Every Year</label>
+                  </div>
+              </div>            
+            </div>
+          
+          <div class="row">
+              <div class="form-group col-sm-6">
+                  <label for="EventType" class="h4">Choose an event content-type</label>
+                  <div id="EventType">
+                      <label class="radio-inline">
+                          <input type="radio" name="type_radio" value="Birthday">Birthday</label>
+                      <label class="radio-inline">
+                          <input type="radio" name="type_radio" value="Corporate">Corporate</label>
+                      <label class="radio-inline">
+                          <input type="radio" name="type_radio" value="Addition">Addition to the family</label>
+                  </div>
+              </div>            
+            </div>
+          
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="datepicker" class="h4">Select month and day</label>
+                    <input type='text' name="event_date" id="datepicker" class="form-control"/>               
+              </div>        
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label class="h4">Choose a person</label>
+                    <select class="selectpicker" name="event_person" id="MembersList" data-live-search="true">
+                    </select>
+                    <button type="button" class="btn btn-default btn-sm"  data-toggle="modal" data-target="#myModal"id="Add member">
+                      <span class="glyphicon glyphicon-plus"></span> Add member
+                    </button>
+                    <button type="button" class="hidden btn btn-default btn-sm" data-toggle="modal" data-target="#myModal1" id="EventExistError">
+                      <span class="glyphicon glyphicon-info-sign"></span> Events already exists!
+                    </button>
+                    
+                    <div id="myModal1" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+                      <!--Modal body-->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Event info</h4>
+                          </div>
+                          <div class="modal-body" id="myModal1_info">
+                            test
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="myModal" class="modal fade" role="dialog">
+                      <div class="modal-dialog">
+                      <!--Modal body-->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Enter new member info</h4>
+                          </div>
+                          <div class="modal-body">
+                            <form>
+                              <label for="email" class="h4">Email</label>
+                              <input type="email" class="form-control" id="email" placeholder="*me@gmail.com" required>
+                              <label for="name" class="h4">Full name</label>
+                              <input type="text" class="form-control" id="name" placeholder="Иванов Петр Алексеевич" required>
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal" onclick="add_member();">Create</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Abort</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+             </div>
+            </div>       
+
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label class="h4">Choose a responsible person</label>
+                <br>
+                  <select class="selectpicker" name="responsible_person" id="OrganizersList" data-live-search="true">
+                    <option>eduard kloster</option>
+                    <option>admin</option>
+                  </select>
+              </div>
+            </div>         
+            
+            <div class="row">
+              <div class="form-group col-sm-6">
+                <label class="h4">Email content</label>
+                   <textarea class="form-control" disabled="true" rows="5" id="comment"></textarea>
+                   <button type="button" class="btn btn-default btn-sm" id="Refresh_email" onclick="refresh_email();" disabled="true">
+                      <span class="glyphicon glyphicon-refresh"></span> Refresh
+                    </button>
+              </div>        
+            </div>
+          <div id="msgSubmit" class="h3 text-center hidden">Message Submitted!</div>
+      </form>
+    </div>
+  </div>
+    
+    <div class="row">
+      <div class="col-md-6 col-sm-offset-3">
+        <button type="submit" id="form-submit" class="btn btn-success btn-lg" onclick="submitForm();">Create event</button>
+    </div>
+  </div>
+
+
+
+</body>
+
+</html>
+

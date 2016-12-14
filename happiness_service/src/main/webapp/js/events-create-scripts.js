@@ -32,7 +32,7 @@ $(document).ready(function(){
 				alert("Everything's fine");
 				$.each(responseText, function() {
 					$('#MembersList').append(
-					'<option value=\"' +this.Name +'\">'+this.Name+'</option>'
+					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
 					);
 				});
 			},
@@ -54,9 +54,6 @@ $(document).ready(function(){
 			}
 		if(type_event_flag==0)
 			return;
-		alert ("Data ot from radio:"+type_event);
-
-		var new_name = document.getElementById('name');
 		$.ajax({
 			type : "POST",
 			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
@@ -64,7 +61,7 @@ $(document).ready(function(){
 			{
 				"message" : "user",
 				"type" : type_event,
-				"name" : "test"
+				"id" : this.value
 			},
 			dataType: "json",
 
@@ -167,13 +164,24 @@ function submitForm(){
 		var name = document.getElementById("name");
 		var date = document.getElementById("datepicker");
 		var comment = document.getElementById("comment");
+                var type_event_array = document.getElementsByName('type_radio');
+                var id = $('#MemberList').value;
+                alert('Id of selected user'+id)
+		var type_event;
+		var type_event_flag=0;
+		for(var i=0;i<type_event_array.length;i++)
+			if(type_event_array[i].checked) {
+				type_event = type_event_array[i].value;
+				type_event_flag=1;
+			}
 		$.ajax({
 			type : "POST",
 			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
 			data :
 			{
 				"message" : "event",
-				"name": name.value,
+                                "type": type_event,
+				"id": id,
 				"date": date.value,
 				"content":comment.value
 			},

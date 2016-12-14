@@ -630,6 +630,26 @@ public class HappyHibernate {
         }
     }
     
+    public Logins changeLoginPassword(Logins login, String password)
+    {
+        try
+        {
+            session.beginTransaction();
+            login = (Logins)session.get(Logins.class, login);
+            if (login == null)
+                return null;
+            login.setPassword(DigestUtils.md5Hex(password));
+            session.save(login);
+            session.getTransaction().commit();
+            return login;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Editing database error!", exc);
+            return null;
+        }
+    }
+    
     public Users changeUserSurname(Users user, String surname)
     {
         try
@@ -1285,6 +1305,51 @@ public class HappyHibernate {
         
     }
     
+    public List<Preferences> selectPreferencesByUser(Users userId)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Preferences.class);
+            cr.add(Restrictions.eq("userId", userId));
+            List<Preferences> list = cr.list();
+            session.getTransaction().commit();
+            if (list == null)
+                return null;
+            else
+                return list;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Getting from database error!", exc);
+            return null;
+        }
+        
+    }
+    
+    public Preferences selectPreferencesByUserAndCat(Users userId, Categories catId)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Preferences.class);
+            cr.add(Restrictions.eq("userId", userId));
+            cr.add(Restrictions.eq("catId", catId));
+            List<Preferences> list = cr.list();
+            session.getTransaction().commit();
+            if (list == null)
+                return null;
+            else
+                return list.get(0);
+        }
+        catch (Exception exc)
+        {
+            log.debug("Getting from database error!", exc);
+            return null;
+        }
+        
+    }
+    
     public List<Events> selectEventsByType(Event_types type)
     {
         try
@@ -1399,7 +1464,7 @@ public class HappyHibernate {
         
     }
     
-    public Map<Categories, List<Categories>> selectPreferencesByUser(Users user)
+    public Map<Categories, List<Categories>> selectMapPreferencesByUser(Users user)
     {
         try
         {
@@ -1639,7 +1704,7 @@ public class HappyHibernate {
         try
         {
             List<Pack> packs = new ArrayList<>();
-            Map<Categories, List<Categories>> map = this.selectPreferencesByUser(user);
+            Map<Categories, List<Categories>> map = this.selectMapPreferencesByUser(user);
             if (map == null)
                 return null;
             Set set = map.keySet();
@@ -1815,7 +1880,7 @@ public class HappyHibernate {
         }
         catch (Exception exc)
         {
-            log.debug("Editing user exception!", exc);
+            log.debug("Editing gift exception!", exc);
             return null;
         }
     }
@@ -1834,7 +1899,26 @@ public class HappyHibernate {
         }
         catch (Exception exc)
         {
-            log.debug("Editing user exception!", exc);
+            log.debug("Editing vote exception!", exc);
+            return null;
+        }
+    }
+    
+    public Preferences addPreferences(Users userId, Categories catId)
+    {
+        Logger log = LogManager.getLogger(HappyHibernate.class);
+        try
+        {
+            if (this.selectPreferencesByUserAndCat(userId, catId) == null)
+            {
+                return this.createPreferences(userId, catId);
+            }
+            else
+                return null;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Editing vote exception!", exc);
             return null;
         }
     }

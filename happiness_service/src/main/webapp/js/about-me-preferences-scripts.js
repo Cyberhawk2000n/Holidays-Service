@@ -49,9 +49,9 @@ function submitForm(){
         selected_options.push(arr[i]);
         var count =0;
         var options = document.getElementsByName(arr[i]);
-        for(var j=0;j<options.length;j++){
-            if(options[j].selected ==true) {
-                selected_sub_options.push(options[j].value);
+        for(var j=0;j<options[0].length;j++){
+            if(options[0][j].selected == true){
+                selected_sub_options.push(options[0][j].value);
                 count++;
             }
         }
@@ -59,7 +59,7 @@ function submitForm(){
     }
     $.ajax({
         type : "POST",
-        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMePreferencesServlet",
         data :
         {
             "message" : "update",

@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by Stanislav on 23.11.2016.
@@ -15,13 +17,14 @@ import java.io.IOException;
 public class MainServlet extends HttpServlet{
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Logger log = LogManager.getLogger(MainServlet.class);
         if("info".equals(request.getParameter("message"))){
             // here we go to DB to get array of active events
             // json format:
             // jsonArray[
             // {date:"", name:""} , {date:"", name:""}
             // ]
-            System.out.println("DEBUG | MainServlet ---> processRequest() ---> reading list of active events from DB");
+            log.debug("MainServlet ---> processRequest() ---> reading list of active events from DB");
             JsonArray json = Json.createArrayBuilder()
                     .add(Json.createObjectBuilder()
                         .add("date","16/09/2016")
@@ -48,7 +51,7 @@ public class MainServlet extends HttpServlet{
             return;
         }
 
-        System.out.println("DEBUG | MainServlet ---> processRequest() --->  ");
+        log.debug("MainServlet ---> processRequest() --->  ");
         // If we didn't entered any case of
         JsonObject json = Json.createObjectBuilder()
                 .add("message", "Error 400: Bad request")

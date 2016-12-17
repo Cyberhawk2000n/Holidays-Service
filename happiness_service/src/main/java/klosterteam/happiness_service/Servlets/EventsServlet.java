@@ -1,6 +1,7 @@
 package klosterteam.happiness_service.Servlets;
 
 import java.io.*;
+import java.util.Calendar;
 import java.util.List;
 import javax.json.JsonArray;
 import javax.servlet.ServletException;
@@ -13,6 +14,8 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.servlet.http.Cookie;
 import klosterteam.happiness_service.HappyHibernate;
+import klosterteam.hibernate.Event_types;
+import klosterteam.hibernate.Events;
 import klosterteam.hibernate.Users;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,12 +53,7 @@ public class EventsServlet extends HttpServlet {
             //  message : 1  // '0' if there is no Event on this user and '1' if there is one
             //  Event_name : 'Birthday on 16.09'
             //}
-            JsonObject json = Json.createObjectBuilder()
-                    .add("message","1")
-                    .add("type","Corporate")
-                    .add("Date","16-09-2017")
-                    .add("User","Kloster V.A.")
-                    .build();
+            JsonObject json = this.getEventExists(request);
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
             return;
@@ -127,14 +125,62 @@ public class EventsServlet extends HttpServlet {
                     {
                         if ("".equals(person.getSurname()))
                             jsonBuilder.add(Json.createObjectBuilder().add("Name", person.getName() + " "
-                                + person.getSurname()));
+                                + person.getSurname()).add("id", person.getId()));
                         else
                             jsonBuilder.add(Json.createObjectBuilder().add("Name", person.getName() + " "
-                                + " " + person.getPatronymic() + " " + person.getSurname()));
-                        jsonBuilder.add(Json.createObjectBuilder().add("id", person.getId()));
+                                + " " + person.getPatronymic() + " " + person.getSurname()).add("id", person.getId()));
                     }
                 }
             return jsonBuilder.build();
+        }
+        catch (Exception exc)
+        {
+            log.warn("Getting users from DB exception", exc);
+            return null;
+        }
+    }
+    
+    protected JsonObject getEventExists(HttpServletRequest request)
+    {
+        Logger log = LogManager.getLogger(EventsServlet.class);
+        try
+        {
+            JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+            String type = "";
+            long userId = -1;
+            type = request.getParameter("type");
+            userId = Long.valueOf(request.getParameter("id"));
+            if (!"".equals(type) && userId != -1)
+            {
+                HappyHibernate hHibernate = new HappyHibernate();
+                Users user = hHibernate.selectUserById(userId);
+                Event_types eType = hHibernate.selectEventTypes(type).get(0);
+                List<Events> list = hHibernate.selectEventsByUserAndType(user, eType);
+                if (list == null)
+                {
+                    jsonBuilder.add("message","0");
+                }
+                else
+                {
+                    Events event = list.get(0);
+                    Calendar date = Calendar.getInstance();
+                    date.setTime(event.getDate());
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(date.get(Calendar.DATE))
+                            .append("-")
+                            .append(date.get(Calendar.MONTH))
+                            .append("-")
+                            .append(date.get(Calendar.YEAR));
+                    jsonBuilder.add("message","1")
+                    .add("type", event.getTypeId().getName())
+                    .add("Date", sb.toString());
+                    if (event.getUserId() != null)
+                        jsonBuilder.add("User", event.getUserId().getSurname() + " "
+                            + event.getUserId().getName().substring(0, 1) + ".");
+                }
+                return jsonBuilder.build();
+            }
+            return null;
         }
         catch (Exception exc)
         {

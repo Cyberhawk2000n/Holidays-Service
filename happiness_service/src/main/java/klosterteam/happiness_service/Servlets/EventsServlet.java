@@ -54,8 +54,11 @@ public class EventsServlet extends HttpServlet {
             //  Event_name : 'Birthday on 16.09'
             //}
             JsonObject json = this.getEventExists(request);
-            response.setContentType("application/json");
-            response.getWriter().write(json.toString());
+            if (json != null)
+            {
+                response.setContentType("application/json");
+                response.getWriter().write(json.toString());
+            }
             return;
         }
         else if("add".equals(request.getParameter("message"))) {
@@ -120,7 +123,7 @@ public class EventsServlet extends HttpServlet {
                     Users user = hHibernate.selectUsersByEmail(cookie.getValue()).get(0);
                     List<Users> list = hHibernate.selectUsersByDepartment(user.getDepId());
                     if (list.isEmpty())
-                        return null;
+                        return jsonBuilder.build();
                     for (Users person: list)
                     {
                         if ("".equals(person.getSurname()))

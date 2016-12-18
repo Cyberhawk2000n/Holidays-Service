@@ -29,7 +29,7 @@ public class RegistrationServlet extends HttpServlet {
             
             HappyHibernate hHibernate = new HappyHibernate();
             List<Users> users = hHibernate.selectUsersByEmail(request.getParameter("email"));
-            if (users != null)
+            if (users != null && !users.isEmpty())
             {
                 Users user = users.get(0);
                 if (hHibernate.authUser(request.getParameter("email"), request.getParameter("pw")) == 0)
@@ -48,6 +48,12 @@ public class RegistrationServlet extends HttpServlet {
                     response.setContentType("application/json");
                     response.getWriter().write(json.toString());
                 }
+            }
+            else
+            {
+                JsonObject json = Json.createObjectBuilder().add("message", "user not found").build();
+                response.setContentType("application/json");
+                response.getWriter().write(json.toString());
             }
             return;
 

@@ -1,11 +1,11 @@
--- Create Table: Gifts
+-- Create Table: Departments
 --------------------------------------------------------------------------------
-CREATE TABLE Gifts
+CREATE TABLE Departments
 (
-	id BIGINT NOT NULL 
-	,cat_id BIGINT NOT NULL 
+	id INTEGER NOT NULL 
 	,name VARCHAR(64) NOT NULL 
-	,CONSTRAINT PK_Gifts_id PRIMARY KEY (id)
+	,manager_id BIGINT  NULL 
+	,CONSTRAINT PK_Departments_id PRIMARY KEY (id)
 );
 
 
@@ -18,31 +18,6 @@ CREATE TABLE Logins
 	,login VARCHAR(32) NOT NULL 
 	,password VARCHAR(32) NOT NULL 
 	,CONSTRAINT PK_Logins_user_id PRIMARY KEY (user_id)
-);
-
-
-
--- Create Table: Vote
---------------------------------------------------------------------------------
-CREATE TABLE Vote
-(
-	hist_id BIGINT NOT NULL 
-	,gift_id BIGINT NOT NULL 
-	,count BIGINT NOT NULL 
-	,id BIGINT NOT NULL 
-	,CONSTRAINT PK_Vote_id PRIMARY KEY (id)
-);
-
-
-
--- Create Table: Money
---------------------------------------------------------------------------------
-CREATE TABLE Money
-(
-	hist_id BIGINT NOT NULL 
-	,money BIGINT NOT NULL 
-	,money_max BIGINT NOT NULL 
-	,CONSTRAINT PK_Money_hist_id PRIMARY KEY (hist_id)
 );
 
 
@@ -78,26 +53,15 @@ CREATE TABLE Categories
 
 
 
--- Create Table: Gift_history
+-- Create Table: Vote
 --------------------------------------------------------------------------------
-CREATE TABLE Gift_history
+CREATE TABLE Vote
 (
-	gift_id BIGINT NOT NULL 
-	,user_id BIGINT NOT NULL 
+	hist_id BIGINT NOT NULL 
+	,gift_id BIGINT NOT NULL 
+	,count BIGINT NOT NULL 
 	,id BIGINT NOT NULL 
-	,CONSTRAINT PK_Gift_history_id PRIMARY KEY (id)
-);
-
-
-
--- Create Table: Preferences
---------------------------------------------------------------------------------
-CREATE TABLE Preferences
-(
-	user_id BIGINT NOT NULL 
-	,cat_id BIGINT NOT NULL 
-	,id BIGINT NOT NULL 
-	,CONSTRAINT PK_Preferences_id PRIMARY KEY (id)
+	,CONSTRAINT PK_Vote_id PRIMARY KEY (id)
 );
 
 
@@ -113,14 +77,14 @@ CREATE TABLE Roles
 
 
 
--- Create Table: Departments
+-- Create Table: Money
 --------------------------------------------------------------------------------
-CREATE TABLE Departments
+CREATE TABLE Money
 (
-	id INTEGER NOT NULL 
-	,name VARCHAR(64) NOT NULL 
-	,manager_id BIGINT  NULL 
-	,CONSTRAINT PK_Departments_id PRIMARY KEY (id)
+	hist_id BIGINT NOT NULL 
+	,money BIGINT NOT NULL 
+	,money_max BIGINT NOT NULL 
+	,CONSTRAINT PK_Money_hist_id PRIMARY KEY (hist_id)
 );
 
 
@@ -154,6 +118,18 @@ CREATE TABLE Event_types
 
 
 
+-- Create Table: Gifts
+--------------------------------------------------------------------------------
+CREATE TABLE Gifts
+(
+	id BIGINT NOT NULL 
+	,cat_id BIGINT NOT NULL 
+	,name VARCHAR(64) NOT NULL 
+	,CONSTRAINT PK_Gifts_id PRIMARY KEY (id)
+);
+
+
+
 -- Create Table: User_vote
 --------------------------------------------------------------------------------
 CREATE TABLE User_vote
@@ -167,75 +143,85 @@ CREATE TABLE User_vote
 
 
 
--- Create Foreign Key: Vote.gift_id -> Gifts.id
-ALTER TABLE Vote ADD CONSTRAINT FK_Vote_gift_id_Gifts_id FOREIGN KEY (gift_id) REFERENCES Gifts(id);
+-- Create Table: Preferences
+--------------------------------------------------------------------------------
+CREATE TABLE Preferences
+(
+	user_id BIGINT NOT NULL 
+	,cat_id BIGINT NOT NULL 
+	,id BIGINT NOT NULL 
+	,CONSTRAINT PK_Preferences_id PRIMARY KEY (id)
+);
 
 
--- Create Foreign Key: Events.type_id -> Event_types.id
-ALTER TABLE Events ADD CONSTRAINT FK_Events_type_id_Event_types_id FOREIGN KEY (type_id) REFERENCES Event_types(id);
 
+-- Create Table: Gift_history
+--------------------------------------------------------------------------------
+CREATE TABLE Gift_history
+(
+	gift_id BIGINT NOT NULL 
+	,user_id BIGINT NOT NULL 
+	,id BIGINT NOT NULL 
+	,CONSTRAINT PK_Gift_history_id PRIMARY KEY (id)
+);
 
--- Create Foreign Key: Events.manager_id -> Users.id
-ALTER TABLE Events ADD CONSTRAINT FK_Events_manager_id_Users_id FOREIGN KEY (manager_id) REFERENCES Users(id);
+CREATE TABLE Passwd
+(
+	id SMALLINT NOT NULL 
+	,passwd VARCHAR(64) NOT NULL 
+	,CONSTRAINT PK_Passwd_id PRIMARY KEY (id)
+);
 
+INSERT INTO Roles (id, role) VALUES (0, 'root');
+INSERT INTO Roles (id, role) VALUES (1, 'moderator');
+INSERT INTO Roles (id, role) VALUES (2, 'user');
 
--- Create Foreign Key: Money.hist_id -> Events.id
-ALTER TABLE Money ADD CONSTRAINT FK_Money_hist_id_Events_id FOREIGN KEY (hist_id) REFERENCES Events(id);
+INSERT INTO Event_types (id, name) VALUES (0, 'Birthday');
+INSERT INTO Event_types (id, name) VALUES (1, 'Corporate');
+INSERT INTO Event_types (id, name) VALUES (2, 'Family adding');
 
+INSERT INTO Categories (id, name) VALUES (0, 'Devices');
+INSERT INTO Categories (id, name) VALUES (1, 'Vehicle');
+INSERT INTO Categories (id, name) VALUES (2, 'Other');
+INSERT INTO Categories (id, parent_id, name) VALUES (3, 0, 'Smartphone');
+INSERT INTO Categories (id, parent_id, name) VALUES (4, 0, 'Laptop');
+INSERT INTO Categories (id, parent_id, name) VALUES (5, 1, 'Motorcycle');
+INSERT INTO Categories (id, parent_id, name) VALUES (6, 1, 'Bicycle');
+INSERT INTO Categories (id, parent_id, name) VALUES (7, 2, 'Others');
 
--- Create Foreign Key: Vote.hist_id -> Events.id
-ALTER TABLE Vote ADD CONSTRAINT FK_Vote_hist_id_Events_id FOREIGN KEY (hist_id) REFERENCES Events(id);
+INSERT INTO Gifts (id, cat_id, name) VALUES (0, 4, 'Asus K53SJ');
+INSERT INTO Gifts (id, cat_id, name) VALUES (1, 3, 'Prestigio PAP3350');
+INSERT INTO Gifts (id, cat_id, name) VALUES (2, 5, 'Diablo 1000 N');
 
+INSERT INTO Users(id, name, surname, patronymic, birthday, role_id, email, about, dep_id, give_gift)
+	VALUES(0, 'Dmitriy', 'Nochevnoy', 'Sergeevich', '1995-12-26', 0, 'nochds@gmail.com', 'about', 5, TRUE);
+INSERT INTO Users(id, name, surname, patronymic, birthday, role_id, email, about, dep_id, give_gift)
+	VALUES(1, 'Eujene', 'Reevs', 'Olegovich', '1995-01-07', 2, 'nochds22@gmail.com', 'about', 5, TRUE);
+INSERT INTO Users(id, name, surname, patronymic, birthday, role_id, email, about, dep_id, give_gift)
+	VALUES(2, 'John', 'King', 'Dunbar', '1995-01-05', 2, 'nochds11@gmail.com', 'about', 5, TRUE);
+INSERT INTO Users(id, name, surname, birthday, role_id, email, about, dep_id, give_gift)
+	VALUES(3, 'Jim', 'Read', '1995-12-12', 1, 'cyberhawk2000n@gmail.com', 'about', 5, TRUE);
 
--- Create Foreign Key: Users.dep_id -> Departments.id
-ALTER TABLE Users ADD CONSTRAINT FK_Users_dep_id_Departments_id FOREIGN KEY (dep_id) REFERENCES Departments(id);
+INSERT INTO Logins(user_id, login, password)
+	VALUES(0, 'nochds@gmail.com', 'e8207de0d491981009b44d9afd944000');
+INSERT INTO Logins(user_id, login, password)
+	VALUES(1, 'nochds22@gmail.com', 'e48506d075c0d1acdabcaaa3c6ed56d8');
+INSERT INTO Logins(user_id, login, password)
+	VALUES(2, 'nochds11@gmail.com', '1e41b95c74646074e22bca6e48c12680');
+INSERT INTO Logins(user_id, login, password)
+	VALUES(3, 'cyberhawk2000n@gmail.com', 'da1077dd4155e10eb1d447211ad095c9');
 
+INSERT INTO Events(id, name, type_id, every_year, user_id, date, active, template)
+	VALUES(0, 'Birthday of nochds@gmail.com', 0, TRUE, 0, '2016-12-26', TRUE, 'template');
+INSERT INTO Events(id, name, type_id, every_year, user_id, date, active, template)
+	VALUES(1, 'Birthday of nochds22@gmail.com', 0, TRUE, 1, '2017-01-07', FALSE, 'template');
+INSERT INTO Events(id, name, type_id, every_year, user_id, date, active, template)
+	VALUES(2, 'Birthday of nochds11@gmail.com', 0, TRUE, 2, '2017-01-05', FALSE, 'template');
+INSERT INTO Events(id, name, type_id, every_year, user_id, date, active, template)
+	VALUES(3, 'Birthday of cyberhawk2000n@gmail.com', 0, TRUE, 3, '2017-12-12', FALSE, 'template');
 
--- Create Foreign Key: Preferences.user_id -> Users.id
-ALTER TABLE Preferences ADD CONSTRAINT FK_Preferences_user_id_Users_id FOREIGN KEY (user_id) REFERENCES Users(id);
+INSERT INTO Preferences (id, user_id, cat_id) VALUES (0, 0, 3);
+INSERT INTO Preferences (id, user_id, cat_id) VALUES (1, 0, 5);
+INSERT INTO Preferences (id, user_id, cat_id) VALUES (2, 0, 6);
 
-
--- Create Foreign Key: Preferences.cat_id -> Categories.id
-ALTER TABLE Preferences ADD CONSTRAINT FK_Preferences_cat_id_Categories_id FOREIGN KEY (cat_id) REFERENCES Categories(id);
-
-
--- Create Foreign Key: Departments.manager_id -> Users.id
-ALTER TABLE Departments ADD CONSTRAINT FK_Departments_manager_id_Users_id FOREIGN KEY (manager_id) REFERENCES Users(id);
-
-
--- Create Foreign Key: Categories.parent_id -> Categories.id
-ALTER TABLE Categories ADD CONSTRAINT FK_Categories_parent_id_Categories_id FOREIGN KEY (parent_id) REFERENCES Categories(id);
-
-
--- Create Foreign Key: Users.role_id -> Roles.id
-ALTER TABLE Users ADD CONSTRAINT FK_Users_role_id_Roles_id FOREIGN KEY (role_id) REFERENCES Roles(id);
-
-
--- Create Foreign Key: Gift_history.user_id -> Users.id
-ALTER TABLE Gift_history ADD CONSTRAINT FK_Gift_history_user_id_Users_id FOREIGN KEY (user_id) REFERENCES Users(id);
-
-
--- Create Foreign Key: Events.user_id -> Users.id
-ALTER TABLE Events ADD CONSTRAINT FK_Events_user_id_Users_id FOREIGN KEY (user_id) REFERENCES Users(id);
-
-
--- Create Foreign Key: Gifts.cat_id -> Categories.id
-ALTER TABLE Gifts ADD CONSTRAINT FK_Gifts_cat_id_Categories_id FOREIGN KEY (cat_id) REFERENCES Categories(id);
-
-
--- Create Foreign Key: User_vote.user_id -> Users.id
-ALTER TABLE User_vote ADD CONSTRAINT FK_User_vote_user_id_Users_id FOREIGN KEY (user_id) REFERENCES Users(id);
-
-
--- Create Foreign Key: User_vote.hist_id -> Events.id
-ALTER TABLE User_vote ADD CONSTRAINT FK_User_vote_hist_id_Events_id FOREIGN KEY (hist_id) REFERENCES Events(id);
-
-
--- Create Foreign Key: User_vote.vote_id -> Vote.id
-ALTER TABLE User_vote ADD CONSTRAINT FK_User_vote_vote_id_Vote_id FOREIGN KEY (vote_id) REFERENCES Vote(id);
-
-
--- Create Foreign Key: Logins.user_id -> Users.id
-ALTER TABLE Logins ADD CONSTRAINT FK_Logins_user_id_Users_id FOREIGN KEY (user_id) REFERENCES Users(id);
-
-
+INSERT INTO Gift_history (id, user_id, gift_id) VALUES (0, 0, 1);

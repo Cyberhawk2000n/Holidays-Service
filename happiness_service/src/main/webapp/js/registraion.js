@@ -3,7 +3,7 @@ function submitForm() {
     var pw = document.getElementById("pw");
     $.ajax({
         type : "POST",
-        url : "/happiness_service-1.0-SNAPSHOT/RegistrationServlet",
+        url : "/RegistrationServlet",
         data :
         {
             "message" : "init",
@@ -15,7 +15,7 @@ function submitForm() {
         success : function(responseText) {
             alert("Everything's fine\n"+responseText.message);
             if(responseText.message == "success")
-                window.location.replace("/happiness_service-1.0-SNAPSHOT/main.html");
+                window.location.replace("/main.html");
             else
                 $('#msgSubmit').show();
         },

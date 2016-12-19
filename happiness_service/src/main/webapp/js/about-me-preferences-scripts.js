@@ -4,12 +4,12 @@ var arr =[];
 $(document).ready(function() {
 
     if(!checkRole()){
-        window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
+        window.location.replace("/registration.html");
     }
 
     $.ajax({
         type : "POST",
-        url : "/happiness_service-1.0-SNAPSHOT/AboutMePreferencesServlet",
+        url : "/AboutMePreferencesServlet",
         data :
         {
             "message" : "info",
@@ -59,7 +59,7 @@ function submitForm(){
     }
     $.ajax({
         type : "POST",
-        url : "/happiness_service-1.0-SNAPSHOT/AboutMePreferencesServlet",
+        url : "/AboutMePreferencesServlet",
         data :
         {
             "message" : "update",

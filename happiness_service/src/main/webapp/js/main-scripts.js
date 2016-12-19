@@ -8,13 +8,13 @@ $(document).ready(function() {
 	});
 
 	if(!checkRole()){
-		window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
+		window.location.replace("/registration.html");
 	}
 	else{
 		if($.cookie("role")=="user") {
 			$.ajax({
 				type : "POST",
-				url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
+				url : "/MainServlet",
 				data :
 				{
 					"message" : "info",
@@ -38,7 +38,7 @@ $(document).ready(function() {
 		else{
 			$.ajax({
 				type : "POST",
-				url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
+				url : "/MainServlet",
 				data :
 				{
 					"message" : "info",
@@ -53,8 +53,8 @@ $(document).ready(function() {
 							'<button onclick="fillUpdate('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e'+this.id+'">'+
 							'<span class="glyphicon glyphicon-cog"></span> Edit Event'+
 							'</button>'+
-							'<button type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d'+this.id+'">'+
-							'<span class="glyphicon glyphicon-cog"></span> Delay Event'+
+							'<button onclick="setSelectedEvent('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d'+this.id+'">'+
+							'<span class="glyphicon glyphicon-remove"></span>'+
 							'</button>'+
 							'</li>'
 						);
@@ -85,7 +85,7 @@ $(document).ready(function() {
 		var new_name = document.getElementById('name');
 		$.ajax({
 			type : "POST",
-			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
+			url : "/EventsServlet",
 			data :
 			{
 				"message" : "user",
@@ -115,11 +115,17 @@ $(document).ready(function() {
 	})
 })
 
+var selected_event_id=0;
+
+function setSelectedEvent(_id){
+	selected_event_id=_id;
+}
+
 function fillUpdate(_id){
 	fillMemberList();
 	$.ajax({
-		ype : "POST",
-		url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
+		type : "POST",
+		url : "/MainServlet",
 		data :
 		{
 			"message" : "event",
@@ -137,10 +143,32 @@ function fillUpdate(_id){
 	});
 }
 
+function delete_event(){
+	var _id = selected_event_id;
+	$.ajax({
+		type : "POST",
+		url : "/MainServlet",
+		data :
+		{
+			"message" : "del_event",
+			"id":_id
+		},
+		dataType: "json",
+
+		success : function(responseText) {
+			alert(responseText.message);
+
+		},
+		error:function(data,status,er) {
+			alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+		}
+	});
+}
+
 function fillMemberList() {
 	$.ajax({
 		type: "POST",
-		url: "/happiness_service-1.0-SNAPSHOT/EventsServlet",
+		url: "/EventsServlet",
 		data: {
 			"message": "users"
 		},
@@ -160,6 +188,9 @@ function fillMemberList() {
 		}
 	});
 }
+
+
+
 
 function checkRole(){
 	if($.cookie("role")!=null){

@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     if(!checkRole()){
-        window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
+        window.location.replace("/registration.html");
     }
     else{
         if($.cookie("role")=="user") {
@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     $.ajax({
         type : "POST",
-        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
+        url : "/AboutMeProfileServlet",
         data :
         {
             "message" : "info",
@@ -50,7 +50,7 @@ function formSubmit(){
     alert("Sending ajax\nemail:"+_email);
     $.ajax({
         type : "POST",
-        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
+        url : "/AboutMeProfileServlet",
         data :
         {
             "message" : "update",

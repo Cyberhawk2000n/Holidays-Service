@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     if(!checkRole()){
-        window.location.replace("/happiness_service-1.0-SNAPSHOT/RegistrationServlet");
+        window.location.replace("/RegistrationServlet");
     }
     else{
         if($.cookie("role")=="user")

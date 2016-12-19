@@ -6,12 +6,12 @@ $(document).ready(function(){
 
 
 	if(!checkRole()){
-		window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
+		window.location.replace("/registration.html");
 	}
 	else{
 		if($.cookie("role")=="user") {
 			alert("You have to be a moderator or an admin to do this \n You can send request for moderator rights \n in your profile");
-			window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
+			window.location.replace("/registration.html");
 		}
 	}
 	    //Datepicker 
@@ -21,7 +21,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			type : "POST",
-			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
+			url : "/EventsServlet",
 			data :
 			{
 				"message" : "users"
@@ -56,7 +56,7 @@ $(document).ready(function(){
 			return;
 		$.ajax({
 			type : "POST",
-			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
+			url : "/EventsServlet",
 			data :
 			{
 				"message" : "user",
@@ -138,7 +138,7 @@ function add_member(){
 	alert("Name: "+new_name.value + " \nEmail:" +new_email.value);
 	$.ajax({
 		type : "POST",
-		url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
+		url : "/EventsServlet",
 		data :
 		{
 			"message" : "add",
@@ -176,11 +176,11 @@ function submitForm(){
 			}
 		$.ajax({
 			type : "POST",
-			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
+			url : "/EventsServlet",
 			data :
 			{
 				"message" : "event",
-                                "type": type_event,
+				"type": type_event,
 				"id": id,
 				"date": date.value,
 				"content":comment.value

@@ -26,7 +26,7 @@ public class RegistrationServlet extends HttpServlet {
         Logger log = LogManager.getLogger(RegistrationServlet.class);
         if("init".equals(request.getParameter("message"))){
             log.debug("RegistrationServlet ---> processRequest() ---> login in "+request.getParameter("email"));
-            
+            System.out.println("RegistrationServlet ---> processRequest() ---> login in "+request.getParameter("email"));
             HappyHibernate hHibernate = new HappyHibernate();
             List<Users> users = hHibernate.selectUsersByEmail(request.getParameter("email"));
             if (users != null && !users.isEmpty())
@@ -56,7 +56,6 @@ public class RegistrationServlet extends HttpServlet {
                 response.getWriter().write(json.toString());
             }
             return;
-
         }
     }
 

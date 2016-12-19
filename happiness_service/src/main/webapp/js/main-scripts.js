@@ -68,6 +68,42 @@ $(document).ready(function() {
 		}
 	}
 
+	$('#datepicker').on('change',function(){
+		$.ajax({
+			type : "POST",
+			url : "/MainServlet",
+			data :
+			{
+				"message" : "refresh",
+				"date" : this.value
+			},
+			dataType: "json",
+
+			success : function(responseText) {
+				clear_event_list();
+				alert("Everything's fine\n"+responseText.message);
+				$.each(responseText,function(){
+					$('#list-group-events').append(
+						'<li class="list-group-item">'+this.date+' '+this.name+
+						'<button onclick="fillUpdate('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e'+this.id+'">'+
+						'<span class="glyphicon glyphicon-cog"></span> Edit Event'+
+						'</button>'+
+						'<button onclick="setSelectedEvent('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d'+this.id+'">'+
+						'<span class="glyphicon glyphicon-remove"></span>'+
+						'</button>'+
+						'</li>'
+					);
+				});
+			},
+
+			error:function(data,status,er) {
+				alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+			}
+		});
+	})
+
+
+
 	//Check is there any event of selected type and user name
 	$('#MembersList').on('change', function() {
 		var type_event_array = document.getElementsByName('type_radio');
@@ -120,6 +156,11 @@ var selected_event_id=0;
 function setSelectedEvent(_id){
 	selected_event_id=_id;
 }
+
+function clear_event_list(){
+	$('ul').empty();
+}
+
 
 function fillUpdate(_id){
 	fillMemberList();

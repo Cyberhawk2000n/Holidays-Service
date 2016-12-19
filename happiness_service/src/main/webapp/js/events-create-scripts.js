@@ -42,6 +42,29 @@ $(document).ready(function(){
 			}
 		});
 
+	$.ajax({
+		type : "POST",
+		url : "/EventsServlet",
+		data :
+		{
+			"message" : "mods"
+		},
+		dataType: "json",
+
+		success : function(responseText) {
+			alert("Everything's fine");
+			$.each(responseText, function() {
+				$('#OrganizersList').append(
+					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
+				);
+			});
+		},
+
+		error:function(data,status,er) {
+			alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+		}
+	});
+
 		//Check is there any event of selected type and user name
 		$('#MembersList').on('change', function() {
 		var type_event_array = document.getElementsByName('type_radio');
@@ -164,9 +187,9 @@ function submitForm(){
 		var name = document.getElementById("name");
 		var date = document.getElementById("datepicker");
 		var comment = document.getElementById("comment");
-                var type_event_array = document.getElementsByName('type_radio');
-                var id = $('#MemberList').value;
-                alert('Id of selected user'+id)
+		var type_event_array = document.getElementsByName('type_radio');
+		var id = $('#MemberList').value;
+		var id_rely = $('#OrganizersList').value;
 		var type_event;
 		var type_event_flag=0;
 		for(var i=0;i<type_event_array.length;i++)
@@ -181,7 +204,8 @@ function submitForm(){
 			{
 				"message" : "event",
 				"type": type_event,
-				"id": id,
+				"id_person": id,
+				"id_rely": id_rely,
 				"date": date.value,
 				"content":comment.value
 			},

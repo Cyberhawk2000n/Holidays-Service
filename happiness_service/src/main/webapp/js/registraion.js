@@ -25,3 +25,13 @@ function submitForm() {
         }
     })
 }
+
+
+function checkRole(){
+    if($.cookie("role")!=null){
+        return true;
+    }
+    else
+        return false;
+}
+

@@ -57,15 +57,18 @@ function submitForm(){
         }
         count_selected_sub.push(count);
     }
+    var selected_options_json = JSON.stringify(selected_options);
+    var selected_sub_options_json = JSON.stringify(selected_sub_options);
+    var count_selected_sub_json = JSON.stringify(count_selected_sub);
     $.ajax({
         type : "POST",
         url : "/AboutMePreferencesServlet",
         data :
         {
             "message" : "update",
-            "categories" : selected_options,
-            "sub_categories" : selected_sub_options,
-            "sub_count" : count_selected_sub
+            "categories" : selected_options_json,
+            "sub_categories" : selected_sub_options_json,
+            "sub_count" : count_selected_sub_json
         },
         dataType: "json",
 

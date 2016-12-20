@@ -1148,6 +1148,25 @@ public class HappyHibernate {
         
     }
     
+    public List<Users> selectUsersByRole(Roles role)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Users.class);
+            cr.add(Restrictions.eq("roleId", role));
+            List<Users> list = cr.list();
+            session.getTransaction().commit();
+            return list;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Getting from database error!", exc);
+            return null;
+        }
+        
+    }
+    
     public List<Users> selectUsersByDepartment(Departments depId)
     {
         try
@@ -1337,7 +1356,7 @@ public class HappyHibernate {
             cr.add(Restrictions.eq("catId", catId));
             List<Preferences> list = cr.list();
             session.getTransaction().commit();
-            if (list == null)
+            if (list == null||list.isEmpty())
                 return null;
             else
                 return list.get(0);
@@ -1559,7 +1578,31 @@ public class HappyHibernate {
         {
             session.beginTransaction();
             Criteria cr = session.createCriteria(Preferences.class);
-            cr.add(Restrictions.eq("userId", user.getId()));
+            cr.add(Restrictions.eq("userId", user));
+            List<Preferences> list = cr.list();
+            for (int i = 0; i < list.size(); i++)
+            {
+                session.delete((Preferences)list.get(i));
+            }
+            session.getTransaction().commit();
+            return 0;
+        }
+        catch (Exception exc)
+        {
+            log.debug("Deleting from database error!", exc);
+            return -1;
+        }
+        
+    }
+    
+    public int deletePreferencesByCategoryId(Users user, Categories catId)
+    {
+        try
+        {
+            session.beginTransaction();
+            Criteria cr = session.createCriteria(Preferences.class);
+            cr.add(Restrictions.eq("userId", user));
+            cr.add(Restrictions.eq("catId", catId));
             List<Preferences> list = cr.list();
             for (int i = 0; i < list.size(); i++)
             {

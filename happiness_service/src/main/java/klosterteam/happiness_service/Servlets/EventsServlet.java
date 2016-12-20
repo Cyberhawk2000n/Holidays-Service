@@ -16,6 +16,7 @@ import javax.servlet.http.Cookie;
 import klosterteam.happiness_service.HappyHibernate;
 import klosterteam.hibernate.Event_types;
 import klosterteam.hibernate.Events;
+import klosterteam.hibernate.Roles;
 import klosterteam.hibernate.Users;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,6 +81,17 @@ public class EventsServlet extends HttpServlet {
             response.getWriter().write(json.toString());
             return;
         }
+        if("managers".equals(request.getParameter("message"))){
+            log.debug("EventsServlet ---> processRequest() ---> forming JsonArray of Managers");
+            //read list of users of this department. Get the department from moderator email (cookies.email)
+            //json respond:
+            //jsonObject [ {Name: "FirstName LastName Patronymmic"} , {Name: "FirstName LastName Patronymmic"} ]
+
+            JsonArray json = this.getManagers(request);
+            response.setContentType("application/json");
+            response.getWriter().write(json.toString());
+            return;
+        }
         log.debug("EventsServlet ---> processRequest() ---> wrong Paramenter sending 400 HTTP code ");
         // If we didn't entered any case of 
         JsonObject json = Json.createObjectBuilder()
@@ -132,6 +144,62 @@ public class EventsServlet extends HttpServlet {
                                 + " " + person.getPatronymic() + " " + person.getSurname()).add("id", person.getId()));
                     }
                 }
+            return jsonBuilder.build();
+        }
+        catch (Exception exc)
+        {
+            log.warn("Getting users from DB exception", exc);
+            return null;
+        }
+    }
+    
+    protected JsonArray getManagers(HttpServletRequest request)
+    {
+        Logger log = LogManager.getLogger(EventsServlet.class);
+        try
+        {
+            JsonArrayBuilder jsonBuilder = Json.createArrayBuilder();
+            Cookie[] cookies = request.getCookies();
+            Users person = null;
+            HappyHibernate hHibernate = new HappyHibernate();
+            for (Cookie cookie: cookies)
+                if ("email".equals(cookie.getName()))
+                {
+                    Users user = hHibernate.selectUsersByEmail(cookie.getValue()).get(0);
+                    person = user.getDepId().getManagerId();
+                    if ("".equals(person.getSurname()))
+                        jsonBuilder.add(Json.createObjectBuilder().add("Name", person.getName() + " "
+                            + person.getSurname()).add("id", person.getId()));
+                    else
+                        jsonBuilder.add(Json.createObjectBuilder().add("Name", person.getName() + " "
+                            + " " + person.getPatronymic() + " " + person.getSurname()).add("id", person.getId()));
+                }
+            Roles role = hHibernate.selectRoles("root").get(0);
+            List<Users> list = hHibernate.selectUsersByRole(role);
+            if ((person == null)||(list.get(0).getId() != person.getId()))
+            {
+                if ("".equals(list.get(0).getSurname()))
+                    jsonBuilder.add(Json.createObjectBuilder().add("Name", list.get(0).getName() + " "
+                        + list.get(0).getSurname()).add("id", list.get(0).getId()));
+                else
+                    jsonBuilder.add(Json.createObjectBuilder().add("Name", list.get(0).getName() + " "
+                        + " " + list.get(0).getPatronymic() + " " + list.get(0).getSurname())
+                            .add("id", list.get(0).getId()));
+            }
+            role = hHibernate.selectRoles("moderator").get(0);
+            list = hHibernate.selectUsersByRole(role);
+            for (int i = 0; i < list.size(); i++)
+            {
+                if ((person != null)&&(list.get(i).getId() == person.getId()))
+                    continue;
+                if ("".equals(list.get(i).getSurname()))
+                    jsonBuilder.add(Json.createObjectBuilder().add("Name", list.get(i).getName() + " "
+                        + list.get(i).getSurname()).add("id", list.get(i).getId()));
+                else
+                    jsonBuilder.add(Json.createObjectBuilder().add("Name", list.get(i).getName() + " "
+                        + " " + list.get(i).getPatronymic() + " " + list.get(i).getSurname())
+                            .add("id", list.get(i).getId()));
+            }
             return jsonBuilder.build();
         }
         catch (Exception exc)

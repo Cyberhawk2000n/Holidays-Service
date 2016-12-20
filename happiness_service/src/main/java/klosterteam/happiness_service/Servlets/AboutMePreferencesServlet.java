@@ -14,6 +14,7 @@ import javax.servlet.http.Cookie;
 import klosterteam.happiness_service.HappyHibernate;
 import klosterteam.happiness_service.Pack;
 import klosterteam.hibernate.Categories;
+import klosterteam.hibernate.Preferences;
 import klosterteam.hibernate.Users;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +34,7 @@ public class AboutMePreferencesServlet extends HttpServlet {
             // jsonObject{
             //      { Cat_Name: cat1[ {test} , {test} ] },  { cat2[ {test} , {test} ] } ;
 
-            log.debug("AboutMeServlet ---> processRequest() ---> reading preferences list ");
+            log.debug("AboutMeServlet ---> processRequest() ---> reading categories list ");
             JsonArray json = this.getCategoriesAndSubcategories();
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
@@ -61,6 +62,21 @@ public class AboutMePreferencesServlet extends HttpServlet {
             }
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
+            return;
+        }
+        else if("load".equals(request.getParameter("message"))){
+            // update preferences in db
+            // request has :
+            // - "categories" - array of selected categories
+            // - "sub_categories" - array of selected sub-categories
+            // - "sub_count" - array of numbers to separate sub_categories.{3,5} - means first 3 sub-cats from first cat, then 5 from second
+            log.debug("AboutMeServlet ---> processRequest() ---> reading preferences list ");
+            JsonArray json = this.getPrefererencedCategories(request);
+            response.setContentType("application/json");
+            if (json != null)
+                response.getWriter().write(json.toString());
+            else
+                response.getWriter().write(Json.createArrayBuilder().build().toString());
             return;
         }
         log.debug("AboutMeServlet ---> processRequest() ---> wrong Paramenter sending 400 HTTP code ");
@@ -137,11 +153,26 @@ public class AboutMePreferencesServlet extends HttpServlet {
                 return -1;
             else
             {
-                String[] subCats = request.getParameterValues("sub_categories");
+                String _subCats = request.getParameter("sub_categories");
+                _subCats = _subCats.substring(2, _subCats.length()-2);
+                String[] subCats = _subCats.split("\",\"");
+                List<Preferences> prefs = hHibernate.selectPreferencesByUser(userId);
+                for (int i = 0; i < prefs.size(); i++)
+                {
+                    int j;
+                    for (j = 0; j < subCats.length; j++)
+                    {
+                        if (subCats[j].equals(prefs.get(i).getCatId().getName()))
+                            break;
+                    }
+                    if (j == subCats.length)
+                        hHibernate.deletePreferencesByCategoryId(userId, prefs.get(i).getCatId());
+                }
                 for (int i = 0; i < subCats.length; i++)
                 {
-                    Categories catId = hHibernate.selectCategoryByName(subCats[i]).get(0);
-                    hHibernate.addPreferences(userId, catId);
+                    List<Categories> catIds = hHibernate.selectCategoryByName(subCats[i]);
+                    if (catIds != null && !catIds.isEmpty())
+                        hHibernate.addPreferences(userId, catIds.get(0));
                 }
                 return 0;
             }
@@ -150,6 +181,48 @@ public class AboutMePreferencesServlet extends HttpServlet {
         {
             log.warn("Save to DB exception!", exc);
             return -1;
+        }
+    }
+    
+    protected JsonArray getPrefererencedCategories(HttpServletRequest request)
+    {
+        Logger log = LogManager.getLogger(EventsServlet.class);
+        try
+        {
+            List<Users> userIds = null;
+            JsonArrayBuilder jsonBuilder = Json.createArrayBuilder();
+            HappyHibernate hHibernate = new HappyHibernate();
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie: cookies)
+                if ("email".equals(cookie.getName()))
+                {
+                    userIds = hHibernate.selectUsersByEmail(cookie.getValue());
+                }
+            if (userIds == null || userIds.isEmpty())
+                return jsonBuilder.build();
+            else
+            {
+                Users user = userIds.get(0);
+                List<Pack> pack = hHibernate.getUserPreferences(user);
+                for (int i = 0; i < pack.size(); i++)
+                {
+                    String[] subcats;
+                    JsonArrayBuilder jsonSubCatsBuilder = Json.createArrayBuilder();
+                    subcats = pack.get(i).getNames();
+                    for (String subcat : subcats) {
+                        jsonSubCatsBuilder.add(subcat);
+                    }
+                    jsonBuilder.add(Json.createObjectBuilder()
+                            .add("Name", pack.get(i).getName())
+                            .add("Subname", jsonSubCatsBuilder));
+                }
+                return jsonBuilder.build();
+            }
+        }
+        catch (Exception exc)
+        {
+            log.warn("Getting preferences from DB exception", exc);
+            return null;
         }
     }
 }

@@ -28,11 +28,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class EventsServlet extends HttpServlet {
 
-    // TODO: 23.11.2016 Make it work with russian letters in names of employees. FUCK!
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: 23.11.2016 Rewrite this block using switch for requesst.getParameter("message) and move all cases to separate methods
         Logger log = LogManager.getLogger(EventsServlet.class);
         log.debug("EventsServlet ---> processRequest() ---> request ="+request.getParameter("message"));
         if("users".equals(request.getParameter("message"))){

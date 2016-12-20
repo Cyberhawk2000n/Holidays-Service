@@ -34,6 +34,11 @@ $(document).ready(function() {
             $("#pw").val(responseText.pw);
             $("#datepicker").val(responseText.date);
             $("#comment").val(responseText.comment);
+            if(responseText.marked == "true")
+                $("#No_Congrat").hide();
+            else
+                $("#Congrat").hide();
+
         },
 
         error:function(data,status,er) {
@@ -41,6 +46,72 @@ $(document).ready(function() {
         }
     });
 })
+
+function markUser(){
+    $.ajax({
+        type : "POST",
+        url : "/AboutMeProfileServlet",
+        data :
+        {
+            "message" : "mark",
+        },
+        dataType: "json",
+
+        success : function(responseText) {
+            alert("Everything's fine\n"+responseText.message);
+            $("#No_Congrat").hide();
+            $("#Congrat").show();
+        },
+
+        error:function(data,status,er) {
+            alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+        }
+    });
+}
+function unmarkUser(){
+    $.ajax({
+        type : "POST",
+        url : "/AboutMeProfileServlet",
+        data :
+        {
+            "message" : "unmark",
+        },
+        dataType: "json",
+
+        success : function(responseText) {
+            alert("Everything's fine\n"+responseText.message);
+            $("#Congrat").hide();
+            $("#No_Congrat").show();
+        },
+
+        error:function(data,status,er) {
+            alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+        }
+    });
+}
+
+
+function becomeAnOrganizer(){
+    $.ajax({
+        type : "POST",
+        url : "/AboutMeProfileServlet",
+        data :
+        {
+            "message" : "organize",
+        },
+        dataType: "json",
+
+        success : function(responseText) {
+            alert("Everything's fine\n"+responseText.message);
+            $('#Organize-btn').hide();
+        },
+
+        error:function(data,status,er) {
+            alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+        }
+    });
+}
+
 
 function formSubmit(){
     var _email = document.getElementById("email");

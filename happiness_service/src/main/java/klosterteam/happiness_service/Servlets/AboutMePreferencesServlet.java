@@ -138,8 +138,6 @@ public class AboutMePreferencesServlet extends HttpServlet {
             else
             {
                 String[] subCats = request.getParameterValues("sub_categories");
-                String _subCats = request.getParameter("sub_categories");
-                log.warn("!!!!!!!!!!!!!!!!!!!!!!!\n\n" + subCats.length + "\n\n" + _subCats + "\n\n");
                 for (int i = 0; i < subCats.length; i++)
                 {
                     Categories catId = hHibernate.selectCategoryByName(subCats[i]).get(0);

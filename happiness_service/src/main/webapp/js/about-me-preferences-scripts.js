@@ -1,4 +1,3 @@
-//todo make this structure displaying correctly. Separete jQuerries in separate functions
 var arr =[];
 
 $(document).ready(function() {
@@ -39,6 +38,32 @@ $(document).ready(function() {
             alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
         }
     });
+
+    $.ajax({
+        type : "POST",
+        url : "/AboutMePreferencesServlet",
+        data :
+        {
+            "message" : "load",
+        },
+        dataType: "json",
+        success : function(responseText) {
+            alert("Everything's fine\n" + responseText.message);
+            $.each(responseText, function() {
+                var current_id = '#'+this.Name;
+                $.each(this.Subname,function(){
+                    var _subname = this.toString();
+                    var test = $(current_id+' option[value='+_subname+']');
+                    test[0].setAttribute('selected',true);
+                })
+            });
+        },
+
+        error:function(data,status,er) {
+            alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+        }
+    });
+
 })
 
 function submitForm(){

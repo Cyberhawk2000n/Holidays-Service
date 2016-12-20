@@ -69,37 +69,64 @@ $(document).ready(function() {
 	}
 
 	$('#datepicker').on('change',function(){
-		$.ajax({
-			type : "POST",
-			url : "/MainServlet",
-			data :
-			{
-				"message" : "refresh",
-				"date" : this.value
-			},
-			dataType: "json",
+		if($.cookie("role")=="user") {
+			$.ajax({
+				type: "POST",
+				url: "/MainServlet",
+				data: {
+					"message": "refresh",
+					"date": this.value
+				},
+				dataType: "json",
 
-			success : function(responseText) {
-				clear_event_list();
-				alert("Everything's fine\n"+responseText.message);
-				$.each(responseText,function(){
-					$('#list-group-events').append(
-						'<li class="list-group-item">'+this.date+' '+this.name+
-						'<button onclick="fillUpdate('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e'+this.id+'">'+
-						'<span class="glyphicon glyphicon-cog"></span> Edit Event'+
-						'</button>'+
-						'<button onclick="setSelectedEvent('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d'+this.id+'">'+
-						'<span class="glyphicon glyphicon-remove"></span>'+
-						'</button>'+
-						'</li>'
-					);
-				});
-			},
+				success: function (responseText) {
+					clear_event_list();
+					alert("Everything's fine\n" + responseText.message);
+					$.each(responseText, function () {
+						$('#list-group-events').append(
+							'<li class="list-group-item">' + this.date + ' ' + this.name +
+							'</li>'
+						);
+					});
+				},
 
-			error:function(data,status,er) {
-				alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
-			}
-		});
+				error: function (data, status, er) {
+					alert("MISTAKES WERE MADE \n\nerror: " + data + " \nstatus: " + status + " \ner:" + er);
+				}
+			});
+		}
+		else {
+			$.ajax({
+				type: "POST",
+				url: "/MainServlet",
+				data: {
+					"message": "refresh",
+					"date": this.value
+				},
+				dataType: "json",
+
+				success: function (responseText) {
+					clear_event_list();
+					alert("Everything's fine\n" + responseText.message);
+					$.each(responseText, function () {
+						$('#list-group-events').append(
+							'<li class="list-group-item">' + this.date + ' ' + this.name +
+							'<button onclick="fillUpdate(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e' + this.id + '">' +
+							'<span class="glyphicon glyphicon-cog"></span> Edit Event' +
+							'</button>' +
+							'<button onclick="setSelectedEvent(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d' + this.id + '">' +
+							'<span class="glyphicon glyphicon-remove"></span>' +
+							'</button>' +
+							'</li>'
+						);
+					});
+				},
+
+				error: function (data, status, er) {
+					alert("MISTAKES WERE MADE \n\nerror: " + data + " \nstatus: " + status + " \ner:" + er);
+				}
+			});
+		}
 	})
 
 

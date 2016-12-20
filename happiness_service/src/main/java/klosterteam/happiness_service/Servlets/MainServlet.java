@@ -10,10 +10,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
 import javax.servlet.http.Cookie;
 import klosterteam.happiness_service.HappyHibernate;
-import klosterteam.hibernate.Categories;
 import klosterteam.hibernate.Events;
 import klosterteam.hibernate.Users;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +33,7 @@ public class MainServlet extends HttpServlet{
             // ]
             
             log.debug("MainServlet ---> processRequest() ---> reading list of active events from DB");
-            JsonArray json = this.getCurrentEvents();
+            JsonArray json = getCurrentEvents();
             /*Json.createArrayBuilder()
                     .add(Json.createObjectBuilder()
                         .add("date","16/09/2016")
@@ -57,14 +55,11 @@ public class MainServlet extends HttpServlet{
             // here we go to DB for an event info using the Id
             // still in development
             //todo need to figure out which fields of event do we allow to change
-            JsonObject json = this.getEventById(request);/*Json.createObjectBuilder()
+            JsonObject json = Json.createObjectBuilder()
                     .add("message", "eh. Loaded")
-                    .build();*/
-            if (json != null)
-            {
-                response.setContentType("text/html;charset=UTF-8");
-                response.getWriter().write(json.toString());
-            }
+                    .build();
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().write(json.toString());
             return;
         }
 
@@ -125,107 +120,6 @@ public class MainServlet extends HttpServlet{
         {
             log.warn("Getting events from DB exception", exc);
             return null;
-        }
-    }
-    
-    protected JsonArray getCurrentEventsByDate(HttpServletRequest request)
-    {
-        Logger log = LogManager.getLogger(EventsServlet.class);
-        try
-        {
-            JsonArrayBuilder jsonBuilder = Json.createArrayBuilder();
-            HappyHibernate hHibernate = new HappyHibernate();
-            /*List<Events> list = hHibernate.selectEventsByActiveDate(date);
-            if (list.isEmpty())
-                return jsonBuilder.build();
-            for (int i = 0; i < list.size(); i++)
-            {
-                Calendar date = Calendar.getInstance();
-                date.setTime(list.get(i).getDate());
-                StringBuilder sb = new StringBuilder();
-                sb.append(date.get(Calendar.DATE))
-                        .append("/")
-                        .append(date.get(Calendar.MONTH) + 1)
-                        .append("/")
-                        .append(date.get(Calendar.YEAR));
-                jsonBuilder.add(Json.createObjectBuilder().add("date", sb.toString())
-                        .add("name", list.get(i).getName())
-                        .add("id", list.get(i).getId()));
-            }*/
-            return jsonBuilder.build();
-        }
-        catch (Exception exc)
-        {
-            log.warn("Getting events from DB exception", exc);
-            return null;
-        }
-    }
-    
-    protected JsonObject getEventById(HttpServletRequest request)
-    {
-        Logger log = LogManager.getLogger(EventsServlet.class);
-        try
-        {
-            Events event = null;
-            JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
-            HappyHibernate hHibernate = new HappyHibernate();
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie: cookies)
-                if ("id".equals(cookie.getName()))
-                {
-                    event = hHibernate.selectEventById(Long.valueOf(cookie.getValue()));
-                }
-            if (event == null)
-                return jsonBuilder.build();
-            else
-            {
-                Calendar date = Calendar.getInstance();
-                date.setTime(event.getDate());
-                StringBuilder sb = new StringBuilder();
-                sb.append(date.get(Calendar.MONTH) + 1)
-                        .append("/")
-                        .append(date.get(Calendar.DATE))
-                        .append("/")
-                        .append(date.get(Calendar.YEAR));
-                jsonBuilder.add("name", event.getName())
-                    .add("date", sb.toString())
-                    .add("template", event.getTemplate());
-                return jsonBuilder.build();
-            }
-        }
-        catch (Exception exc)
-        {
-            log.warn("Save to DB exception!", exc);
-            return null;
-        }
-    }
-    
-    protected int deleteEvent(HttpServletRequest request)
-    {
-        Logger log = LogManager.getLogger(EventsServlet.class);
-        try
-        {
-            Events event = null;
-            JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
-            HappyHibernate hHibernate = new HappyHibernate();
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie: cookies)
-                if ("id".equals(cookie.getName()))
-                {
-                    event = hHibernate.selectEventById(Long.valueOf(cookie.getValue()));
-                }
-            if (event == null)
-                return 0;
-            else
-            {
-                hHibernate.deleteEvent(event);
-                return 0;
-            }
-        }
-        catch (Exception exc)
-        {
-            log.warn("Save to DB exception!", exc);
-            return -1;
         }
     }
     

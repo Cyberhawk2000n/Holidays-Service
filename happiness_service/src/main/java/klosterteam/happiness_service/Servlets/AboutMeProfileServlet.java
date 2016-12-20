@@ -87,6 +87,26 @@ public class AboutMeProfileServlet extends HttpServlet {
             response.getWriter().write(json.toString());
             return;
         }
+        else if("mark".equals(request.getParameter("message"))){
+            // update info in db
+            // fields for request - email, pw, date, comment
+            log.debug("AboutMeServlet ---> processRequest() ---> don't give a gift");
+            JsonObject json = Json.createObjectBuilder().build();
+            this.editUserGiveGift(request, false);
+            response.setContentType("application/json");
+            response.getWriter().write(json.toString());
+            return;
+        }
+        else if("umark".equals(request.getParameter("message"))){
+            // update info in db
+            // fields for request - email, pw, date, comment
+            log.debug("AboutMeServlet ---> processRequest() ---> give a gift");
+            JsonObject json = Json.createObjectBuilder().build();
+            this.editUserGiveGift(request, true);
+            response.setContentType("application/json");
+            response.getWriter().write(json.toString());
+            return;
+        }
         log.debug("AboutMeServlet ---> processRequest() ---> wrong Paramenter sending 400 HTTP code ");
         // If we didn't entered any case of
         JsonObject json = Json.createObjectBuilder()
@@ -151,6 +171,33 @@ public class AboutMeProfileServlet extends HttpServlet {
         catch (Exception exc)
         {
             log.warn("Getting users from DB exception", exc);
+            return -1;
+        }
+    }
+    
+    protected int editUserGiveGift(HttpServletRequest request, boolean giveGift)
+    {
+        Logger log = LogManager.getLogger(EventsServlet.class);
+        try
+        {
+            Users userId = null;
+            HappyHibernate hHibernate = new HappyHibernate();
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie: cookies)
+                if ("email".equals(cookie.getName()))
+                {
+                    userId = hHibernate.selectUsersByEmail(cookie.getValue()).get(0);
+                }
+            if (userId == null)
+                return -1;
+            {
+                hHibernate.changeUserGiveGift(userId, giveGift);
+                return 0;
+            }
+        }
+        catch (Exception exc)
+        {
+            log.warn("Setting users from DB exception", exc);
             return -1;
         }
     }

@@ -158,12 +158,11 @@ function setSelectedEvent(_id){
 }
 
 function clear_event_list(){
-	$('#list-group-events').empty();
+	$('ul').empty();
 }
 
 
 function fillUpdate(_id){
-	setSelectedEvent(_id);
 	fillMemberList();
 	$.ajax({
 		type : "POST",
@@ -231,49 +230,6 @@ function fillMemberList() {
 	});
 }
 
-function updateEvent() {
-	var name = document.getElementById("name");
-	var date = document.getElementById("datepicker");
-	var comment = document.getElementById("comment");
-	var type_event_array = document.getElementsByName('type_radio');
-	var id = $('#MemberList').value;
-	var id_rely = $('#OrganizersList').value;
-	var type_event;
-	var type_event_flag=0;
-	for(var i=0;i<type_event_array.length;i++)
-		if(type_event_array[i].checked) {
-			type_event = type_event_array[i].value;
-			type_event_flag=1;
-		}
-	$.ajax({
-		type : "POST",
-		url : "/EventsServlet",
-		data :
-		{
-			"message" : "event",
-			"type": type_event,
-			"id": selected_event_id,
-			"id_person": id,
-			"id_rely": id_rely,
-			"date": date.value,
-			"content":comment.value
-		},
-		dataType: "json",
-
-		success : function(responseText) {
-			alert("Everything's fine");
-			$.each(responseText, function() {
-				$('#MembersList').append(
-					$("<option></option>").text(this.Name)
-				);
-			});
-		},
-
-		error:function(data,status,er) {
-			alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
-		}
-	});
-}
 
 
 

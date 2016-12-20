@@ -193,6 +193,9 @@ INSERT INTO Gifts (id, cat_id, name) VALUES (0, 4, 'Asus K53SJ');
 INSERT INTO Gifts (id, cat_id, name) VALUES (1, 3, 'Prestigio PAP3350');
 INSERT INTO Gifts (id, cat_id, name) VALUES (2, 5, 'Diablo 1000 N');
 
+INSERT INTO Departments (id, name) VALUES (1, 'Dep1');
+INSERT INTO Departments (id, name) VALUES (5, 'Dep5');
+
 INSERT INTO Users(id, name, surname, patronymic, birthday, role_id, email, about, dep_id, give_gift)
 	VALUES(0, 'Dmitriy', 'Nochevnoy', 'Sergeevich', '1995-12-26', 0, 'nochds@gmail.com', 'about', 5, TRUE);
 INSERT INTO Users(id, name, surname, patronymic, birthday, role_id, email, about, dep_id, give_gift)

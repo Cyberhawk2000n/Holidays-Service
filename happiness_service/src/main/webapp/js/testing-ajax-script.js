@@ -9,7 +9,7 @@ function TestConnection() {
         dataType: "json",
 
         success : function(responseText) {
-            alert("Everything's fine");
+            /*alert("Everything's fine");*/
             //var json = JSON.parse(responseText);
             $('#ajaxGetUserServletResponse').text(responseText.message);
         },

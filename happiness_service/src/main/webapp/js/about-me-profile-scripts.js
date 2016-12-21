@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     if(!checkRole()){
-        window.location.replace("/registration.html");
+        window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
     }
     else{
         if($.cookie("role")=="user") {
@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     $.ajax({
         type : "POST",
-        url : "/AboutMeProfileServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
         data :
         {
             "message" : "info",
@@ -28,7 +28,7 @@ $(document).ready(function() {
         dataType: "json",
 
         success : function(responseText) {
-            alert("Everything's fine\n"+responseText.message);
+            /*alert("Everything's fine\n"+responseText.message);*/
             //код заполения input-ов
             $("#email").val(responseText.email);
             $("#pw").val(responseText.pw);
@@ -55,7 +55,7 @@ $(document).ready(function() {
 function markUser(){
     $.ajax({
         type : "POST",
-        url : "/AboutMeProfileServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
         data :
         {
             "message" : "mark",
@@ -65,7 +65,7 @@ function markUser(){
         success : function(responseText) {
             //$("#No_Congrat").hide();
             //$("#Congrat").show();
-            alert("Everything's fine\n"+responseText.message);
+            /*alert("Everything's fine\n"+responseText.message);*/
         },
 
         error:function(data,status,er) {
@@ -76,7 +76,7 @@ function markUser(){
 function unmarkUser(){
     $.ajax({
         type : "POST",
-        url : "/AboutMeProfileServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
         data :
         {
             "message" : "unmark",
@@ -86,7 +86,7 @@ function unmarkUser(){
         success : function(responseText) {
             //$("#Congrat").hide();
             //$("#No_Congrat").show();
-            alert("Everything's fine\n"+responseText.message);
+            /*alert("Everything's fine\n"+responseText.message);*/
         },
 
         error:function(data,status,er) {
@@ -99,7 +99,7 @@ function unmarkUser(){
 function becomeAnOrganizer(){
     $.ajax({
         type : "POST",
-        url : "/AboutMeProfileServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
         data :
         {
             "message" : "organize",
@@ -107,7 +107,7 @@ function becomeAnOrganizer(){
         dataType: "json",
 
         success : function(responseText) {
-            alert("Everything's fine\n"+responseText.message);
+            /*alert("Everything's fine\n"+responseText.message);*/
             $('#Organize-btn').hide();
         },
 
@@ -126,7 +126,7 @@ function formSubmit(){
     alert("Sending ajax\nemail:"+_email);
     $.ajax({
         type : "POST",
-        url : "/AboutMeProfileServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMeProfileServlet",
         data :
         {
             "message" : "update",
@@ -138,7 +138,7 @@ function formSubmit(){
         dataType: "json",
 
         success : function(responseText) {
-            alert("Everything's fine\n"+responseText.message);
+            /*alert("Everything's fine\n"+responseText.message);*/
         },
 
         error:function(data,status,er) {

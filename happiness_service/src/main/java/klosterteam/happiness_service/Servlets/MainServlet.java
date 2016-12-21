@@ -271,7 +271,7 @@ public class MainServlet extends HttpServlet{
             else
             {
                 log.warn("\n\n" + event.getName() + "\n\n");
-                //hHibernate.deleteEvent(event);
+                hHibernate.deleteEvent(event);
                 return 1;
             }
         }

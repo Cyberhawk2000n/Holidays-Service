@@ -8,13 +8,13 @@ $(document).ready(function() {
 	});
 
 	if(!checkRole()){
-		window.location.replace("/registration.html");
+		window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
 	}
 	else{
 		if($.cookie("role")=="user") {
 			$.ajax({
 				type : "POST",
-				url : "/MainServlet",
+				url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
 				data :
 				{
 					"message" : "info",
@@ -22,7 +22,7 @@ $(document).ready(function() {
 				dataType: "json",
 
 				success : function(responseText) {
-					alert("Everything's fine\n"+responseText.message);
+					/*alert("Everything's fine\n"+responseText.message);*/
 					$.each(responseText,function(){
 						$('#list-group-events').append(
 							'<li class="list-group-item">'+this.date+' '+this.name+'</li>'
@@ -38,7 +38,7 @@ $(document).ready(function() {
 		else{
 			$.ajax({
 				type : "POST",
-				url : "/MainServlet",
+				url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
 				data :
 				{
 					"message" : "info",
@@ -46,7 +46,7 @@ $(document).ready(function() {
 				dataType: "json",
 
 				success : function(responseText) {
-					alert("Everything's fine\n"+responseText.message);
+					/*alert("Everything's fine\n"+responseText.message);*/
 					$.each(responseText,function(){
 						$('#list-group-events').append(
 							'<li class="list-group-item">' + this.date + ' ' + this.name +
@@ -75,7 +75,7 @@ $(document).ready(function() {
 		if($.cookie("role")=="user") {
 			$.ajax({
 				type: "POST",
-				url: "/MainServlet",
+				url: "/happiness_service-1.0-SNAPSHOT/MainServlet",
 				data: {
 					"message": "refresh",
 					"date": this.value
@@ -84,7 +84,7 @@ $(document).ready(function() {
 
 				success: function (responseText) {
 					clear_event_list();
-					alert("Everything's fine\n" + responseText.message);
+					/*alert("Everything's fine\n" + responseText.message);*/
 					$.each(responseText, function () {
 						$('#list-group-events').append(
 							'<li class="list-group-item">' + this.date + ' ' + this.name +
@@ -101,7 +101,7 @@ $(document).ready(function() {
 		else {
 			$.ajax({
 				type: "POST",
-				url: "/MainServlet",
+				url: "/happiness_service-1.0-SNAPSHOT/MainServlet",
 				data: {
 					"message": "refresh",
 					"date": this.value
@@ -110,7 +110,7 @@ $(document).ready(function() {
 
 				success: function (responseText) {
 					clear_event_list();
-					alert("Everything's fine\n" + responseText.message);
+					/*alert("Everything's fine\n" + responseText.message);*/
 					$.each(responseText, function () {
 						$('#list-group-events').append(
 							'<li class="list-group-item">' + this.date + ' ' + this.name +
@@ -153,7 +153,7 @@ $(document).ready(function() {
 		var new_name = document.getElementById('name');
 		$.ajax({
 			type : "POST",
-			url : "/EventsServlet",
+			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
 			data :
 			{
 				"message" : "user",
@@ -163,7 +163,7 @@ $(document).ready(function() {
 			dataType: "json",
 
 			success : function(responseText) {
-				alert("Everything's fine");
+				/*alert("Everything's fine");*/
 				if(responseText.message == "1") {
 					if (!$("#EvetExistError").is(":visible"))
 						$("#EventExistError").removeClass("hidden");
@@ -199,7 +199,7 @@ function fillUpdate(_id){
 	fillOrganizerList()
 	$.ajax({
 		type : "POST",
-		url : "/MainServlet",
+		url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
 		data :
 		{
 			"message" : "event",
@@ -208,7 +208,7 @@ function fillUpdate(_id){
 		dataType: "json",
 
 		success : function(responseText) {
-			alert(responseText.message);
+			/*alert(responseText.message);*/
 			$('#event_name').val(responseText.name);
 			$('input[name="type_radio"][value='+responseText.type+']').prop('checked',true);
 			$('#datepicker1').val(responseText.date);
@@ -226,7 +226,7 @@ function delete_event(){
 	var _id = selected_event_id;
 	$.ajax({
 		type : "POST",
-		url : "/MainServlet",
+		url : "/happiness_service-1.0-SNAPSHOT/MainServlet",
 		data :
 		{
 			"message" : "del_event",
@@ -235,7 +235,7 @@ function delete_event(){
 		dataType: "json",
 
 		success : function(responseText) {
-			alert(responseText.message);
+			/*alert(responseText.message);*/
 
 		},
 		error:function(data,status,er) {
@@ -247,14 +247,14 @@ function delete_event(){
 function fillMemberList() {
 	$.ajax({
 		type: "POST",
-		url: "/EventsServlet",
+		url: "/happiness_service-1.0-SNAPSHOT/EventsServlet",
 		data: {
 			"message": "users"
 		},
 		dataType: "json",
 
 		success : function(responseText) {
-			alert("Everything's fine");
+			/*alert("Everything's fine");*/
 			$.each(responseText, function() {
 				$('#MembersList').append(
 					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
@@ -271,7 +271,7 @@ function fillMemberList() {
 function fillOrganizerList(){
 	$.ajax({
 		type : "POST",
-		url : "/EventsServlet",
+		url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
 		data :
 		{
 			"message" : "managers"
@@ -279,7 +279,7 @@ function fillOrganizerList(){
 		dataType: "json",
 
 		success : function(responseText) {
-			alert("Everything's fine");
+			/*alert("Everything's fine");*/
 			$.each(responseText, function() {
 				$('#OrganizersList').append(
 					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
@@ -304,7 +304,7 @@ function clearModuleBody(){
 }
 
 function redirectVote(_id){
-	window.location.replace("/Voting.jsp?id="+_id);
+	window.location.replace("/happiness_service-1.0-SNAPSHOT/Voting.jsp?id="+_id);
 }
 
 

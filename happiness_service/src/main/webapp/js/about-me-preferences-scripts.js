@@ -3,12 +3,12 @@ var arr =[];
 $(document).ready(function() {
 
     if(!checkRole()){
-        window.location.replace("/registration.html");
+        window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
     }
 
     $.ajax({
         type : "POST",
-        url : "/AboutMePreferencesServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMePreferencesServlet",
         data :
         {
             "message" : "info",
@@ -16,7 +16,7 @@ $(document).ready(function() {
         dataType: "json",
 
         success : function(responseText) {
-            alert("Everything's fine\n" + responseText.message);
+            /*alert("Everything's fine\n" + responseText.message);*/
             $.each(responseText, function() {
                 arr.push(this.Name);
                 var _name = this.Name;
@@ -41,14 +41,14 @@ $(document).ready(function() {
 
     $.ajax({
         type : "POST",
-        url : "/AboutMePreferencesServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMePreferencesServlet",
         data :
         {
             "message" : "load",
         },
         dataType: "json",
         success : function(responseText) {
-            alert("Everything's fine\n" + responseText.message);
+            /*alert("Everything's fine\n" + responseText.message);*/
             $.each(responseText, function() {
                 var current_id = '#'+this.Name;
                 $.each(this.Subname,function(){
@@ -87,7 +87,7 @@ function submitForm(){
     var count_selected_sub_json = JSON.stringify(count_selected_sub);
     $.ajax({
         type : "POST",
-        url : "/AboutMePreferencesServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/AboutMePreferencesServlet",
         data :
         {
             "message" : "update",
@@ -98,7 +98,7 @@ function submitForm(){
         dataType: "json",
 
         success : function(responseText) {
-            alert("Everything's fine\n"+responseText.message);
+            /*alert("Everything's fine\n"+responseText.message);*/
             //код заполения input-ов
         },
 

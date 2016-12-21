@@ -6,7 +6,7 @@ $(document).ready(function(){
 
 
 	if(!checkRole()){
-		window.location.replace("/registration.html");
+		window.location.replace("/happiness_service-1.0-SNAPSHOT/registration.html");
 	}
 	else{
 		if($.cookie("role")=="user") {
@@ -21,7 +21,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			type : "POST",
-			url : "/EventsServlet",
+			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
 			data :
 			{
 				"message" : "users"
@@ -29,7 +29,7 @@ $(document).ready(function(){
 			dataType: "json",
 
 			success : function(responseText) {
-				alert("Everything's fine");
+				/*alert("Everything's fine");*/
 				$.each(responseText, function() {
 					$('#MembersList').append(
 					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
@@ -46,7 +46,7 @@ $(document).ready(function(){
 
 	$.ajax({
 		type : "POST",
-		url : "/EventsServlet",
+		url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
 		data :
 		{
 			"message" : "managers"
@@ -54,7 +54,7 @@ $(document).ready(function(){
 		dataType: "json",
 
 		success : function(responseText) {
-			alert("Everything's fine");
+			/*alert("Everything's fine");*/
 			$.each(responseText, function() {
 				$('#OrganizersList').append(
 					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
@@ -81,7 +81,7 @@ $(document).ready(function(){
 			return;
 		$.ajax({
 			type : "POST",
-			url : "/EventsServlet",
+			url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
 			data :
 			{
 				"message" : "user",
@@ -91,7 +91,7 @@ $(document).ready(function(){
 			dataType: "json",
 
 			success : function(responseText) {
-				alert("Everything's fine");
+				/*alert("Everything's fine");*/
 				if(responseText.message == "1") {
 					if (!$("#EvetExistError").is(":visible"))
 						$("#EventExistError").removeClass("hidden");
@@ -155,7 +155,7 @@ function add_member(){
     alert("Name: "+new_name.value + " \nEmail:" +new_email.value);
     $.ajax({
         type : "POST",
-        url : "/EventsServlet",
+        url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
         data :
         {
             "message" : "add",
@@ -165,7 +165,7 @@ function add_member(){
         dataType: "json",
 
         success : function(responseText) {
-            alert("Everything's fine \nResponse:" + responseText.message);
+            /*alert("Everything's fine \nResponse:" + responseText.message);*/
             $('#MembersList').append(
                 '<option value=\"' +new_name +'\">'+new_name+'</option>'
             );
@@ -193,7 +193,7 @@ function submitForm(){
             }
         $.ajax({
             type : "POST",
-            url : "/EventsServlet",
+            url : "/happiness_service-1.0-SNAPSHOT/EventsServlet",
             data :
             {
                 "message" : "event",
@@ -206,7 +206,7 @@ function submitForm(){
             dataType: "json",
 
             success : function(responseText) {
-                alert("Everything's fine");
+                /*alert("Everything's fine");*/
                 $.each(responseText, function() {
                     $('#MembersList').append(
                         $("<option></option>").text(this.Name)

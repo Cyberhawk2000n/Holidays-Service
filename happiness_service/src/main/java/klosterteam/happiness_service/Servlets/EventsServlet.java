@@ -323,7 +323,7 @@ public class EventsServlet extends HttpServlet {
             {
                 eventShed = hHibernate.createEvent("Holiday #"+num++, calendar.getTime(), false, eventType, userId, content, managerId);
             }
-            //hHibernate.createEventShedule(eventShed, eventShed.isEveryYear());
+            hHibernate.createEventShedule(eventShed, eventShed.isEveryYear());
             return 1;
             
         }

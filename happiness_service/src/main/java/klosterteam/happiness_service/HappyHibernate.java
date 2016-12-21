@@ -2033,7 +2033,7 @@ public class HappyHibernate {
                                 new Date(Integer.valueOf(dayMonthYear[2]) - 1900, Integer.valueOf(dayMonthYear[1]) - 1,
                                         Integer.valueOf(dayMonthYear[0])),
                                 role, email, "about", depId, true);
-                        this.createLogin(user, user.getEmail(), user.getEmail());
+                        Logins login = this.createLogin(user, user.getEmail(), user.getEmail());
                         Event_types typeId = this.selectEventTypes("Birthday").get(0);
                         //Date eventDate = user.getBirthday();
                         Calendar calendar = Calendar.getInstance();
@@ -2057,13 +2057,14 @@ public class HappyHibernate {
                         Users root = this.selectUsersByRole(role2).get(0);
                         Events event = this.createEvent("Birthday of " + user.getEmail(), calendar.getTime(),
                                 true, typeId, user, active, "template", root);
-                        //this.createEventShedule(event, true);
-                        //sendMessage(); login, password
+                        this.createEventShedule(event, true);
+                        this.sendMessage(event.getUserId().getEmail(), "Now you are user of Happiness Service!\n" +
+                                "login: " + login.getLogin() + "\npassword: " + login.getPassword());
 
                     }
                 }
             }
-            log.warn("SUCCESS!!!!!!!!!!!!!!!!!!!!!!!");
+            //log.warn("SUCCESS!!!!!!!!!!!!!!!!!!!!!!!");
         }
         catch (Exception exc)
         {

@@ -49,13 +49,16 @@ $(document).ready(function() {
 					alert("Everything's fine\n"+responseText.message);
 					$.each(responseText,function(){
 						$('#list-group-events').append(
-							'<li class="list-group-item">'+this.date+' '+this.name+
-							'<button onclick="fillUpdate('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e'+this.id+'">'+
-							'<span class="glyphicon glyphicon-cog"></span> Edit Event'+
-							'</button>'+
-							'<button onclick="setSelectedEvent('+this.id+')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d'+this.id+'">'+
-							'<span class="glyphicon glyphicon-remove"></span>'+
-							'</button>'+
+							'<li class="list-group-item">' + this.date + ' ' + this.name +
+							'<button onclick="fillUpdate(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e' + this.id + '">' +
+							'<span class="glyphicon glyphicon-cog"></span>' +
+							'</button>' +
+							'<button onclick="setSelectedEvent(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d' + this.id + '">' +
+							'<span class="glyphicon glyphicon-remove"></span>' +
+							'</button>' +
+							'<button onclick="redirectVote(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right" >' +
+							'<span class="glyphicon glyphicon-stats"></span>' +
+							'</button>' +
 							'</li>'
 						);
 					});
@@ -112,10 +115,13 @@ $(document).ready(function() {
 						$('#list-group-events').append(
 							'<li class="list-group-item">' + this.date + ' ' + this.name +
 							'<button onclick="fillUpdate(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#UpdateEventModule"id="e' + this.id + '">' +
-							'<span class="glyphicon glyphicon-cog"></span> Edit Event' +
+							'<span class="glyphicon glyphicon-cog"></span>' +
 							'</button>' +
 							'<button onclick="setSelectedEvent(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right"  data-toggle="modal" data-target="#delayModule"id="d' + this.id + '">' +
 							'<span class="glyphicon glyphicon-remove"></span>' +
+							'</button>' +
+							'<button onclick="redirectVote(' + this.id + ')" type="button" class="btn btn-default btn-sm pull-right" >' +
+							'<span class="glyphicon glyphicon-stats"></span>' +
 							'</button>' +
 							'</li>'
 						);
@@ -128,7 +134,6 @@ $(document).ready(function() {
 			});
 		}
 	})
-
 
 
 	//Check is there any event of selected type and user name
@@ -185,11 +190,11 @@ function setSelectedEvent(_id){
 }
 
 function clear_event_list(){
-	$('ul').empty();
+	$('#list-group-events').empty();
 }
 
-
 function fillUpdate(_id){
+	clearModuleBody();
 	fillMemberList();
 	fillOrganizerList()
 	$.ajax({
@@ -248,11 +253,11 @@ function fillMemberList() {
 		},
 		dataType: "json",
 
-		success: function (responseText) {
+		success : function(responseText) {
 			alert("Everything's fine");
-			$.each(responseText, function () {
+			$.each(responseText, function() {
 				$('#MembersList').append(
-					'<option value=\"' + this.Name + '\">' + this.Name + '</option>'
+					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
 				);
 			});
 		},
@@ -287,6 +292,19 @@ function fillOrganizerList(){
 		}
 	});
 
+}
+
+function clearModuleBody(){
+	$('#OrganizersList')
+		.find('option')
+		.remove();
+	$('#MembersList')
+		.find('option')
+		.remove();
+}
+
+function redirectVote(_id){
+	window.location.replace("/Voting.jsp?id="+_id);
 }
 
 

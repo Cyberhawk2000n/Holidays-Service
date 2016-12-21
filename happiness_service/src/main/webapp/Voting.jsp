@@ -23,25 +23,24 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-Welcome to vote #<b><%=request.getParameter("id")%></b>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="main.html">HappyService</a>
+            <a class="navbar-brand" href="main.html">HappynessService</a>
         </div>
         <ul class="nav navbar-nav">
-            <li><a href="main.html">Main</a></li>
-            <li><a href="events-create.html">Events</a></li>
-            <li><a href="about.htlm">About me</a></li>
+            <li class="active"><a href="main.html">Main</a></li>
+            <li ><a href="events-create.html">Events</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">About me
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="profile.html">My Profile</a></li>
+                    <li><a href="preferences.html">My preferences</a></li>
+                </ul>
+            </li>
         </ul>
-        <form class="navbar-form navbar-left">
-            <div class="form-group">
-                <label class="btn btn-default btn-file">
-                    Update members <input type="file" style="display: none;">
-                </label>
-                <button type="submit" class="btn btn-success">Become an organizaer</button>
-            </div>
-        </form>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
         </ul>
@@ -51,22 +50,26 @@ Welcome to vote #<b><%=request.getParameter("id")%></b>
 <div class="row">
     <div class="col-md-3 col-sm-offset-3" >
         <h1>Vote for a gift!</h1>
-        <form role="form" id="EventForm" onclick="check()" \>
+        <form role="form" id="EventForm" action="/voting_redirect" method="post" \>
             <label for="Options" class="h4">Choose an option:</label>
 
             <div id="Options">
                 <% String[] options = VotingServletAPI.getVotingOptions(Integer.parseInt(request.getParameter("id")));
+                    if(!VotingServletAPI.getVotedFlag()){
                     for (int i=0; i<options.length;i++ ){%>
                 <label class="radio-inline">
-                    <input type="radio" name="freq_radio"><%=options[i]%></label> <br>
+                    <input type="radio" name=""><%=options[i]%></label> <br>
                 <% }%>
             </div>
+            <% }
+                else {%>
             <div id="Progress">
                 <% int[] progress = VotingServletAPI.getVotingProgress(Integer.parseInt(request.getParameter("id")));
                     for (int i=0; i<options.length;i++ ){%>
                     <%=i%>  <%=options[i]%> -- <%=progress[i]%>
                 <% }%>
             </div>
+            <%}%>
         </form>
     </div>
     <div class="col-md-6 ">
@@ -125,7 +128,7 @@ Welcome to vote #<b><%=request.getParameter("id")%></b>
                 </div>
             </div>
 
-            <button type="submit" id="form-submit" class="btn btn-success btn-md pull-left">Confirm
+            <button type="submit" id="form-submit" class="btn btn-success btn-md pull-left" onclick="submitVoting()">Confirm
             </button>
         </div>
     </div>
@@ -134,3 +137,10 @@ Welcome to vote #<b><%=request.getParameter("id")%></b>
 
 </html>
 
+
+<script>
+    function submitVoting(){
+        $('#EventForm').submit();
+    }
+
+</script>

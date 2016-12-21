@@ -1,5 +1,5 @@
 $(document).ready(function(){
-		//stops standart form submit request
+        //stops standart form submit request
         //$("#EventForm").submit(function (e) {
         //e.preventDefault();
 		//});
@@ -110,11 +110,11 @@ $(document).ready(function(){
 		});
 	})
 
-
 })
 
 //Checking for enabling the template editing field
 function check(){
+
 	var type = document.getElementsByName('type_radio');
 	var date = document.getElementById('datepicker');
 	var select = document.getElementById('MembersList');
@@ -140,92 +140,91 @@ function check(){
 		alert("Здесь я запрашиваю шаблон у сервера");
 	}
 
-
 }
 
 //Refresh the template editing field
 function refresh_email(){
-	alert("Здесь я запрашиваю шаблон у сервера");
+    alert("Здесь я запрашиваю шаблон у сервера");
 }
 
 //Ajax to merge new User
 function add_member(){
-	var new_email = document.getElementById('email');
-	var new_name = document.getElementById('name');
-	alert("Здесь создается новый пользователь");
-	alert("Name: "+new_name.value + " \nEmail:" +new_email.value);
-	$.ajax({
-		type : "POST",
-		url : "/EventsServlet",
-		data :
-		{
-			"message" : "add",
-			"Name" : new_name.value,
-			"Email" : new_email.value
-		},
-		dataType: "json",
+    var new_email = document.getElementById('email');
+    var new_name = document.getElementById('name');
+    alert("Здесь создается новый пользователь");
+    alert("Name: "+new_name.value + " \nEmail:" +new_email.value);
+    $.ajax({
+        type : "POST",
+        url : "/EventsServlet",
+        data :
+        {
+            "message" : "add",
+            "Name" : new_name.value,
+            "Email" : new_email.value
+        },
+        dataType: "json",
 
-		success : function(responseText) {
-			alert("Everything's fine \nResponse:" + responseText.message);
-			$('#MembersList').append(
-				'<option value=\"' +new_name +'\">'+new_name+'</option>'
-			);
-		},
+        success : function(responseText) {
+            alert("Everything's fine \nResponse:" + responseText.message);
+            $('#MembersList').append(
+                '<option value=\"' +new_name +'\">'+new_name+'</option>'
+            );
+        },
 
-		error:function(data,status,er) {
-			alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
-		}
-	});
+        error:function(data,status,er) {
+            alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+        }
+    });
 }
 
 function submitForm(){
-		var name = document.getElementById("name");
-		var date = document.getElementById("datepicker");
-		var comment = document.getElementById("comment");
-		var type_event_array = document.getElementsByName('type_radio');
-		var id = $('#MemberList').value;
-		var id_rely = $('#OrganizersList').value;
-		var type_event;
-		var type_event_flag=0;
-		for(var i=0;i<type_event_array.length;i++)
-			if(type_event_array[i].checked) {
-				type_event = type_event_array[i].value;
-				type_event_flag=1;
-			}
-		$.ajax({
-			type : "POST",
-			url : "/EventsServlet",
-			data :
-			{
-				"message" : "event",
-				"type": type_event,
-				"id_person": id,
-				"id_rely": id_rely,
-				"date": date.value,
-				"content":comment.value
-			},
-			dataType: "json",
+        var name = document.getElementById("name");
+        var date = document.getElementById("datepicker");
+        var comment = document.getElementById("comment");
+        var type_event_array = document.getElementsByName('type_radio');
+        var id = $('#MemberList').value;
+        var id_rely = $('#OrganizersList').value;
+        var type_event;
+        var type_event_flag=0;
+        for(var i=0;i<type_event_array.length;i++)
+            if(type_event_array[i].checked) {
+                type_event = type_event_array[i].value;
+                type_event_flag=1;
+            }
+        $.ajax({
+            type : "POST",
+            url : "/EventsServlet",
+            data :
+            {
+                "message" : "event",
+                "type": type_event,
+                "id_person": id,
+                "id_rely": id_rely,
+                "date": date.value,
+                "content":comment.value
+            },
+            dataType: "json",
 
-			success : function(responseText) {
-				alert("Everything's fine");
-				$.each(responseText, function() {
-					$('#MembersList').append(
-						$("<option></option>").text(this.Name)
-					);
-				});
-			},
+            success : function(responseText) {
+                alert("Everything's fine");
+                $.each(responseText, function() {
+                    $('#MembersList').append(
+                        $("<option></option>").text(this.Name)
+                    );
+                });
+            },
 
-			error:function(data,status,er) {
-				alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
-			}
-		});
+            error:function(data,status,er) {
+                alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+            }
+        });
 }
 
 
 function checkRole(){
-	if($.cookie("role")!=null){
-		return true;
-	}
-	else
-		return false;
+    if($.cookie("role")!=null){
+        return true;
+    }
+    else
+        return false;
 }

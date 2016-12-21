@@ -77,7 +77,15 @@ public class MainServlet extends HttpServlet{
             // here we go to DB for an event info using the Id
             // still in development
             //todo need to figure out which fields of event do we allow to change
-            JsonObject json = this.getEventById(request);
+            JsonObject json;// = this.getEventById(request);
+            JsonObjectBuilder jsonBuilder = Json.createObjectBuilder();
+            jsonBuilder.add("name", "26/12/2016 Birthday of nochds@gmail.com")
+                    .add("type", "Birthday")
+                    .add("date", "26/12/2016")
+                    .add("user", "0")
+                    .add("manager", "0")
+                    .add("template", "test template");
+            json = jsonBuilder.build();
             response.setContentType("text/html;charset=UTF-8");
             if (json != null)
                 response.getWriter().write(json.toString());

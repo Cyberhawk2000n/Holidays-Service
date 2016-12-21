@@ -14,6 +14,7 @@ import klosterteam.hibernate.Vote;
  */
 public class VotingServletAPI {
 
+    public static boolean voted_flag=false;
     // returns the voting variants
     public static String[] getVotingOptions(long id){
         //String[] res = new String[2];
@@ -56,9 +57,15 @@ public class VotingServletAPI {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < (prefs.size() - 1); i++)
             sb.append(prefs.get(i)).append(", ");
-        sb.append(prefs.get(prefs.size() - 1)).append("\nAbout ")
-                .append(user.getEmail()).append("\n");
+        sb.append(prefs.get(prefs.size() - 1)).append("\nAbout \n")
+                .append(user.getEmail()).append("\n").append(user.getAbout());
         return sb.toString();
+    }
+    public static boolean getVotedFlag(){
+        return voted_flag;
+    }
+    public static void Vote(int i){
+        voted_flag=true;
     }
     // returns gift history
     public static String[] gGetGiftHistory(long id){

@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import klosterteam.hibernate.Events;
@@ -1966,7 +1968,7 @@ public class HappyHibernate {
         }
     }
     
-    public int updateMembers(FileInputStream csvInput) throws FileNotFoundException
+    public int updateMembers(InputStream csvInput) throws FileNotFoundException
     {
         Logger log = LogManager.getLogger(HappyHibernate.class);
         try
@@ -1975,9 +1977,9 @@ public class HappyHibernate {
             String csvSplitBy = ";";
             Map<String, String[]> rows = new HashMap<>();
             String[] columns;
-            FileWriter fos = new FileWriter("in.csv");
+            //FileWriter fos = new FileWriter("in.csv");
             //fos.
-            String str = "Nochevnoy;Dmitriy;Sergeevich;26.12.1995;1;Dep1;nochds@gmail.com\n";
+            /*String str = "Nochevnoy;Dmitriy;Sergeevich;26.12.1995;1;Dep1;nochds@gmail.com\n";
             fos.write(str);
             str = "Read;Jim;;12.12.1995;5;Dep5;cyberhawk2000n@gmail.com\n";
             fos.write(str);
@@ -1985,14 +1987,14 @@ public class HappyHibernate {
             fos.write(str);
             str = "Reevs;Eujene;Olegovich;7.1.1995;5;Dep5;nochds22@gmail.com\n";
             fos.write(str);
-            fos.close();
-            BufferedReader csv = new BufferedReader(new FileReader("in.csv"));
+            fos.close();*/
+            BufferedReader csv = new BufferedReader(new InputStreamReader(csvInput, "UTF-8"));
             while ((line = csv.readLine()) != null)//while
             {
                 columns = line.split(csvSplitBy);
                 //for (int i = 0; i < columns.length; i++)
                 //{
-                //    log.warn(columns[i] + "\n\n");
+                    log.warn(columns.length + "\n\n" + line);
                 //}
                 rows.put(columns[columns.length - 1], columns);
             }
@@ -2001,42 +2003,6 @@ public class HappyHibernate {
             {
                 if (!rows.containsKey(users.get(i).getEmail()))
                 {
-                    //log.warn(users.get(i).getEmail() + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    //hHibernate.deleteLogin(users.get(i));
-                    //hHibernate.deletePreferences(users.get(i));
-                    /*List<Gift_history> gHist = hHibernate.selectGiftHistoryByUser(users.get(i));
-                    if (gHist != null)
-                        for (int j = 0; j < gHist.size(); j++)
-                            hHibernate.deleteGiftHistory(gHist.get(i));*/
-                    /*List<Event_types> evTypes;
-                    Event_types typeId;
-                    Events event;
-                    if ((evTypes = hHibernate.selectEventTypes("Birthday")) != null)
-                    {
-                        log.warn("HERE!!!!!!!!\n");
-                        typeId = evTypes.get(0);
-                        if (typeId != null)
-                        {
-                            List<Events> events;
-                            log.warn("HERE!!!!!!!!\n");
-                            events = hHibernate.selectEventsByUserAndType(users.get(i), typeId);
-                            if (events != null)
-                            {
-                                event = events.get(0);
-                                log.warn("HERE2222!!!!!!!!\n");
-                                List<Vote> votes;
-                                if (event != null)
-                                {
-                                    votes = hHibernate.selectVote(event.getId());
-                                    if (votes != null)
-                                        for (int j = 0; j < votes.size(); j++)
-                                            hHibernate.deleteVote(votes.get(i));
-                                    hHibernate.deleteMoney(event);
-                                    hHibernate.deleteEvent(event);
-                                }
-                            }
-                        }
-                    }*/
                     this.deleteUser(users.get(i));
                 }
             }
@@ -2045,8 +2011,10 @@ public class HappyHibernate {
             for (Iterator i = set.iterator(); i.hasNext();)
             {
                 String email = (String)i.next();
+                Roles role = this.selectRoles("root").get(0);
+                Users user = this.selectUsersByRole(role).get(0);
                 if (this.selectDepartments(rows.get(email)[5]).isEmpty())
-                    this.createDepartments(Integer.valueOf(rows.get(email)[4]), rows.get(email)[5]);
+                    this.createDepartments(Integer.valueOf(rows.get(email)[4]), rows.get(email)[5], user);
             }
             //add users and events
             List<Roles> roles = this.selectRoles("user");
@@ -2085,8 +2053,10 @@ public class HappyHibernate {
                         long diff = calendar.getTimeInMillis() - (new Date()).getTime();
                         if (diff > -43200000L && diff < 1209600000L)
                             active = true;
+                        Roles role2 = this.selectRoles("root").get(0);
+                        Users root = this.selectUsersByRole(role2).get(0);
                         Events event = this.createEvent("Birthday of " + user.getEmail(), calendar.getTime(),
-                                true, typeId, user, active, "template", null);
+                                true, typeId, user, active, "template", root);
                         //this.createEventShedule(event, true);
                         //sendMessage(); login, password
 

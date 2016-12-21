@@ -42,12 +42,14 @@ $(document).ready(function(){
 			}
 		});
 
+
+
 	$.ajax({
 		type : "POST",
 		url : "/EventsServlet",
 		data :
 		{
-			"message" : "mods"
+			"message" : "managers"
 		},
 		dataType: "json",
 
@@ -113,7 +115,6 @@ $(document).ready(function(){
 
 //Checking for enabling the template editing field
 function check(){
-	var freq = document.getElementsByName('freq_radio');
 	var type = document.getElementsByName('type_radio');
 	var date = document.getElementById('datepicker');
 	var select = document.getElementById('MembersList');
@@ -121,15 +122,9 @@ function check(){
 
 	if(Email_text.disabled == false)
 		return;
-	var flag_freq=0;
 	var flag_type=0;
 	var flag_date=0;
 	var flag_select=0;
-	for(var i=0;i<freq.length;i++)
-	{
-	    if(freq[i].checked)
-	     flag_freq=1;
-	}
 	for(var i=0;i<type.length;i++)
 	{
 	    if(type[i].checked)
@@ -139,7 +134,7 @@ function check(){
 		flag_date=1;
 	if(select != '')
 		flag_select=1; 
-	if(flag_freq==1 && flag_date==1 && flag_select==1 && flag_type==1){
+	if(flag_date==1 && flag_select==1 && flag_type==1){
 		document.getElementById('comment').disabled=false;
 		document.getElementById('Refresh_email').disabled=false;
 		alert("Здесь я запрашиваю шаблон у сервера");

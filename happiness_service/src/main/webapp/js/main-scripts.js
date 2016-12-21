@@ -191,6 +191,7 @@ function clear_event_list(){
 
 function fillUpdate(_id){
 	fillMemberList();
+	fillOrganizerList()
 	$.ajax({
 		type : "POST",
 		url : "/MainServlet",
@@ -203,7 +204,12 @@ function fillUpdate(_id){
 
 		success : function(responseText) {
 			alert(responseText.message);
-
+			$('#event_name').val(responseText.name);
+			$('input[name="type_radio"][value='+responseText.type+']').prop('checked',true);
+			$('#datepicker1').val(responseText.date);
+			$('#MembersList').val(responseText.user);
+			$('#OrganizersList').val(responseText.manager);
+			$('#comment').val(responseText.template);
 		},
 		error:function(data,status,er) {
 			alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
@@ -257,7 +263,31 @@ function fillMemberList() {
 	});
 }
 
+function fillOrganizerList(){
+	$.ajax({
+		type : "POST",
+		url : "/EventsServlet",
+		data :
+		{
+			"message" : "managers"
+		},
+		dataType: "json",
 
+		success : function(responseText) {
+			alert("Everything's fine");
+			$.each(responseText, function() {
+				$('#OrganizersList').append(
+					'<option value=\"' +this.id +'\">'+this.Name+'</option>'
+				);
+			});
+		},
+
+		error:function(data,status,er) {
+			alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
+		}
+	});
+
+}
 
 
 function checkRole(){

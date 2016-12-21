@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 import javax.json.JsonArray;
@@ -60,7 +61,9 @@ public class AboutMeProfileServlet extends HttpServlet {
                         .add("email", login.getLogin())
                         .add("pw", "")
                         .add("date", sb.toString())
+                        .add("marked", !userId.isGiveGift())
                         .add("comment", userId.getAbout()).build();
+                log.warn("\n\n" + !userId.isGiveGift());
                 response.setContentType("application/json");
                 response.getWriter().write(json.toString());
             }
@@ -83,6 +86,30 @@ public class AboutMeProfileServlet extends HttpServlet {
                         .add("message", "Fail on updating user")
                         .build();
             }
+            response.setContentType("application/json");
+            response.getWriter().write(json.toString());
+            return;
+        }
+        else if("mark".equals(request.getParameter("message"))){
+            // update info in db
+            // fields for request - email, pw, date, comment
+            log.debug("AboutMeServlet ---> processRequest() ---> don't give a gift");
+            JsonObject json = Json.createObjectBuilder()
+                    .add("message", "success")
+                    .build();
+            this.editUserGiveGift(request, false);
+            response.setContentType("application/json");
+            response.getWriter().write(json.toString());
+            return;
+        }
+        else if("unmark".equals(request.getParameter("message"))){
+            // update info in db
+            // fields for request - email, pw, date, comment
+            log.debug("AboutMeServlet ---> processRequest() ---> give a gift");
+            JsonObject json = Json.createObjectBuilder()
+                    .add("message", "success")
+                    .build();
+            this.editUserGiveGift(request, true);
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
             return;
@@ -151,6 +178,38 @@ public class AboutMeProfileServlet extends HttpServlet {
         catch (Exception exc)
         {
             log.warn("Getting users from DB exception", exc);
+            return -1;
+        }
+    }
+    
+    protected int editUserGiveGift(HttpServletRequest request, boolean giveGift)
+    {
+        Logger log = LogManager.getLogger(EventsServlet.class);
+        try
+        {
+            Users userId = null;
+            log.warn("\n\nHERE!!!!!!!!!!!!!!!!!\n\n");
+            HappyHibernate hHibernate = new HappyHibernate();
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie: cookies)
+                if ("email".equals(cookie.getName()))
+                {
+                    userId = hHibernate.selectUsersByEmail(cookie.getValue()).get(0);
+                }
+            if (userId == null){
+                log.warn("No user with such id");
+                return -1;
+            }
+            else
+            {
+                log.warn("\n\n changing status for\n"+userId.getName()+"\n"+giveGift+"\n\n");
+                hHibernate.changeUserGiveGift(userId, giveGift);
+                return 0;
+            }
+        }
+        catch (Exception exc)
+        {
+            log.warn("Setting users from DB exception", exc);
             return -1;
         }
     }

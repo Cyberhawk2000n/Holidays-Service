@@ -15,6 +15,9 @@ import org.apache.commons.io.output.*;
 
 import javax.json.Json;
 import javax.json.JsonObject;
+import klosterteam.happiness_service.HappyHibernate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TestingAjaxServlet extends HttpServlet {
 
@@ -46,7 +49,7 @@ public class TestingAjaxServlet extends HttpServlet {
             throws ServletException, IOException {
         if(request.getParameter("message") != null)
             processRequest(request, response);
-
+        Logger log = LogManager.getLogger(TestingAjaxServlet.class);
         // Check that we have a file upload request
         isMultipart = ServletFileUpload.isMultipartContent(request);
         response.setContentType("text/html");
@@ -90,6 +93,7 @@ public class TestingAjaxServlet extends HttpServlet {
                 FileItem fi = (FileItem)i.next();
                 if ( !fi.isFormField () )
                 {
+                    
                     // Get the uploaded file parameters
                     String fieldName = fi.getFieldName();
                     String fileName = fi.getName();
@@ -97,6 +101,11 @@ public class TestingAjaxServlet extends HttpServlet {
                     boolean isInMemory = fi.isInMemory();
                     long sizeInBytes = fi.getSize();
                     // Write the file
+                    InputStream is = fi.getInputStream();
+                    HappyHibernate hHibernate = new HappyHibernate();
+                    hHibernate.updateMembers(is);
+                    //while (br.lines() != null)
+                        //log.warn("\n\n\n" + br.readLine());
                     if( fileName.lastIndexOf("\\") >= 0 ){
                         file = new File( filePath +
                                 fileName.substring( fileName.lastIndexOf("\\"))) ;
@@ -108,12 +117,14 @@ public class TestingAjaxServlet extends HttpServlet {
                     System.out.println("file path: "+filePath);
                     System.out.println("fi: "+fi.toString());
                     System.out.println("FILE INFO. \n PATH: "+ file.getPath() + "\n Name: "+file.getName()+"\n Total Space: "+file.getTotalSpace());
-                    fi.write( file ) ;
+                    //fi.write( file ) ;
                     out.println("Uploaded Filename: " + fileName + "<br>");
+                    
                 }
             }
             out.println("</body>");
             out.println("</html>");
+            response.sendRedirect(request.getContextPath() + "/profile.html");
         }catch(Exception ex) {
             System.out.println(ex);
         }

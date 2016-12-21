@@ -17,7 +17,7 @@ $(document).ready(function() {
     });
 
 
-
+/*
     $.ajax({
         type : "POST",
         url : "/AboutMeProfileServlet",
@@ -34,7 +34,7 @@ $(document).ready(function() {
             $("#pw").val(responseText.pw);
             $("#datepicker").val(responseText.date);
             $("#comment").val(responseText.comment);
-            if(responseText.marked === "true")
+            if(responseText.marked == "true")
             {
                 $("#No_Congrat").hide();
                 $("#Congrat").show();
@@ -49,7 +49,7 @@ $(document).ready(function() {
         error:function(data,status,er) {
             alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
         }
-    });
+    });*/
 })
 
 function markUser(){

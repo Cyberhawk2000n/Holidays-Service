@@ -54,9 +54,10 @@ public class DoEventActiveJob implements Job {
                     {
                         hHibernate.changeEventActive(event, true);
                         hHibernate.createMoney(event, 0, 10000);
-                        hHibernate.sendMessage("nochds@gmail.com",
+                        hHibernate.sendMessage(event.getManagerId().getEmail(),
                             Calendar.getInstance().getTime().toString() + "Vote for event \" "
-                                    + event.getName() + "\" is ready!");
+                                   + event.getName() + "\" is ready!");
+                        //можно указать путь к нему "/Voting.jsp?id=" + event.getId()
                     }
                 }
             }
@@ -70,7 +71,7 @@ public class DoEventActiveJob implements Job {
                 {
                     if ((event.getTypeId().getId() != 0)||(event.getUserId().isGiveGift()))
                     {
-                        hHibernate.sendMessage("nochds@gmail.com",
+                        hHibernate.sendMessage(event.getManagerId().getEmail(),
                             Calendar.getInstance().getTime().toString() + "\nVote for event \" "
                                     + event.getName() + "\" has been ended!");
                         List<Vote> gifts = hHibernate.selectVoteByEvent(event);
@@ -107,7 +108,7 @@ public class DoEventActiveJob implements Job {
                                         .append("\"\n");
                                 sb.append("You must choose something!");
                             }
-                            hHibernate.sendMessage("nochds@gmail.com", sb.toString());
+                            hHibernate.sendMessage(event.getManagerId().getEmail(), sb.toString());
                         }
                     }
                     else
@@ -126,11 +127,19 @@ public class DoEventActiveJob implements Job {
                     jec.getScheduler().deleteJob(jec.getTrigger().getJobKey());
                 else
                 {
-                    hHibernate.changeEventActive(event, false);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(event.getDate());
-                    calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1);
-                    hHibernate.changeEventDate(event, calendar.getTime());
+                    if (!event.isEveryYear())
+                    {
+                        hHibernate.deleteEvent(event);
+                        jec.getScheduler().deleteJob(jec.getTrigger().getJobKey());
+                    }
+                    else
+                    {
+                        hHibernate.changeEventActive(event, false);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(event.getDate());
+                        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + 1);
+                        hHibernate.changeEventDate(event, calendar.getTime());
+                    }
                     hHibernate.deleteMoney(event);
                 }
             }

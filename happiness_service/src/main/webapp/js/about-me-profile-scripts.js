@@ -5,10 +5,10 @@ $(document).ready(function() {
     }
     else{
         if($.cookie("role")=="user") {
-            $("#lbl-browse-btn").addClass("hidden");
+            $("#uploadBtn").addClass("hidden");
         }
-        else if($.cookie("role")=="mod")
-            $("#browse-btn").addClass("hidden");
+        else
+            $("#Organize-btn").addClass("hidden");
     }
 
     //Datepicker
@@ -17,7 +17,7 @@ $(document).ready(function() {
     });
 
 
-/*
+
     $.ajax({
         type : "POST",
         url : "/AboutMeProfileServlet",
@@ -34,7 +34,7 @@ $(document).ready(function() {
             $("#pw").val(responseText.pw);
             $("#datepicker").val(responseText.date);
             $("#comment").val(responseText.comment);
-            if(responseText.marked == "true")
+            /*if(responseText.marked == "true")
             {
                 $("#No_Congrat").hide();
                 $("#Congrat").show();
@@ -43,13 +43,13 @@ $(document).ready(function() {
             {
                 $("#Congrat").hide();
                 $("#No_Congrat").show();
-            }
+            }*/
         },
 
         error:function(data,status,er) {
             alert("MISTAKES WERE MADE \n\nerror: "+data+" \nstatus: "+status+" \ner:"+er);
         }
-    });*/
+    });
 })
 
 function markUser(){

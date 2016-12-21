@@ -73,7 +73,7 @@ public class AboutMePreferencesServlet extends HttpServlet {
             log.debug("AboutMeServlet ---> processRequest() ---> reading preferences list ");
             JsonArray json = this.getPrefererencedCategories(request);
             response.setContentType("application/json");
-            if (json != null)
+            if (json != null&&!json.isEmpty())
                 response.getWriter().write(json.toString());
             else
                 response.getWriter().write(Json.createArrayBuilder().build().toString());

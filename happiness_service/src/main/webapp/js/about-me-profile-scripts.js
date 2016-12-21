@@ -34,11 +34,16 @@ $(document).ready(function() {
             $("#pw").val(responseText.pw);
             $("#datepicker").val(responseText.date);
             $("#comment").val(responseText.comment);
-            if(responseText.marked == "true")
+            if(responseText.marked === "true")
+            {
                 $("#No_Congrat").hide();
+                $("#Congrat").show();
+            }
             else
+            {
                 $("#Congrat").hide();
-
+                $("#No_Congrat").show();
+            }
         },
 
         error:function(data,status,er) {
@@ -58,9 +63,9 @@ function markUser(){
         dataType: "json",
 
         success : function(responseText) {
+            //$("#No_Congrat").hide();
+            //$("#Congrat").show();
             alert("Everything's fine\n"+responseText.message);
-            $("#No_Congrat").hide();
-            $("#Congrat").show();
         },
 
         error:function(data,status,er) {
@@ -79,9 +84,9 @@ function unmarkUser(){
         dataType: "json",
 
         success : function(responseText) {
+            //$("#Congrat").hide();
+            //$("#No_Congrat").show();
             alert("Everything's fine\n"+responseText.message);
-            $("#Congrat").hide();
-            $("#No_Congrat").show();
         },
 
         error:function(data,status,er) {

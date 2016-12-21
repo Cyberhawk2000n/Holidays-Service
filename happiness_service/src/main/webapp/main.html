@@ -92,21 +92,22 @@
            </div>
            <div class="modal-body">
              <form>
+               <label for="event_name" class="h4">Choose an event content-type</label>
+               <input type='text' name="event_name" id="event_name" class="form-control"/>
                <label for="EventType" class="h4">Choose an event content-type</label>
                <div id="EventType">
                  <label class="radio-inline">
-                   <input type="radio" name="type_radio">Birthday</label>
+                   <input type="radio" name="type_radio" value="Birthday">Birthday</label>
                  <label class="radio-inline">
-                   <input type="radio" name="type_radio">Corporate</label>
+                   <input type="radio" name="type_radio" value="Corporate">Corporate</label>
                  <label class="radio-inline">
-                   <input type="radio" name="type_radio">Addition to the family</label>
+                   <input type="radio" name="type_radio" value="Addition">Addition to the family</label>
                </div>
                <label for="datepicker1" class="h4">Select month and day</label>
                <input type='text' name="event_date" id="datepicker1" class="form-control"/>
                <label class="h4">Choose a person</label>
                <br>
                <select class="selectpicker" name="event_person" id="MembersList" data-live-search="true">
-
                </select>
                <br>
                <label class="h4">Choose a responsible person</label>

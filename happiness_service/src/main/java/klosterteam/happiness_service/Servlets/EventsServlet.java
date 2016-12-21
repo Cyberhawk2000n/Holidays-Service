@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  * stas33553377@yandex.ru
  */
 public class EventsServlet extends HttpServlet {
-
+    static long num = 0;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -74,9 +74,17 @@ public class EventsServlet extends HttpServlet {
             log.debug("EventsServlet ---> processRequest() --->  creating Event");
             //merge new Event to DB.
             //fields: name, date, content (email content) (for now) Still in development
-            JsonObject json = Json.createObjectBuilder()
-                    .add("message", "Event merged to db")
+            JsonObjectBuilder json = Json.createObjectBuilder();
+            if (this.saveEvent(request) > 0)
+            {
+                json.add("message", "Event merged to db")
                     .build();
+            }
+            else
+            {
+                json.add("message", "Event not merged to db")
+                    .build();
+            }
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
             return;
@@ -255,6 +263,71 @@ public class EventsServlet extends HttpServlet {
         {
             log.warn("Getting users from DB exception", exc);
             return null;
+        }
+    }
+    
+    protected int saveEvent(HttpServletRequest request)
+    {
+        Logger log = LogManager.getLogger(EventsServlet.class);
+        try
+        {
+            HappyHibernate hHibernate = new HappyHibernate();
+            String type, date, content, id_person, id_rely;
+            long id_u = -1, id_m = -1;
+            Events event = null;
+            Calendar calendar = null;
+            if ((date = request.getParameter("date")) != null)
+            {
+                String[] fields = date.split("/");
+                if (fields.length == 3)
+                {
+                    calendar = Calendar.getInstance();
+                    calendar.set(Calendar.MONTH, Integer.valueOf(fields[0]) - 1);
+                    calendar.set(Calendar.DATE, Integer.valueOf(fields[1]));
+                    calendar.set(Calendar.YEAR, Integer.valueOf(fields[2]));
+                }
+            }
+            if ((type = request.getParameter("type")) != null)
+            {
+                log.warn(type+"\n\n\n");
+            }
+            if ((content = request.getParameter("content")) == null)
+            {
+                content = "";
+            }
+            if ((id_person = request.getParameter("id_person")) != null)
+            {
+                id_u = Long.valueOf(id_person);
+            }
+            if ((id_rely = request.getParameter("id_rely")) != null)
+            {
+                id_m = Long.valueOf(id_rely);
+            }
+            Users userId, managerId;
+            if (id_u != -1)
+                userId = hHibernate.selectUserById(id_u);
+            else userId = null;
+            if (id_m != -1)
+                managerId = hHibernate.selectUserById(id_m);
+            else managerId = null;
+            Event_types eventType = hHibernate.selectEventTypes(type.replaceAll(" .*", "")).get(0);
+            Events eventShed;
+            if (eventType.getId() == 0)
+            {
+                eventShed = hHibernate.createEvent("Holiday #"+num++, calendar.getTime(), true, eventType, userId, content, managerId);
+            }
+            else
+            {
+                eventShed = hHibernate.createEvent("Holiday #"+num++, calendar.getTime(), false, eventType, userId, content, managerId);
+            }
+            //hHibernate.createEventShedule(eventShed, eventShed.isEveryYear());
+            return 1;
+            
+        }
+        catch (Exception exc)
+        {
+            log.warn("Save to DB exception!", exc);
+            return -1;
         }
     }
 }

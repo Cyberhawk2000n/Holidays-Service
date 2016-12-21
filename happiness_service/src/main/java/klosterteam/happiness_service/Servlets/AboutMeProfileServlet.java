@@ -15,6 +15,7 @@ import javax.json.JsonArrayBuilder;
 import javax.servlet.http.Cookie;
 import klosterteam.happiness_service.HappyHibernate;
 import klosterteam.hibernate.Logins;
+import klosterteam.hibernate.Roles;
 import klosterteam.hibernate.Users;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -110,6 +111,33 @@ public class AboutMeProfileServlet extends HttpServlet {
                     .add("message", "success")
                     .build();
             this.editUserGiveGift(request, true);
+            response.setContentType("application/json");
+            response.getWriter().write(json.toString());
+            return;
+        }
+        else if("organize".equals(request.getParameter("message"))){
+            // update info in db
+            // fields for request - email, pw, date, comment\
+            log.debug("AboutMeServlet ---> processRequest() ---> organize");
+            Users userId = null;
+            HappyHibernate hHibernate = new HappyHibernate();
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie: cookies)
+                if ("email".equals(cookie.getName()))
+                {
+                    userId = hHibernate.selectUsersByEmail(cookie.getValue()).get(0);
+                }
+            if (userId != null)
+            {
+                Roles role = hHibernate.selectRoles("root").get(0);
+                Users root = hHibernate.selectUsersByRole(role).get(0);
+                hHibernate.sendMessage(root.getEmail(), "I want to be a moderator.\n" +
+                        userId.getEmail());
+            }
+            //this.editUserGiveGift(request, true);
+            JsonObject json = Json.createObjectBuilder()
+                    .add("message", "success")
+                    .build();
             response.setContentType("application/json");
             response.getWriter().write(json.toString());
             return;
